@@ -58,22 +58,17 @@
         <div class="mode-wrap reveal">
           <p class="system-kicker">ORACLE TABLE OPEN</p>
           <h2 id="mode-title">把问题交给哪一座法阵？</h2>
-          <p class="mode-copy">别急着许愿。先选一盏灯：照现实、照暗面，或者让两束光同时落在你的岔路上。</p>
-          <div class="mode-grid">
-            <button class="mode-card" type="button" data-mode-choice="理性模式">
-              <span class="mode-glyph">LOGIC</span>
-              <strong>白昼法阵</strong>
-              <em>把现实摊开：收入、风险、机会和三年后的站位。</em>
-            </button>
-            <button class="mode-card featured" type="button" data-mode-choice="双模式融合">
+          <p class="mode-copy">雾已经升起来了。你只需要决定：让沙盘同时照见现实和预兆，还是把一个问题交给夜色直接起卦。</p>
+          <div class="mode-grid two-mode">
+            <button class="mode-card featured sandbox-card" type="button" data-mode-choice="双模式融合">
               <span class="mode-glyph">TWIN</span>
               <strong>双生法阵</strong>
-              <em>一半看路径，一半看征兆。最像魔法师把牌和地图一起推到你面前。</em>
+              <em>一半推演现实，一半落下预兆。适合想同时看见三条人生路径、风险代价和命运暗示的人。</em>
             </button>
-            <button class="mode-card" type="button" data-mode-choice="命运模式">
+            <button class="mode-card oracle-card" type="button" data-mode-choice="命运模式">
               <span class="mode-glyph">FATE</span>
               <strong>夜色法阵</strong>
-              <em>写下心中所求，系统按此刻时间起卦，落出卦象并解读暗线。</em>
+              <em>不读取档案，不做现实分析。只写下心中所求，让此刻的时间落成卦象，再从玄学角度解读暗线。</em>
             </button>
           </div>
           <button class="secondary-action" type="button" data-home-back>返回入口</button>
@@ -130,7 +125,7 @@
           <h2 data-result-title>你的生活存档已生成</h2>
           <p data-result-subtitle>LV28 · 新一线 · 平衡型玩家</p>
           <div class="result-actions">
-            <button class="primary-action" type="button" data-export-card>生成人生说明书图片</button>
+            <button class="primary-action" type="button" data-export-card>生成人生存档图</button>
             <button class="secondary-action" type="button" data-copy>复制分享咒语</button>
             <button class="secondary-action" type="button" data-restart>重洗命运牌</button>
           </div>
@@ -185,7 +180,7 @@
           <div class="share-card" id="shareCard">
             <div class="share-sigil" aria-hidden="true"><span></span></div>
             <p class="share-eyebrow">LIFE SANDBOX</p>
-            <h3 data-share-title>你的30岁人生存档已生成</h3>
+            <h3 data-share-title>你的人生存档已生成</h3>
             <div class="share-portrait" data-share-portrait>
               <span>你的画像</span>
               <strong>平衡型玩家</strong>
@@ -202,7 +197,7 @@
     </main>
 
     <div class="toast" data-toast>已复制</div>
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="./assets/qrcode-generator.js"></script>
     <script src="./script.js"></script>
   </body>
 </html>

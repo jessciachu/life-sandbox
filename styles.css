@@ -416,7 +416,16 @@ h1 {
   margin-bottom: 24px;
 }
 
+.mode-grid.two-mode {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  max-width: 880px;
+  margin: 0 auto 24px;
+}
+
 .mode-card {
+  position: relative;
+  overflow: hidden;
   min-height: 270px;
   padding: 24px;
   border: 1px solid var(--line);
@@ -429,10 +438,26 @@ h1 {
   animation: float 5s ease-in-out infinite;
 }
 
+.mode-card::before {
+  content: "";
+  position: absolute;
+  inset: -30%;
+  background:
+    radial-gradient(circle at 30% 22%, rgba(245,197,66,0.16), transparent 22%),
+    radial-gradient(circle at 78% 72%, rgba(77,163,255,0.14), transparent 26%),
+    repeating-conic-gradient(from 20deg, transparent 0 15deg, rgba(255,255,255,0.045) 16deg 17deg, transparent 18deg 34deg);
+  opacity: 0.65;
+  animation: mistTurn 18s linear infinite;
+}
+
+.mode-card > * { position: relative; z-index: 1; }
+
 .mode-card:nth-child(3) { animation-delay: 520ms; }
 .mode-card.featured { min-height: 320px; border-color: rgba(245,197,66,0.42); background: linear-gradient(180deg, rgba(245,197,66,0.13), rgba(108,92,231,0.11)); animation-delay: 260ms; }
+.mode-card.oracle-card { border-color: rgba(108,92,231,0.4); background: linear-gradient(180deg, rgba(108,92,231,0.16), rgba(8,11,18,0.56)); }
+.mode-card.sandbox-card { background: linear-gradient(180deg, rgba(245,197,66,0.13), rgba(77,163,255,0.08), rgba(8,11,18,0.52)); }
 .mode-card:hover { transform: translateY(-8px) scale(1.015); border-color: rgba(245,197,66,0.68); box-shadow: 0 0 58px rgba(108,92,231,0.24), 0 30px 90px rgba(0,0,0,0.36); }
-.mode-glyph { display: inline-grid; place-items: center; width: 64px; height: 64px; margin-bottom: 40px; border: 1px solid rgba(245,197,66,0.32); color: var(--gold); font-size: 12px; font-weight: 900; border-radius: 50%; }
+.mode-glyph { display: inline-grid; place-items: center; width: 76px; height: 76px; margin-bottom: 40px; border: 1px solid rgba(245,197,66,0.32); color: var(--gold); font-size: 11px; font-weight: 900; border-radius: 50%; box-shadow: inset 0 0 28px rgba(245,197,66,0.08), 0 0 30px rgba(108,92,231,0.12); }
 .mode-card strong { display: block; margin-bottom: 12px; font-size: clamp(24px, 3vw, 34px); }
 .mode-card em { display: block; color: var(--muted); font-style: normal; line-height: 1.6; }
 
@@ -714,6 +739,29 @@ h1 {
   margin: 0;
 }
 
+.narrative-points {
+  display: grid;
+  gap: 10px;
+}
+
+.narrative-points p {
+  max-width: none;
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: var(--radius);
+  background: rgba(8,11,18,0.32);
+}
+
+.narrative-points b {
+  display: inline-grid;
+  place-items: center;
+  min-width: 42px;
+  margin-right: 10px;
+  color: var(--gold);
+  font-size: 12px;
+}
+
 .live-strip {
   width: min(520px, 100%);
   display: flex;
@@ -748,11 +796,12 @@ h1 {
 }
 
 .result-screen.oracle-result .result-hero {
-  min-height: calc(100dvh - 56px);
+  min-height: min(860px, calc(100dvh - 56px));
   display: grid;
   align-content: center;
   justify-items: center;
   text-align: center;
+  padding-bottom: 56px;
 }
 
 .result-screen.oracle-result .result-hero::before {
@@ -772,7 +821,7 @@ h1 {
 
 .result-screen.oracle-result .result-hero h2 { max-width: 820px; }
 .result-screen.oracle-result .result-actions { justify-content: center; }
-.result-screen.oracle-result .oracle-narration { text-align: left; max-width: 820px; }
+.result-screen.oracle-result .oracle-narration { text-align: left; max-width: 820px; margin-bottom: 34px; }
 .result-screen.oracle-result .live-strip { justify-content: center; }
 .result-screen.oracle-result .rpg-panel,
 .result-screen.oracle-result .paths-section,
@@ -787,6 +836,13 @@ h1 {
   border-color: rgba(245,197,66,0.3);
   background: linear-gradient(180deg, rgba(245,197,66,0.08), rgba(255,255,255,0.035));
 }
+
+.result-screen.result-casting .result-hero::before { animation: spin 8s linear infinite, oracleOpen 1150ms ease both; }
+.result-screen.result-casting .result-hero h2,
+.result-screen.result-casting .result-hero > p,
+.result-screen.result-casting .result-actions,
+.result-screen.result-casting .oracle-narration,
+.result-screen.result-casting .live-strip { animation: rise 680ms ease both; animation-delay: 760ms; }
 
 .rpg-panel,
 .fate-card,
@@ -814,12 +870,26 @@ h1 {
 }
 
 .avatar-core span {
-  width: 42px;
+  width: 48px;
   aspect-ratio: 1;
+  display: grid;
+  place-items: center;
   border-radius: 50% 50% 44% 44%;
   background: linear-gradient(180deg, var(--gold), var(--purple));
+  color: #090b16;
+  font-weight: 900;
+  font-size: 18px;
   box-shadow: 0 0 28px rgba(245,197,66,0.34);
 }
+
+.persona-opener .avatar-core { background: radial-gradient(circle, rgba(255,77,79,0.24), rgba(245,197,66,0.14) 52%, transparent 54%); }
+.persona-opener .avatar-core span { background: linear-gradient(180deg, #f5c542, #ff4d4f); }
+.persona-key .avatar-core { background: radial-gradient(circle, rgba(77,163,255,0.24), rgba(108,92,231,0.14) 52%, transparent 54%); }
+.persona-key .avatar-core span { background: linear-gradient(180deg, #4da3ff, #f5c542); }
+.persona-keeper .avatar-core { background: radial-gradient(circle, rgba(57,217,138,0.24), rgba(245,197,66,0.13) 52%, transparent 54%); }
+.persona-keeper .avatar-core span { background: linear-gradient(180deg, #39d98a, #f5c542); }
+.persona-record .avatar-core { background: radial-gradient(circle, rgba(157,163,178,0.26), rgba(108,92,231,0.14) 52%, transparent 54%); }
+.persona-record .avatar-core span { background: linear-gradient(180deg, #d7d9e3, #6c5ce7); }
 
 .rpg-panel h3 { margin-bottom: 8px; font-size: 28px; }
 .panel-copy { color: var(--muted); line-height: 1.7; margin-bottom: 0; }
@@ -935,19 +1005,30 @@ h1 {
 .path-card.red { border-color: rgba(255,77,79,0.34); }
 .path-card h4 { margin: 0 0 10px; font-size: 22px; }
 .path-card p { color: var(--muted); line-height: 1.65; }
-.mini-chart { height: 54px; display: flex; align-items: end; gap: 7px; margin: 18px 0; }
-.mini-chart span { flex: 1; min-width: 12px; border-radius: 4px 4px 0 0; background: linear-gradient(180deg, rgba(245,197,66,0.9), rgba(108,92,231,0.72)); }
-.path-meta { display: grid; gap: 8px; color: var(--soft); font-size: 14px; }
+.path-years { display: grid; gap: 10px; margin: 16px 0; }
+.path-years div { padding: 12px; border: 1px solid rgba(255,255,255,0.09); border-radius: var(--radius); background: rgba(8,11,18,0.28); }
+.path-years span { color: var(--gold); font-size: 12px; font-weight: 900; }
+.path-years strong { display: block; margin: 4px 0; color: var(--soft); }
+.path-years p { margin: 0; font-size: 13px; line-height: 1.55; }
+.path-insight { display: grid; gap: 8px; padding-top: 12px; border-top: 1px solid var(--line); color: var(--soft); font-size: 14px; }
+.path-insight b { color: var(--muted); font-weight: 600; }
 
 .event-section { padding: 20px 22px; background: rgba(18,21,34,0.48); border: 1px solid var(--line); border-radius: var(--radius); }
 .event-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-.event-pill { min-height: 74px; padding: 14px; border-radius: var(--radius); border: 1px solid var(--line); background: rgba(255,255,255,0.045); color: var(--soft); line-height: 1.45; }
+.event-pill { position: relative; min-height: 102px; overflow: hidden; padding: 14px; border-radius: var(--radius); border: 1px solid var(--line); background: rgba(255,255,255,0.045); color: var(--soft); line-height: 1.45; }
+.event-pill span { display: inline-flex; margin-bottom: 8px; color: var(--gold); font-weight: 900; font-size: 20px; }
+.event-pill p { margin: 0; position: relative; z-index: 1; }
+.event-pill i { position: absolute; left: 0; bottom: 0; height: 3px; background: var(--gold); box-shadow: 0 0 18px rgba(245,197,66,0.4); }
+.event-pill.blue i { background: var(--blue); }
+.event-pill.red i { background: var(--red); }
+.event-pill.warm i { background: var(--green); }
 
 .share-section { display: block; }
 .share-card {
   position: relative;
-  width: min(560px, 100%);
-  min-height: 720px;
+  width: min(720px, 100%);
+  min-height: 760px;
+  margin: 0 auto;
   overflow: hidden;
   padding: 28px;
   background:
@@ -965,7 +1046,7 @@ h1 {
 }
 .share-card::after { inset: 36px; border-color: rgba(77,163,255,0.14); }
 .share-card > * { position: relative; z-index: 1; }
-.share-card h3 { max-width: 12em; font-size: 34px; line-height: 1.14; margin-bottom: 20px; }
+.share-card h3 { max-width: 14em; font-size: clamp(30px, 4vw, 42px); line-height: 1.14; margin-bottom: 20px; }
 .share-sigil {
   position: absolute;
   top: 92px;
@@ -996,8 +1077,8 @@ h1 {
 }
 .share-eyebrow { color: var(--gold); font-size: 12px; font-weight: 900; letter-spacing: 0; }
 .share-portrait {
-  width: min(330px, 100%);
-  margin: 108px 0 18px;
+  width: min(410px, 100%);
+  margin: 92px 0 18px;
   padding: 16px;
   border: 1px solid rgba(245,197,66,0.24);
   border-radius: var(--radius);
@@ -1007,7 +1088,7 @@ h1 {
 .share-portrait em { display: block; color: var(--muted); font-size: 12px; font-style: normal; }
 .share-portrait strong { display: block; margin: 6px 0; color: var(--gold); font-size: 30px; line-height: 1.1; }
 .share-story {
-  max-width: 34em;
+  max-width: 44em;
   margin: 0 0 18px;
   padding: 0 0 18px 14px;
   border-left: 2px solid rgba(245,197,66,0.32);
@@ -1046,6 +1127,8 @@ h1 {
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes pulse { 0%, 100% { opacity: 0.22; transform: scaleX(0.78); } 50% { opacity: 1; transform: scaleX(1); } }
 @keyframes float { 0%, 100% { transform: translateY(0) rotateX(0deg); } 50% { transform: translateY(-5px) rotateX(3deg); } }
+@keyframes mistTurn { to { transform: rotate(360deg); } }
+@keyframes oracleOpen { 0% { opacity: 0; transform: scale(0.55) rotate(-30deg); filter: blur(16px); } 65% { opacity: 0.9; } 100% { opacity: 1; transform: scale(1) rotate(0deg); filter: blur(0); } }
 @keyframes driftStars { to { transform: translate3d(3%, 4%, 0) rotate(2deg); } }
 @keyframes gateReveal { 0% { opacity: 0; transform: scale(0.45) rotate(-24deg); filter: blur(18px); } 25% { opacity: 0.9; } 100% { opacity: 0.72; transform: scale(1.04) rotate(0deg); filter: blur(0); } }
 @keyframes typeBoot { from { width: 0; opacity: 1; } to { width: 100%; opacity: 1; } }
@@ -1065,7 +1148,8 @@ h1 {
   .boot-sequence { min-height: 420px; }
   .boot-line { white-space: normal; border-right: 0; }
   .engine-card { padding: 22px; }
-  .mode-grid { grid-template-columns: 1fr; }
+  .mode-grid,
+  .mode-grid.two-mode { grid-template-columns: 1fr; }
   .mode-card,
   .mode-card.featured { min-height: 178px; }
   .mode-glyph { margin-bottom: 24px; }

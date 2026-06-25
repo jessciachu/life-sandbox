@@ -307,7 +307,7 @@ function runSimulation(flow = "simulation") {
   state.answers.castTime = castTime.toISOString();
   const oracleOnly = flow === "oracle" || modeName === "命运模式";
   $("#loading .system-kicker").textContent = oracleOnly ? "TIME HEXAGRAM CASTING" : "SIMULATION RUNNING";
-  $("#loading h2").textContent = oracleOnly ? `正在以 ${formatCastTime(castTime)} 起卦` : modeName === "理性模式" ? "正在摊开白昼地图" : `正在以 ${formatCastTime(castTime)} 同时落卦与推演`;
+  $("#loading h2").textContent = oracleOnly ? `正在以 ${formatCastTime(castTime)} 起卦` : `雾中沙盘正在显影`;
   setTimeout(() => {
     const data = generateResult(state.answers);
     renderResult(data, { oracleOnly });
@@ -333,22 +333,23 @@ function generateResult(a) {
   const pressure = clamp(stressBase + (a.family === "已婚有娃" ? 10 : 0) - (wealth > 70 ? 8 : 0), 24, 92);
   const playerType = getPlayerType(a, risk, growth, riskType);
   const fate = getFate(a, risk, pressure);
-  const city = a.city || "杭州";
-  const titleAge = ageLevel + 2;
+  const city = a.city || "流动中";
 
   const paths = buildPaths(a, { risk, wealth, growth, stability, pressure });
 
   const events = pickEvents(a, risk);
   const saveId = `LV${ageLevel} · ${city} · ${playerType}`;
   const narrative = getResultNarrative(a, playerType, fate, pressure);
+  const persona = getPlayerPersona(playerType);
   const shareStory = getShareStory(a, playerType, fate, pressure);
   const shareLine = pressure > 70 ? "你不是没有路，只是雾太大，先把火把点亮。" : "人生不是选择题，是一局可以读档的长线游戏。";
 
   return {
-    title: a.mode === "命运模式" ? "此刻卦象已落定" : `你的${titleAge}岁人生存档已生成`,
+    title: a.mode === "命运模式" ? "此刻卦象已落定" : "你的人生存档已生成",
     subtitle: a.mode === "命运模式" ? `问事 · ${fate.sign} · ${fate.cast.time}` : saveId,
     riskType,
     playerType,
+    persona,
     playerCopy: getPlayerCopy(playerType),
     stats: { 财富: wealth, 风险: risk, 成长: growth, 稳定: stability, 压力: pressure },
     fate,
@@ -365,10 +366,22 @@ function renderResult(data, options = {}) {
   latestResult = data;
   const oracleOnly = Boolean(options.oracleOnly || state.answers.mode === "命运模式");
   result.classList.toggle("oracle-result", oracleOnly);
+  result.classList.remove("result-casting");
+  void result.offsetWidth;
+  if (oracleOnly) result.classList.add("result-casting");
   $("[data-result-title]").textContent = data.title;
   $("[data-result-subtitle]").textContent = data.subtitle;
+  $("[data-export-card]").textContent = oracleOnly ? "生成卦象分享图" : "生成人生存档图";
+  $("[data-copy]").textContent = oracleOnly ? "复制卦象解读" : "复制分享咒语";
+  $("[data-restart]").textContent = oracleOnly ? "重新起卦" : "重开沙盘";
   $("[data-player-type]").textContent = data.playerType;
   $("[data-player-copy]").textContent = data.playerCopy;
+  const rpgPanel = $(".rpg-panel");
+  if (rpgPanel) {
+    rpgPanel.className = `rpg-panel reveal ${data.persona.className}`;
+    const avatar = rpgPanel.querySelector(".avatar-core span");
+    if (avatar) avatar.textContent = data.persona.mark;
+  }
   $("[data-fate-sign]").textContent = data.fate.sign;
   $("[data-fate-symbol]").textContent = data.fate.symbol;
   $("[data-fate-cast]").innerHTML = `
@@ -383,8 +396,8 @@ function renderResult(data, options = {}) {
   $("[data-share-story]").textContent = data.shareStory;
   $("[data-share-text]").value = data.shareText;
   $("[data-result-narrative]").innerHTML = oracleOnly
-    ? `<span>时间卦解</span><p>${getOracleOnlyNarrative(state.answers, data.fate)}</p>`
-    : `<span>魔法师批注</span><p>${data.narrative}</p>`;
+    ? renderOracleNarrative(state.answers, data.fate)
+    : renderResultNarrative(data.narrative);
   $("[data-share-portrait]").innerHTML = `
     <span>你的画像</span>
     <strong>${data.playerType}</strong>
@@ -425,8 +438,10 @@ function renderResult(data, options = {}) {
     <article class="path-card ${path.tone}">
       <h4>${path.name}</h4>
       <p>${path.summary}</p>
-      <div class="mini-chart" aria-hidden="true">${path.bars.map((height) => `<span style="height:${height}%"></span>`).join("")}</div>
-      <div class="path-meta"><span>${path.income}</span><span>${path.risk}</span></div>
+      <div class="path-years">
+        ${path.years.map((year) => `<div><span>${year.year}</span><strong>${year.title}</strong><p>${year.copy}</p></div>`).join("")}
+      </div>
+      <div class="path-insight"><span>${path.income}</span><b>${path.risk}</b></div>
     </article>
   `).join("");
 
@@ -434,7 +449,13 @@ function renderResult(data, options = {}) {
     <div class="share-mini"><span>${path.short}</span><b>${path.income}</b></div>
   `).join("");
 
-  $("[data-events]").innerHTML = data.events.map((event) => `<div class="event-pill">${event}</div>`).join("");
+  $("[data-events]").innerHTML = data.events.map((event) => `
+    <div class="event-pill ${event.tone}">
+      <span>${event.probability}%</span>
+      <p>${event.text}</p>
+      <i style="width:${event.probability}%"></i>
+    </div>
+  `).join("");
 }
 
 function toggleFateDetail(button) {
@@ -540,6 +561,16 @@ function getPlayerCopy(type) {
   }[type];
 }
 
+function getPlayerPersona(type) {
+  return {
+    "风险开拓者": { className: "persona-opener", mark: "星", name: "星图开路者" },
+    "转型探索者": { className: "persona-key", mark: "钥", name: "门钥持有者" },
+    "稳健执行者": { className: "persona-keeper", mark: "灯", name: "守灯人" },
+    "观察型玩家": { className: "persona-record", mark: "录", name: "雾中记录者" },
+    "平衡型玩家": { className: "persona-balance", mark: "衡", name: "双灯旅人" },
+  }[type] || { className: "persona-balance", mark: "衡", name: "双灯旅人" };
+}
+
 function buildPaths(a, score) {
   const trouble = Array.isArray(a.troubles) && a.troubles.length ? a.troubles[0] : "未来看不清";
   const industryLens = getIndustryLens(a.industry);
@@ -557,7 +588,11 @@ function buildPaths(a, score) {
       summary: `如果先守住当前章节，你会把「${trouble}」压到后台运行。${industryLens.stable}${stateLens.stable}${resourceLens.stable}`,
       income: stableIncome,
       risk: pickBySeed("stable-risk", a, ["暗线：热情被日常慢慢磨钝", "暗线：习惯会伪装成安全", "暗线：机会可能从旁边经过"]),
-      bars: [38, 44, 50, 57, 62],
+      years: [
+        { year: "第1年", title: "先稳住基本盘", copy: "收入和生活节奏更可控，适合补现金流、补技能短板。" },
+        { year: "第2年", title: "信用继续复利", copy: "人脉、经验和组织信任会变厚，但新鲜感下降。" },
+        { year: "第3年", title: "看见稳定的价格", copy: "你会更安全，也更容易意识到哪些愿望被搁置了。" },
+      ],
     },
     {
       tone: "blue",
@@ -566,7 +601,11 @@ function buildPaths(a, score) {
       summary: `如果开启一条可控支线，系统建议先做小型试炼。${industryLens.optimize}${stateLens.optimize}${resourceLens.optimize}`,
       income: optimizeIncome,
       risk: pickBySeed("opt-risk", a, ["通关条件：把技能筹码摆上桌面", "通关条件：给试错设置截止日", "通关条件：先拿到真实反馈"]),
-      bars: [32, 48, 45, 68, 80],
+      years: [
+        { year: "第1年", title: "开一条低风险支线", copy: "用面试、项目、副业或转岗试水，不急着把桌子掀翻。" },
+        { year: "第2年", title: "把反馈变成筹码", copy: "如果市场回应不错，你会拿到更清楚的议价点。" },
+        { year: "第3年", title: "形成新站位", copy: "适合从“想改变”走到“有证据地改变”。" },
+      ],
     },
     {
       tone: "red",
@@ -575,7 +614,11 @@ function buildPaths(a, score) {
       summary: `如果选择重构，这不是简单换工作，而像换一套角色职业。${industryLens.rebuild}${stateLens.rebuild}${resourceLens.rebuild}`,
       income: rebuildIncome,
       risk: pickBySeed("rebuild-risk", a, ["雾区等级：高", "代价：安全感会先被扣血", "提醒：先画止损线再进雾"]),
-      bars: [42, 24, 38, 76, 92],
+      years: [
+        { year: "第1年", title: "进入雾区", copy: "不确定性会先变大，最容易怀疑自己选错了。" },
+        { year: "第2年", title: "重建技能和信用", copy: "开始知道新地图的规则，也会为旧经验重新定价。" },
+        { year: "第3年", title: "上限打开或止损回城", copy: "它不是最舒服的线，但最可能改写身份叙事。" },
+      ],
     },
   ];
 }
@@ -607,8 +650,40 @@ function pickBySeed(label, a, list) {
 
 function getResultNarrative(a, playerType, fate, pressure) {
   const trouble = Array.isArray(a.troubles) && a.troubles.length ? a.troubles[0] : "未来不确定";
-  const pressureLine = pressure > 70 ? "你的火焰烧得有点急，容易把短期情绪看成长期命令。" : "你的沙盘还算清晰，直觉和现实证据可以一起上桌。";
-  return `我先看见的是「${trouble}」，再看见你停在「${a.state || "当前章节"}」这一页。你不是单纯想逃离现状，更像一位${playerType}：一边想保住已有的光，一边又听见新门在响。签面落在「${fate.sign}」，意思不是替你做决定，而是提醒你：${pressureLine}`;
+  const pressureLine = pressure > 70 ? "先不要把短期焦虑误读成长期命令。" : "你现在适合让直觉和证据一起上桌。";
+  return {
+    seen: `沙盘先读到「${trouble}」，再读到你停在「${a.state || "当前章节"}」。这说明问题不是简单逃离，而是你需要重新确认哪条路还值得投入。`,
+    key: `重点：你更像${playerType}。真正要判断的不是“敢不敢变”，而是“用多大成本换多大可能”。`,
+    action: `下一步：把${trouble}拆成一个 7 天内可验证的小动作。${pressureLine}`,
+    sign: `签面「${fate.sign}」的提醒：${fate.oracle}`,
+  };
+}
+
+function renderResultNarrative(narrative) {
+  return `
+    <span>魔法师批注</span>
+    <div class="narrative-points">
+      <p><b>看见</b>${narrative.seen}</p>
+      <p><b>重点</b>${narrative.key}</p>
+      <p><b>可做</b>${narrative.action}</p>
+      <p><b>签面</b>${narrative.sign}</p>
+    </div>
+  `;
+}
+
+function renderOracleNarrative(a, fate) {
+  const question = a.oracleQuestion || "心中所求";
+  const cast = fate.cast;
+  const tendency = cast.yangCount >= 4 ? "动象偏强，事情会先动后定" : cast.yangCount <= 2 ? "静象偏重，宜先蓄力再启程" : "动静相持，关键在于分辨哪一步该先落下";
+  return `
+    <span>时间卦解</span>
+    <div class="narrative-points oracle-points">
+      <p><b>所问</b>「${question}」</p>
+      <p><b>卦面</b>此刻落卦为「${fate.sign}」，${cast.yangCount}阳${6 - cast.yangCount}阴，${tendency}。</p>
+      <p><b>暗线</b>${fate.oracle}</p>
+      <p><b>启发</b>先不要急着求一个绝对答案。把这件事拆成“现在能看见的信号”和“还没出现的证据”，再决定下一步。</p>
+    </div>
+  `;
 }
 
 function getOracleOnlyNarrative(a, fate) {
@@ -670,7 +745,11 @@ function getFate(a, risk, pressure) {
   return {
     ...base,
     cast,
-    meaning: [
+    meaning: a.mode === "命运模式" ? [
+      { label: "卦面", text: `以当前时间落出 ${cast.yangCount} 阳 ${6 - cast.yangCount} 阴。阳多则动，阴多则蓄；此卦偏「${cast.yangCount >= 4 ? "先动后定" : cast.yangCount <= 2 ? "先蓄后动" : "动静相持"}」。${base.oracle}` },
+      { label: "象意", text: pressure > 70 ? "气口急，心火旺。此时最怕把一时的烦躁当作天命。" : "卦气不散，说明你已经看见一部分答案，只是还缺最后一盏灯。" },
+      { label: "启示", text: risk > 70 ? "可向前，但先设结界：边界、期限、退路都要写清。" : "宜先观兆，再落小步。让时间替你筛掉一部分雾。" },
+    ] : [
       { label: "卦面", text: `以当前时间落出 ${cast.yangCount} 阳 ${6 - cast.yangCount} 阴。阳多则动，阴多则蓄；你的盘面更偏「${cast.yangCount >= 4 ? "先动后定" : cast.yangCount <= 2 ? "先蓄后动" : "动静相持"}」。${base.oracle}` },
       { label: "现实层", text: pressure > 70 ? "当前压力噪音偏高，容易把短期情绪误判成长期趋势。" : "你已经拥有部分信息，但真正关键的变量还没有完全显形。" },
       { label: "行动层", text: risk > 70 ? "可以靠近高塔，但先把止损线画在地上，让野心有边界。" : "先点一盏小灯，观察、试点、换角度，比一次性掀桌更容易看清路。" },
@@ -704,17 +783,22 @@ function formatCastTime(date) {
 
 function pickEvents(a, risk) {
   const pool = [
-    "办公室深处掉落一枚关键机会",
-    "行业天气突然转向，旧地图开始褪色",
-    "副业支线在夜里亮了一下",
-    "羁绊系统给你加了护盾，也加了重量",
-    "旧技能撞到透明天花板",
-    "朋友递来一张新副本入场券",
-    "现金流守门人要求你放慢脚步",
-    "一次谈话像火柴，改变了你看路的角度",
+    { text: "一次关键谈话改变你看路的角度", base: 42, tone: "warm" },
+    { text: "当前行业出现一次明显转向", base: 36, tone: "blue" },
+    { text: "副业或项目机会在夜里亮起", base: 31, tone: "gold" },
+    { text: "家庭或关系议题临时加重", base: 28, tone: "red" },
+    { text: "旧技能碰到透明天花板", base: 47, tone: "red" },
+    { text: "熟人递来一张新地图入场券", base: 24, tone: "gold" },
+    { text: "现金流提醒你暂时放慢脚步", base: 40, tone: "warm" },
+    { text: "一个被你低估的能力开始变值钱", base: 34, tone: "blue" },
   ];
   const offset = Math.abs(hash(`${a.state}${a.resources}${risk}`)) % pool.length;
-  return [0, 1, 2, 3].map((i) => pool[(offset + i) % pool.length]);
+  return [0, 1, 2, 3].map((i) => {
+    const item = pool[(offset + i) % pool.length];
+    const drift = Math.abs(hash(`${item.text}-${JSON.stringify(a)}-${i}`)) % 23;
+    const riskBoost = risk > 70 && ["gold", "red"].includes(item.tone) ? 10 : 0;
+    return { ...item, probability: clamp(item.base + drift + riskBoost, 18, 82) };
+  });
 }
 
 function makeShareText(a, playerType, fate, paths, line, riskType) {
@@ -739,6 +823,10 @@ async function copyShareText() {
 }
 
 async function exportShareCard() {
+  if (!window.qrcode) {
+    showToast("二维码组件还没加载好，请稍后再试");
+    return;
+  }
   const canvas = document.createElement("canvas");
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   const width = 900;
@@ -749,6 +837,7 @@ async function exportShareCard() {
   ctx.scale(dpr, dpr);
 
   const data = latestResult;
+  const oracleOnly = state.answers.mode === "命运模式";
   const title = data?.title || $("[data-share-title]").textContent;
   const sign = data ? `「${data.fate.sign} · ${data.fate.tag}」` : $("[data-share-sign]").textContent;
   const line = data?.shareLine || $("[data-share-line]").textContent;
@@ -792,7 +881,7 @@ async function exportShareCard() {
 
   ctx.fillStyle = "#f3f0ff";
   ctx.font = "900 46px sans-serif";
-  wrapCanvasText(ctx, title, 450, 505, 680, 56, 2);
+  wrapCanvasText(ctx, oracleOnly ? "此刻卦象分享" : title, 450, 505, 680, 56, 2);
 
   ctx.fillStyle = "rgba(255,255,255,0.07)";
   roundRect(ctx, 106, 595, 688, 176, 8);
@@ -802,26 +891,51 @@ async function exportShareCard() {
 
   ctx.fillStyle = "#9da3b2";
   ctx.font = "700 18px sans-serif";
-  ctx.fillText("你的画像", 450, 635);
+  ctx.fillText(oracleOnly ? "所问之事" : "你的画像", 450, 635);
 
   ctx.fillStyle = "#f5c542";
-  ctx.font = "900 48px sans-serif";
-  ctx.fillText(player, 450, 690);
+  ctx.font = oracleOnly ? "900 30px sans-serif" : "900 48px sans-serif";
+  wrapCanvasText(ctx, oracleOnly ? (state.answers.oracleQuestion || "心中所求") : player, 450, 690, 560, 42, 2);
 
   ctx.fillStyle = "#d7d9e3";
   ctx.font = "600 24px sans-serif";
-  ctx.fillText(`${riskType} · ${sign}`, 450, 735);
+  ctx.fillText(oracleOnly ? `${data.fate.cast.time} · ${sign}` : `${riskType} · ${sign}`, 450, 755);
 
   ctx.fillStyle = "#f3f0ff";
   ctx.font = "900 24px sans-serif";
   ctx.textAlign = "left";
-  ctx.fillText("沙盘小传", 120, 825);
+  ctx.fillText(oracleOnly ? "卦象小传" : "沙盘小传", 120, 825);
   ctx.fillStyle = "#d7d9e3";
   ctx.font = "500 24px sans-serif";
-  wrapCanvasText(ctx, story, 120, 865, 660, 36, 3);
+  const posterStory = oracleOnly ? getFateDetail(state.answers, data.fate, data.playerType).story : story;
+  wrapCanvasText(ctx, posterStory, 120, 865, 660, 36, oracleOnly ? 4 : 3);
 
   const cardY = 982;
-  paths.slice(0, 3).forEach((path, index) => {
+  if (oracleOnly) {
+    data.fate.cast.lines.slice().reverse().forEach((isYang, index) => {
+      const y = cardY + index * 19;
+      ctx.strokeStyle = "rgba(245,197,66,0.76)";
+      ctx.lineWidth = 8;
+      ctx.lineCap = "round";
+      if (isYang) {
+        ctx.beginPath();
+        ctx.moveTo(120, y);
+        ctx.lineTo(292, y);
+        ctx.stroke();
+      } else {
+        ctx.beginPath();
+        ctx.moveTo(120, y);
+        ctx.lineTo(190, y);
+        ctx.moveTo(222, y);
+        ctx.lineTo(292, y);
+        ctx.stroke();
+      }
+    });
+    ctx.fillStyle = "#d7d9e3";
+    ctx.font = "700 20px sans-serif";
+    wrapCanvasText(ctx, data.fate.oracle, 330, 980, 340, 30, 3);
+  } else {
+    paths.slice(0, 3).forEach((path, index) => {
     const x = 110 + index * 214;
     ctx.fillStyle = "rgba(255,255,255,0.055)";
     roundRect(ctx, x, cardY, 194, 88, 8);
@@ -835,7 +949,8 @@ async function exportShareCard() {
     ctx.fillStyle = "#d7d9e3";
     ctx.font = "600 17px sans-serif";
     wrapCanvasText(ctx, path.income, x + 16, cardY + 60, 160, 22, 2);
-  });
+    });
+  }
 
   ctx.fillStyle = "#f3f0ff";
   ctx.font = "800 22px sans-serif";
@@ -843,17 +958,17 @@ async function exportShareCard() {
   wrapCanvasText(ctx, line, 110, 1118, 520, 28, 2);
 
   const pageUrl = location.href.split("#")[0].split("?")[0];
-  await drawQr(ctx, pageUrl, 686, 1050, 112);
+  await drawQr(ctx, pageUrl, 672, 1036, 136);
   ctx.fillStyle = "#9da3b2";
   ctx.font = "600 16px sans-serif";
   ctx.textAlign = "center";
-  ctx.fillText("扫码重开沙盘", 742, 1182);
+  ctx.fillText(oracleOnly ? "扫码进入法阵" : "扫码重开沙盘", 740, 1188);
 
   const link = document.createElement("a");
-  link.download = "life-sandbox-manual.png";
+  link.download = oracleOnly ? "life-sandbox-oracle.png" : "life-sandbox-manual.png";
   link.href = canvas.toDataURL("image/png");
   link.click();
-  showToast("分享图已生成");
+  showToast(oracleOnly ? "卦象分享图已生成" : "分享图已生成");
 }
 
 function drawMagicCircle(ctx, cx, cy, radius) {
@@ -923,22 +1038,30 @@ function loadImage(src) {
 }
 
 async function drawQr(ctx, url, x, y, size) {
+  const qr = window.qrcode(0, "H");
+  qr.addData(url);
+  qr.make();
+  const moduleCount = qr.getModuleCount();
+  const quietZone = 4;
+  const totalModules = moduleCount + quietZone * 2;
+  const moduleSize = Math.floor(size / totalModules);
+  const qrSize = moduleSize * totalModules;
+  const offset = Math.floor((size - qrSize) / 2);
+
   ctx.save();
-  ctx.fillStyle = "#f3f0ff";
-  roundRect(ctx, x - 8, y - 8, size + 16, size + 16, 8);
+  ctx.fillStyle = "#ffffff";
+  roundRect(ctx, x - 12, y - 12, size + 24, size + 24, 8);
   ctx.fill();
-  if (window.QRCode?.toCanvas) {
-    const qrCanvas = document.createElement("canvas");
-    await window.QRCode.toCanvas(qrCanvas, url, { width: size, margin: 1, color: { dark: "#080b12", light: "#f3f0ff" } });
-    ctx.drawImage(qrCanvas, x, y, size, size);
-  } else {
-    ctx.fillStyle = "#080b12";
-    ctx.fillRect(x, y, size, size);
-    ctx.fillStyle = "#f3f0ff";
-    const cell = size / 9;
-    for (let row = 0; row < 9; row += 1) {
-      for (let col = 0; col < 9; col += 1) {
-        if ((row * 7 + col * 5 + hash(url)) % 3 !== 0) ctx.fillRect(x + col * cell, y + row * cell, cell * 0.72, cell * 0.72);
+  ctx.fillStyle = "#080b12";
+  for (let row = 0; row < moduleCount; row += 1) {
+    for (let col = 0; col < moduleCount; col += 1) {
+      if (qr.isDark(row, col)) {
+        ctx.fillRect(
+          x + offset + (col + quietZone) * moduleSize,
+          y + offset + (row + quietZone) * moduleSize,
+          moduleSize,
+          moduleSize,
+        );
       }
     }
   }
