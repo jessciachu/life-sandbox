@@ -781,7 +781,7 @@ h1 {
 .result-screen.oracle-result .result-grid {
   max-width: 640px;
   grid-template-columns: 1fr;
-  margin-top: -86px;
+  margin-top: 18px;
 }
 .result-screen.oracle-result .fate-card {
   border-color: rgba(245,197,66,0.3);
