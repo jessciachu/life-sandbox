@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>人生沙盘 Life Sandbox</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="opening-screen" id="opening" aria-label="人生沙盘启动动画">
+        <div class="starfield" aria-hidden="true"></div>
+        <div class="magic-gate" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+        <div class="boot-sequence">
+          <p class="boot-line boot-line-a">正在接入人生模拟系统...</p>
+          <p class="boot-line boot-line-b">权限验证通过</p>
+          <div class="engine-card">
+            <p class="system-kicker">Life Sandbox Engine v1.0</p>
+            <h2>Initializing...</h2>
+            <ul>
+              <li>✓ Personality Matrix</li>
+              <li>✓ Life Variables</li>
+              <li>✓ Risk Engine</li>
+              <li>✓ Fate Model</li>
+            </ul>
+          </div>
+          <div class="opening-welcome">
+            <h2>欢迎来到「人生沙盘」</h2>
+            <p>你的人生不止一条路径</p>
+            <p>系统正在生成你的可能世界</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="hero-screen" id="home" aria-labelledby="hero-title">
+        <div class="ambient-grid"></div>
+        <div class="hero-visual" aria-hidden="true">
+          <img src="./assets/life-os-hero.png" alt="" />
+        </div>
+        <div class="hero-content reveal">
+          <p class="system-kicker">LIFE SANDBOX · RPG EDITION</p>
+          <h1 id="hero-title">人生沙盘</h1>
+          <p class="hero-copy">一台正在低声运转的人生模拟引擎，等你放入第一枚变量。</p>
+          <button class="primary-action" type="button" data-mode-entry>进入人生沙盘</button>
+          <p class="hero-note">不是测试，是一次存档读取。</p>
+        </div>
+        <aside class="live-oracle reveal" aria-label="实时沙盘动态">
+          <p>沙盘回声</p>
+          <strong data-live-count>100</strong>
+          <span data-live-action>正在同步本机真实生成记录</span>
+        </aside>
+        <div class="scroll-hint" aria-hidden="true">SYSTEM READY</div>
+      </section>
+
+      <section class="mode-screen hidden" id="mode" aria-labelledby="mode-title">
+        <div class="ambient-grid"></div>
+        <div class="mode-wrap reveal">
+          <p class="system-kicker">ORACLE TABLE OPEN</p>
+          <h2 id="mode-title">把问题交给哪一座法阵？</h2>
+          <p class="mode-copy">别急着许愿。先选一盏灯：照现实、照暗面，或者让两束光同时落在你的岔路上。</p>
+          <div class="mode-grid">
+            <button class="mode-card" type="button" data-mode-choice="理性模式">
+              <span class="mode-glyph">LOGIC</span>
+              <strong>白昼法阵</strong>
+              <em>把现实摊开：收入、风险、机会和三年后的站位。</em>
+            </button>
+            <button class="mode-card featured" type="button" data-mode-choice="双模式融合">
+              <span class="mode-glyph">TWIN</span>
+              <strong>双生法阵</strong>
+              <em>一半看路径，一半看征兆。最像魔法师把牌和地图一起推到你面前。</em>
+            </button>
+            <button class="mode-card" type="button" data-mode-choice="命运模式">
+              <span class="mode-glyph">FATE</span>
+              <strong>夜色法阵</strong>
+              <em>写下心中所求，系统按此刻时间起卦，落出卦象并解读暗线。</em>
+            </button>
+          </div>
+          <button class="secondary-action" type="button" data-home-back>返回入口</button>
+        </div>
+      </section>
+
+      <section class="oracle-screen hidden" id="oracle" aria-labelledby="oracle-title">
+        <div class="ambient-grid"></div>
+        <div class="oracle-panel reveal">
+          <p class="system-kicker">TIME HEXAGRAM</p>
+          <h2 id="oracle-title">把心中所求放进法阵</h2>
+          <p>不用填写完整档案。写一句最近最想问的事，或先点一张问题牌，系统会按当前时间起卦。</p>
+          <div class="oracle-presets" aria-label="常见问题牌">
+            <button type="button" data-oracle-preset="我想知道现在该不该换工作">换工作</button>
+            <button type="button" data-oracle-preset="我想知道要不要转行或重选方向">转方向</button>
+            <button type="button" data-oracle-preset="我想知道副业或创业有没有窗口">做副业</button>
+            <button type="button" data-oracle-preset="我想知道接下来怎么缓解收入焦虑">问收入</button>
+          </div>
+          <textarea data-oracle-question placeholder="例：我最近很想离开现在的工作，但又怕重来太贵。"></textarea>
+          <div class="oracle-actions">
+            <button class="secondary-action" type="button" data-oracle-back>返回法阵</button>
+            <button class="primary-action" type="button" data-oracle-cast>按此刻时间起卦</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="simulator-screen hidden" id="simulator" aria-live="polite">
+        <div class="topbar">
+          <button class="icon-button" type="button" data-back aria-label="返回上一题">‹</button>
+          <div>
+            <p class="topbar-label">人生信息采样</p>
+            <div class="progress-track"><span data-progress></span></div>
+          </div>
+          <span class="step-count" data-step-count>01/10</span>
+        </div>
+
+        <div class="question-panel reveal" data-question-panel></div>
+      </section>
+
+      <section class="loading-screen hidden" id="loading" aria-live="polite">
+        <div class="loading-orbit" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+        <p class="system-kicker">SIMULATION RUNNING</p>
+        <h2>正在生成你的三条人生路径</h2>
+        <div class="scan-lines">
+          <i></i><i></i><i></i><i></i>
+        </div>
+      </section>
+
+      <section class="result-screen hidden" id="result">
+        <div class="result-hero reveal">
+          <p class="system-kicker">SAVE FILE GENERATED</p>
+          <h2 data-result-title>你的生活存档已生成</h2>
+          <p data-result-subtitle>LV28 · 新一线 · 平衡型玩家</p>
+          <div class="result-actions">
+            <button class="primary-action" type="button" data-export-card>生成人生说明书图片</button>
+            <button class="secondary-action" type="button" data-copy>复制分享咒语</button>
+            <button class="secondary-action" type="button" data-restart>重洗命运牌</button>
+          </div>
+          <div class="oracle-narration" data-result-narrative>
+            <span>魔法师批注</span>
+            <p>沙盘已经读到你的当前章节。真正重要的不是立刻选择哪条路，而是看见哪条路正在反复召唤你。</p>
+          </div>
+          <div class="live-strip" aria-label="实时使用动态">
+            <span data-live-count-result>100</span>
+            <p data-live-feed>份人生说明书已在本机生成</p>
+          </div>
+        </div>
+
+        <div class="result-grid">
+          <article class="rpg-panel reveal">
+            <div class="avatar-core" aria-hidden="true"><span></span></div>
+            <div>
+              <p class="panel-label">玩家类型</p>
+              <h3 data-player-type>平衡型玩家</h3>
+              <p class="panel-copy" data-player-copy>你适合用可控试错换取成长窗口。</p>
+            </div>
+            <div class="stat-list" data-stats></div>
+          </article>
+
+          <article class="fate-card reveal">
+            <div class="fate-face">
+              <p>命运签</p>
+              <h3 data-fate-sign>风起未定</h3>
+              <span data-fate-symbol>△</span>
+            </div>
+            <div class="fate-cast" data-fate-cast></div>
+            <div class="fate-meaning" data-fate-meaning></div>
+          </article>
+        </div>
+
+        <div class="paths-section reveal">
+          <div class="section-head">
+            <p class="panel-label">理性人生模拟</p>
+            <h3>三条可能路径</h3>
+          </div>
+          <div class="path-grid" data-paths></div>
+        </div>
+
+        <div class="event-section reveal">
+          <p class="panel-label">随机人生事件</p>
+          <div class="event-list" data-events></div>
+        </div>
+
+        <div class="share-section reveal">
+          <div class="share-card" id="shareCard">
+            <div class="share-sigil" aria-hidden="true"><span></span></div>
+            <p class="share-eyebrow">LIFE SANDBOX</p>
+            <h3 data-share-title>你的30岁人生存档已生成</h3>
+            <div class="share-portrait" data-share-portrait>
+              <span>你的画像</span>
+              <strong>平衡型玩家</strong>
+              <em>正在读取主线冲突</em>
+            </div>
+            <p class="share-story" data-share-story>夜里，你把一个没有说出口的问题放进沙盘。第一盏灯亮起时，系统读到了你的岔路。</p>
+            <div class="share-paths" data-share-paths></div>
+            <div class="share-sign" data-share-sign>「风起未定 · 缓进之象」</div>
+            <p data-share-line>人生不是选择题，是存档游戏。</p>
+          </div>
+          <textarea class="share-text" readonly data-share-text aria-hidden="true" tabindex="-1"></textarea>
+        </div>
+      </section>
+    </main>
+
+    <div class="toast" data-toast>已复制</div>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="./script.js"></script>
+  </body>
+</html>
