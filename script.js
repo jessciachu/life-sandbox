@@ -88,6 +88,7 @@ const progress = $("[data-progress]");
 const stepCount = $("[data-step-count]");
 let latestResult = null;
 let liveStats = { total: 100, generated: 0, events: [] };
+let referenceInsights = null;
 
 const fateLibrary = [
   { sign: "风起未定", tag: "巽风之象", symbol: "△", oracle: "风先到，路还没有完全显形。适合听信号，不适合急着拍板。" },
@@ -105,6 +106,7 @@ const fateLibrary = [
 ];
 
 window.addEventListener("DOMContentLoaded", () => {
+  loadReferenceInsights();
   initLiveStats();
   setTimeout(() => {
     opening.classList.add("opening-done");
@@ -114,6 +116,16 @@ window.addEventListener("DOMContentLoaded", () => {
     }, 950);
   }, 6200);
 });
+
+async function loadReferenceInsights() {
+  try {
+    const response = await fetch("./data/reference-insights.json", { cache: "no-store" });
+    if (!response.ok) throw new Error("reference unavailable");
+    referenceInsights = await response.json();
+  } catch {
+    referenceInsights = null;
+  }
+}
 
 document.addEventListener("click", (event) => {
   const modeEntry = event.target.closest("[data-mode-entry]");
@@ -334,12 +346,13 @@ function generateResult(a) {
   const playerType = getPlayerType(a, risk, growth, riskType);
   const fate = getFate(a, risk, pressure);
   const city = a.city || "流动中";
+  const reference = getReferenceProfile(a);
 
-  const paths = buildPaths(a, { risk, wealth, growth, stability, pressure });
+  const paths = buildPaths(a, { risk, wealth, growth, stability, pressure }, reference);
 
   const events = pickEvents(a, risk);
   const saveId = `LV${ageLevel} · ${city} · ${playerType}`;
-  const narrative = getResultNarrative(a, playerType, fate, pressure);
+  const narrative = getResultNarrative(a, playerType, fate, pressure, reference);
   const persona = getPlayerPersona(playerType);
   const shareStory = getShareStory(a, playerType, fate, pressure);
   const shareLine = pressure > 70 ? "你不是没有路，只是雾太大，先把火把点亮。" : "人生不是选择题，是一局可以读档的长线游戏。";
@@ -355,6 +368,7 @@ function generateResult(a) {
     fate,
     paths,
     events,
+    reference,
     narrative,
     shareStory,
     shareLine,
@@ -398,6 +412,8 @@ function renderResult(data, options = {}) {
   $("[data-result-narrative]").innerHTML = oracleOnly
     ? renderOracleNarrative(state.answers, data.fate)
     : renderResultNarrative(data.narrative);
+  document.querySelector("[data-mobile-conclusion]")?.remove();
+  $("[data-result-narrative]").insertAdjacentHTML("beforebegin", oracleOnly ? "" : renderMobileConclusion(data));
   $("[data-share-portrait]").innerHTML = `
     <span>你的画像</span>
     <strong>${data.playerType}</strong>
@@ -456,6 +472,31 @@ function renderResult(data, options = {}) {
       <i style="width:${event.probability}%"></i>
     </div>
   `).join("");
+}
+
+function renderMobileConclusion(data) {
+  const firstPath = data.paths[1] || data.paths[0];
+  const next = data.narrative?.actionShort || data.narrative?.action || `先把「${data.fate.sign}」对应的问题拆成一个小动作。`;
+  const benchmark = data.reference?.benchmark || data.narrative.tension;
+  return `
+    <div class="mobile-conclusion" data-mobile-conclusion>
+      <div class="mobile-conclusion-main">
+        <span>参考读取</span>
+        <strong>${data.narrative.headline}</strong>
+        <p>${benchmark}</p>
+      </div>
+      <div>
+        <span>更值得先试</span>
+        <strong>${firstPath.short}</strong>
+        <p>${firstPath.mobile || firstPath.summary}</p>
+      </div>
+      <div>
+        <span>下一步</span>
+        <strong>先点一盏小灯</strong>
+        <p>${next.replace(/^下一步：/, "")}</p>
+      </div>
+    </div>
+  `;
 }
 
 function toggleFateDetail(button) {
@@ -571,11 +612,12 @@ function getPlayerPersona(type) {
   }[type] || { className: "persona-balance", mark: "衡", name: "双灯旅人" };
 }
 
-function buildPaths(a, score) {
+function buildPaths(a, score, reference = getReferenceProfile(a)) {
   const trouble = Array.isArray(a.troubles) && a.troubles.length ? a.troubles[0] : "未来看不清";
   const industryLens = getIndustryLens(a.industry);
   const stateLens = getStateLens(a.state);
   const resourceLens = getResourceLens(a.resources);
+  const decision = getDecisionLens(a, score, reference);
   const stableIncome = score.wealth > 68 ? pickBySeed("stable-rich", a, ["收入像城墙一样慢慢加厚", "金币池稳中抬升", "现金流开始出现余裕"]) : pickBySeed("stable-low", a, ["金币池缓慢修复", "收入小幅爬坡", "先把漏水的桶补上"]);
   const optimizeIncome = score.growth > 68 ? pickBySeed("opt-growth", a, ["有阶梯式抬升机会", "技能变现窗口变亮", "会出现更好的议价点"]) : pickBySeed("opt-calm", a, ["温和抬升，代价可控", "先换节奏，再换价格", "小幅试错更容易成局"]);
   const rebuildIncome = score.risk > 70 ? pickBySeed("rebuild-high", a, ["上限高，波动像潮汐", "可能打开新天花板", "前期乱流大，后期空间大"]) : pickBySeed("rebuild-low", a, ["前期大概率先交学费", "需要先储备半年火把", "回撤明显，但认知会升级"]);
@@ -583,44 +625,94 @@ function buildPaths(a, score) {
   return [
     {
       tone: "green",
-      name: "A线 · 稳定路径",
-      short: "稳定线",
-      summary: `如果先守住当前章节，你会把「${trouble}」压到后台运行。${industryLens.stable}${stateLens.stable}${resourceLens.stable}`,
+      name: "A线 · 守城线",
+      short: "守城线",
+      summary: `这条路不是“什么都不做”，而是先把基本盘修稳。适合你在 ${decision.stableWhen} 时选择：继续积累信用、现金流和体力，同时留意「${trouble}」有没有反复回来。${industryLens.stable}${resourceLens.stable}`,
+      mobile: `先稳现金流和体力，观察「${trouble}」是不是周期性反复。`,
       income: stableIncome,
-      risk: pickBySeed("stable-risk", a, ["暗线：热情被日常慢慢磨钝", "暗线：习惯会伪装成安全", "暗线：机会可能从旁边经过"]),
+      risk: pickBySeed("stable-risk", a, ["提醒：别把习惯误读成安全", "提醒：稳定也要给自己留窗口", "提醒：机会可能从旁边经过"]),
       years: [
-        { year: "第1年", title: "先稳住基本盘", copy: "收入和生活节奏更可控，适合补现金流、补技能短板。" },
-        { year: "第2年", title: "信用继续复利", copy: "人脉、经验和组织信任会变厚，但新鲜感下降。" },
-        { year: "第3年", title: "看见稳定的价格", copy: "你会更安全，也更容易意识到哪些愿望被搁置了。" },
+        { year: "0-6个月", title: "修基本盘", copy: `先处理最吵的变量：${decision.firstRepair}。` },
+        { year: "6-18个月", title: "攒可迁移筹码", copy: "让作品、客户、证书、人脉或关键项目变得可展示。" },
+        { year: "18个月后", title: "决定是否开门", copy: "如果心里的噪音仍在，就不是累，是方向需要复盘。" },
       ],
     },
     {
       tone: "blue",
-      name: "B线 · 优化路径",
-      short: "优化线",
-      summary: `如果开启一条可控支线，系统建议先做小型试炼。${industryLens.optimize}${stateLens.optimize}${resourceLens.optimize}`,
+      name: "B线 · 点灯线",
+      short: "点灯线",
+      summary: `这条路最适合当前的你：不立刻掀桌，而是拿一个真实世界的小实验照亮下一步。${industryLens.optimize}${stateLens.optimize}${resourceLens.optimize}`,
+      mobile: `做一个小实验，比反复想更快知道路有没有亮。`,
       income: optimizeIncome,
       risk: pickBySeed("opt-risk", a, ["通关条件：把技能筹码摆上桌面", "通关条件：给试错设置截止日", "通关条件：先拿到真实反馈"]),
       years: [
-        { year: "第1年", title: "开一条低风险支线", copy: "用面试、项目、副业或转岗试水，不急着把桌子掀翻。" },
-        { year: "第2年", title: "把反馈变成筹码", copy: "如果市场回应不错，你会拿到更清楚的议价点。" },
-        { year: "第3年", title: "形成新站位", copy: "适合从“想改变”走到“有证据地改变”。" },
+        { year: "7天", title: "问一个真实的人", copy: decision.smallStep },
+        { year: "30天", title: "拿一次反馈", copy: "面试、试稿、试合作、内部沟通，至少完成一种。" },
+        { year: "90天", title: "决定加码或收回", copy: "有证据就加码，没反馈就换实验，不和情绪硬耗。" },
       ],
     },
     {
       tone: "red",
-      name: "C线 · 重构路径",
-      short: "重构线",
-      summary: `如果选择重构，这不是简单换工作，而像换一套角色职业。${industryLens.rebuild}${stateLens.rebuild}${resourceLens.rebuild}`,
+      name: "C线 · 换地图线",
+      short: "换地图线",
+      summary: `这条路不是不能走，但它会先扣安全感，再给上限。只有当你已经写清止损线、现金流和学习成本时，它才像选择，不像逃离。${industryLens.rebuild}${stateLens.rebuild}${resourceLens.rebuild}`,
+      mobile: `能改写身份，但先写清止损线和现金流。`,
       income: rebuildIncome,
       risk: pickBySeed("rebuild-risk", a, ["雾区等级：高", "代价：安全感会先被扣血", "提醒：先画止损线再进雾"]),
       years: [
-        { year: "第1年", title: "进入雾区", copy: "不确定性会先变大，最容易怀疑自己选错了。" },
-        { year: "第2年", title: "重建技能和信用", copy: "开始知道新地图的规则，也会为旧经验重新定价。" },
-        { year: "第3年", title: "上限打开或止损回城", copy: "它不是最舒服的线，但最可能改写身份叙事。" },
+        { year: "前3个月", title: "雾最大", copy: "信息混乱，容易后悔，所以先保留回城路线。" },
+        { year: "3-12个月", title: "重建定价", copy: "旧经验要翻译成新地图听得懂的语言。" },
+        { year: "第2年后", title: "身份重写", copy: "若跑通，你会换一套叙事；若没跑通，也会知道边界。" },
       ],
     },
   ];
+}
+
+function getDecisionLens(a, score, reference = getReferenceProfile(a)) {
+  const trouble = Array.isArray(a.troubles) && a.troubles.length ? a.troubles[0] : "这件事";
+  const stableWhen = score.pressure > 70 ? "压力很高、判断力被噪音占满" : "还能积累资源、但需要保留选择权";
+  const firstRepair = score.wealth < 46 ? "现金流" : score.pressure > 70 ? "睡眠和精力" : (reference.trouble?.label || trouble);
+  const smallSteps = {
+    "职业去留": "找两位同行聊真实岗位，不只看招聘 JD。",
+    "方向重选": "列出新方向最小入场券：课程、作品、证书或人脉。",
+    "自己做事": "先卖一个很小的服务或产品，不急着注册一家公司。",
+    "钱不够稳": "把未来三个月固定支出写出来，先算能承受多大波动。",
+    "意义感变低": "记录一周里让你有能量的任务，别只记录让你耗尽的任务。",
+    "关系消耗": "先划出一个不解释的边界，看看对方如何反应。",
+    "未来看不清": "把最担心的三件事写成可验证问题，而不是抽象恐惧。",
+  };
+  return { stableWhen, firstRepair, smallStep: reference.trouble?.next || smallSteps[trouble] || "找一个真实场景试一下，不要只在脑内推演。" };
+}
+
+function getReferenceProfile(a) {
+  const db = referenceInsights || {};
+  const troubleKey = Array.isArray(a.troubles) && a.troubles.length ? a.troubles[0] : "未来看不清";
+  const age = db.age?.[a.age] || fallbackReference("age", a.age);
+  const city = db.city?.[a.city] || fallbackReference("city", a.city);
+  const industry = db.industry?.[a.industry] || fallbackReference("industry", a.industry);
+  const trouble = db.troubles?.[troubleKey] || fallbackReference("trouble", troubleKey);
+  const resource = db.resources?.[a.resources] || fallbackReference("resource", a.resources);
+  return {
+    age,
+    city,
+    industry,
+    trouble,
+    resource,
+    benchmark: `同阶段参考：${age.sample}${city.signal ? ` 你所在的${city.label}还会放大这一点：${city.signal}` : ""}`,
+    guardrail: `${resource.guardrail || "先确认安全垫，再决定动作大小。"} ${trouble.metric || "把问题写成可验证条件。"}`,
+    next: trouble.next || resource.experiment || "先做一次低成本验证。",
+  };
+}
+
+function fallbackReference(type, value = "") {
+  const common = {
+    age: { label: value || "当前阶段", sample: "常见卡点是想要改变，但缺少足够真实的反馈。", window: "适合先做小实验，再决定是否加码。" },
+    city: { label: value || "当前地图", signal: "机会和消耗会同时影响你的判断。", cost: "需要把现实成本写清楚。" },
+    industry: { label: value || "当前行业", asset: "可迁移能力、真实作品和人脉反馈是核心筹码。", risk: "最大风险是只在脑内推演，不去拿市场反馈。" },
+    trouble: { label: value || "当前问题", metric: "重点看它是信息不足、资源不足，还是精力不足。", next: "把它拆成一个 7 天内能验证的小动作。" },
+    resource: { label: value || "当前缓冲", guardrail: "先确认安全垫，再决定动作大小。", experiment: "适合做轻量、短周期的验证。" },
+  };
+  return common[type];
 }
 
 function getIndustryLens(industry = "") {
@@ -648,25 +740,47 @@ function pickBySeed(label, a, list) {
   return list[Math.abs(hash(`${label}-${JSON.stringify(a)}`)) % list.length];
 }
 
-function getResultNarrative(a, playerType, fate, pressure) {
+function getResultNarrative(a, playerType, fate, pressure, reference = getReferenceProfile(a)) {
   const trouble = Array.isArray(a.troubles) && a.troubles.length ? a.troubles[0] : "未来不确定";
+  const secondTrouble = Array.isArray(a.troubles) && a.troubles[1] ? a.troubles[1] : "选择成本";
+  const state = a.state || "当前章节";
   const pressureLine = pressure > 70 ? "先不要把短期焦虑误读成长期命令。" : "你现在适合让直觉和证据一起上桌。";
+  const headline = pickBySeed("headline", a, [
+    `你不是卡住，你是在等证据`,
+    `你真正缺的不是答案，是一盏近一点的灯`,
+    `这不是单选题，是一场低成本侦察`,
+    `你的局面需要先降雾，再做决定`,
+  ]);
+  const tension = pickBySeed("tension", a, [
+    `表面问题是「${trouble}」，底层拉扯更像「${secondTrouble}」和安全感之间的拔河。`,
+    `你现在的状态是「${state}」：能量没有完全熄灭，但已经不想再靠忍耐通关。`,
+    `沙盘读到的不是逃跑信号，而是你想重新确认投入是否值得。`,
+    `你不是没有行动力，是每一步背后的代价还没被写清楚。`,
+  ]);
+  const actionShort = getDecisionLens(a, { pressure, wealth: 50 }, reference).smallStep;
   return {
-    seen: `沙盘先读到「${trouble}」，再读到你停在「${a.state || "当前章节"}」。这说明问题不是简单逃离，而是你需要重新确认哪条路还值得投入。`,
-    key: `重点：你更像${playerType}。真正要判断的不是“敢不敢变”，而是“用多大成本换多大可能”。`,
-    action: `下一步：把${trouble}拆成一个 7 天内可验证的小动作。${pressureLine}`,
-    sign: `签面「${fate.sign}」的提醒：${fate.oracle}`,
+    headline,
+    tension,
+    reference: `参考读取：${reference.age.label}、${reference.city.label}、${reference.industry.label}叠在一起时，最该先看的不是“要不要立刻改变”，而是「${reference.trouble.label}」背后的成本结构。${reference.guardrail}`,
+    seen: `沙盘先读到「${trouble}」，再读到你停在「${state}」。所以这次不是要立刻选边站，而是先分清：哪一部分是现实限制，哪一部分只是雾。`,
+    key: `你更像${playerType}。重点不是“敢不敢变”，而是“能不能用可承受的成本，换到足够真实的反馈”。`,
+    action: `把「${trouble}」拆成一个 7 天内能完成的小验证：${actionShort}${pressureLine}`,
+    actionShort,
+    sign: `签面「${fate.sign}」提醒你：${fate.oracle}`,
   };
 }
 
 function renderResultNarrative(narrative) {
   return `
     <span>魔法师批注</span>
+    <h3>${narrative.headline}</h3>
+    <p class="narrative-lead">${narrative.tension}</p>
     <div class="narrative-points">
-      <p><b>看见</b>${narrative.seen}</p>
-      <p><b>重点</b>${narrative.key}</p>
-      <p><b>可做</b>${narrative.action}</p>
-      <p><b>签面</b>${narrative.sign}</p>
+      <div class="narrative-card focus"><b>参考</b><p>${narrative.reference}</p></div>
+      <div class="narrative-card"><b>看见</b><p>${narrative.seen}</p></div>
+      <div class="narrative-card"><b>重点</b><p>${narrative.key}</p></div>
+      <div class="narrative-card"><b>可做</b><p>${narrative.action}</p></div>
+      <div class="narrative-card"><b>签面</b><p>${narrative.sign}</p></div>
     </div>
   `;
 }
@@ -783,14 +897,18 @@ function formatCastTime(date) {
 
 function pickEvents(a, risk) {
   const pool = [
-    { text: "一次关键谈话改变你看路的角度", base: 42, tone: "warm" },
-    { text: "当前行业出现一次明显转向", base: 36, tone: "blue" },
-    { text: "副业或项目机会在夜里亮起", base: 31, tone: "gold" },
-    { text: "家庭或关系议题临时加重", base: 28, tone: "red" },
-    { text: "旧技能碰到透明天花板", base: 47, tone: "red" },
-    { text: "熟人递来一张新地图入场券", base: 24, tone: "gold" },
-    { text: "现金流提醒你暂时放慢脚步", base: 40, tone: "warm" },
-    { text: "一个被你低估的能力开始变值钱", base: 34, tone: "blue" },
+    { text: "有人把一个真实机会递到你面前，但它不会包装得很完美", base: 42, tone: "warm" },
+    { text: "行业风向有一次小转弯，旧经验需要换一种说法", base: 36, tone: "blue" },
+    { text: "副业或项目线索出现，适合先试卖一次，不适合立刻豪赌", base: 31, tone: "gold" },
+    { text: "家庭或关系议题临时加重，影响你做决定的速度", base: 28, tone: "red" },
+    { text: "旧技能撞到天花板，逼你补一个新筹码", base: 47, tone: "red" },
+    { text: "熟人带来一张入场券，但真正的门槛在后面", base: 24, tone: "gold" },
+    { text: "现金流提醒你放慢脚步，先算能承受几个月波动", base: 40, tone: "warm" },
+    { text: "一个被你低估的能力开始变值钱，值得重新包装", base: 34, tone: "blue" },
+    { text: "一次面试或聊天让你意识到，外面的标价和想象不同", base: 38, tone: "blue" },
+    { text: "你会突然厌倦原来的叙事，但这未必等于必须离开", base: 33, tone: "warm" },
+    { text: "某个长期搁置的技能开始召唤你，像旧抽屉里亮起的符号", base: 29, tone: "gold" },
+    { text: "压力在某个普通工作日集中爆发，提醒你该修系统了", base: 44, tone: "red" },
   ];
   const offset = Math.abs(hash(`${a.state}${a.resources}${risk}`)) % pool.length;
   return [0, 1, 2, 3].map((i) => {
