@@ -10,6 +10,7 @@ const questions = [
     key: "city",
     title: "你现在所在的城市层级是？",
     hint: "不用精确到城市名。系统只读取机会密度、生活成本和转身难度。",
+    compact: true,
     options: ["一线城市", "新一线城市", "二线城市", "三四线城市", "县城/小城", "海外/流动中"],
     descriptions: ["如北上广深：机会密，消耗也高", "如杭州/成都/南京：上升通道多，节奏分化", "省会或强区域城市：稳定与机会并存", "熟人网络更强，转换成本更低", "生活半径小，安全感和天花板同时存在", "坐标不固定，人生地图正在重绘"],
   },
@@ -17,6 +18,7 @@ const questions = [
     key: "industry",
     title: "你的主要工作场域更接近哪类？",
     hint: "选最像你日常的那一类，不需要完全准确。系统会用它判断增长速度和抗风险方式。",
+    compact: true,
     options: ["互联网/AI/产品技术", "金融/咨询/专业服务", "消费/品牌/运营销售", "制造/供应链/工程", "教育/医疗/公共服务", "内容/设计/自由职业", "体制内/国企/稳定组织", "其他/复合职业"],
     descriptions: ["变化快，技能迭代压力明显", "结果导向强，资源和人脉权重高", "靠市场嗅觉、表达和执行吃饭", "重流程、重经验、重长期积累", "责任感强，节奏更受制度影响", "自由度更高，收入波动也更真实", "稳定性更强，突破常在边界之外", "身份不止一种，系统按复合路径读取"],
   },
@@ -61,6 +63,7 @@ const questions = [
     key: "resources",
     title: "如果你想试错，手里有哪些缓冲？",
     hint: "这里读的是安全垫，不是评判。选最接近你现在真实情况的一项。",
+    compact: true,
     options: ["几乎没缓冲", "能撑1-3个月", "能撑3-6个月", "有副业/项目收入", "家人能托底", "现金流比较稳"],
     descriptions: ["例：存款少，断收入会立刻紧张", "例：短期空窗可以扛，但不能拖太久", "例：能认真试一轮，但需要计划", "例：主业外已有一点收入或客户线索", "例：必要时家里能帮一把或住回去", "例：存款/收入足够给选择留余地"],
   },
@@ -91,19 +94,197 @@ let liveStats = { total: 100, generated: 0, events: [] };
 let referenceInsights = null;
 
 const fateLibrary = [
-  { sign: "风起未定", tag: "巽风之象", symbol: "△", oracle: "风先到，路还没有完全显形。适合听信号，不适合急着拍板。" },
-  { sign: "山行有阻", tag: "艮山之象", symbol: "◇", oracle: "山挡在前面，不是让你退回去，而是让你确认装备够不够。" },
-  { sign: "三岔之局", tag: "择路之象", symbol: "✦", oracle: "你站在岔口太久了，真正耗你的不是路少，而是每条路都有代价。" },
-  { sign: "灯下见门", tag: "震雷之象", symbol: "◎", oracle: "门已经出现，但还需要一次小动作把它推开。" },
-  { sign: "水面藏桥", tag: "坎水之象", symbol: "◌", oracle: "表面像没路，其实桥在水下。先降噪，路会浮出来。" },
-  { sign: "地势回声", tag: "坤地之象", symbol: "□", oracle: "你需要的不是更猛，而是把地基垫厚，让下一步站得住。" },
-  { sign: "火照旧卷", tag: "离火之象", symbol: "✧", oracle: "旧问题被照亮了。你不是第一次遇见它，只是这次看得更清楚。" },
-  { sign: "雷在远处", tag: "震动之象", symbol: "☉", oracle: "变化还没落地，但声音已经传来。准备比冲刺更重要。" },
-  { sign: "泽边新盟", tag: "兑泽之象", symbol: "◈", oracle: "有人的一句话、一个邀请，可能成为你下一段路的开端。" },
-  { sign: "天光压顶", tag: "乾天之象", symbol: "✶", oracle: "上限正在召唤你，但别让野心把呼吸感挤没。" },
-  { sign: "雾里留灯", tag: "守灯之象", symbol: "◍", oracle: "不确定不是失败。你现在最该保住的是那一点还没灭的光。" },
-  { sign: "星落背包", tag: "蓄资之象", symbol: "✹", oracle: "先清点手里的筹码。真正能让你转身的，是可用资源。" },
+  {
+    sign: "风起未定",
+    tag: "巽风之象",
+    symbol: "△",
+    oracle: "风先到，路还没有完全显形。适合听信号，不适合急着拍板。",
+    story: "山谷里先起了一阵风，草叶倒向同一边，但远处的路牌还没露出来。守夜人没有立刻启程，他把灯举高，等第二阵风吹过：如果两次风向一致，才说明这不是错觉。",
+    reading: "这卦像一个早到的消息：你已经感觉到变化，但证据还不够厚。现在最有价值的不是勇敢宣布决定，而是连续观察几个信号是否指向同一处。",
+    action: "接下来三天，只记录真实信号：谁邀请你、哪个机会反复出现、哪件事让你身体先紧起来。不要只听脑内辩论。",
+    warning: "忌把一时兴奋当成天命，也忌因为还没看清就假装什么都没发生。",
+  },
+  {
+    sign: "山行有阻",
+    tag: "艮山之象",
+    symbol: "◇",
+    oracle: "山挡在前面，不是让你退回去，而是让你确认装备够不够。",
+    story: "一行人走到山腰，雾忽然压下来，前路只剩半截石阶。急的人想硬闯，老向导却先蹲下检查鞋底和水囊。他知道，山不是在拒绝人，山只是在筛掉没准备好的人。",
+    reading: "这卦不是坏兆头，它更像一道门槛。你遇到的阻力未必说明方向错了，可能是在提醒：资源、技能、体力或退路还差一块。",
+    action: "先补一件装备：钱、作品、证明、联系人或睡眠。补齐之后再看这座山是不是还那么高。",
+    warning: "忌用蛮力证明自己，也忌把所有阻碍都解释成命不好。",
+  },
+  {
+    sign: "三岔之局",
+    tag: "择路之象",
+    symbol: "✦",
+    oracle: "你站在岔口太久了，真正耗你的不是路少，而是每条路都有代价。",
+    story: "夜市散去后，路口剩下三盏灯：一盏通向熟悉的城，一盏通向有声音的新门，一盏通向没人保证的荒地。占卦的人发现，自己不是不知道路，而是不愿承认每盏灯都会拿走一样东西。",
+    reading: "这卦点破的是选择成本。你需要的不是更多选项，而是承认哪一种代价你更愿意付：慢一点、累一点，还是不确定一点。",
+    action: "把三个选项各写一句最真实的代价。能接受代价的那条路，才有资格进入下一轮。",
+    warning: "忌继续收集选项来拖延，也忌因为怕后悔就把决定交给别人。",
+  },
+  {
+    sign: "灯下见门",
+    tag: "震雷之象",
+    symbol: "◎",
+    oracle: "门已经出现，但还需要一次小动作把它推开。",
+    story: "旧书房里有一面墙，白天看只是墙。夜里烛火偏了一寸，墙缝里露出铜色门环。它并不轰鸣，也不召唤，只安静地等一个人伸手试一下。",
+    reading: "这卦主显现。你可能已经拥有入口，只是把它当成普通线索忽略了。一次聊天、一次投递、一个小项目，都可能是门环。",
+    action: "今天推一扇小门：发出一条消息、投一次简历、约一次沟通，目标不是成功，是确认门后有没有回声。",
+    warning: "忌等到万事俱备才行动；门会先开一条缝，不会先给你完整地图。",
+  },
+  {
+    sign: "水面藏桥",
+    tag: "坎水之象",
+    symbol: "◌",
+    oracle: "表面像没路，其实桥在水下。先降噪，路会浮出来。",
+    story: "渡口没有船，水面也没有桥。少年急着喊人，老人却把灯放低，照见水下排列整齐的石墩。桥一直在，只是水声太响，人心太急。",
+    reading: "这卦说的是隐藏通道。你以为自己没有路，可能只是信息太吵、情绪太满，导致看不见已经存在的资源。",
+    action: "先做一次降噪：删掉最吵的假问题，只保留一个真正要验证的事实。桥会从事实里浮出来。",
+    warning: "忌在恐慌里做决定。水浑的时候，最贵的动作就是猛跳。",
+  },
+  {
+    sign: "地势回声",
+    tag: "坤地之象",
+    symbol: "□",
+    oracle: "你需要的不是更猛，而是把地基垫厚，让下一步站得住。",
+    story: "一个人想在雨季盖塔，木料、图纸、旗帜都准备好了，唯独地基还湿。泥土没有说“不许”，它只是每踩一步都回一声闷响：先压实我，再谈高度。",
+    reading: "这卦重地基。眼下不适合靠激情冲高，更适合把现金流、节奏、身体、基本能力补稳。慢不是退，是让未来不塌。",
+    action: "先完成一个基础修复：整理账本、固定作息、补核心技能、清理一个长期拖着的责任。",
+    warning: "忌嫌基础动作不够酷。很多转机不是从高光开始，是从不再漏水开始。",
+  },
+  {
+    sign: "火照旧卷",
+    tag: "离火之象",
+    symbol: "✧",
+    oracle: "旧问题被照亮了。你不是第一次遇见它，只是这次看得更清楚。",
+    story: "火光落在一卷旧纸上，纸边已经发黄。占卦的人才看见，自己以为的新困境，三年前就写过一遍，只是那时用的是别的名字。火不是烧毁它，火是让字迹显形。",
+    reading: "这卦主复现。现在困扰你的事，可能不是偶发，而是一种反复出现的模式：讨好、拖延、害怕失去、或总在临门一脚撤退。",
+    action: "回看过去三次相似情境：你每次在哪里退缩，在哪里硬撑，在哪里没有说真话。答案藏在重复里。",
+    warning: "忌只怪外部环境。旧卷重现，是因为有一段内在脚本还没改写。",
+  },
+  {
+    sign: "雷在远处",
+    tag: "震动之象",
+    symbol: "☉",
+    oracle: "变化还没落地，但声音已经传来。准备比冲刺更重要。",
+    story: "远山后滚来第一声雷，城里的人还在晾衣服。懂天气的人不会马上逃跑，也不会继续装作晴天，他先收衣、关窗、备灯。雷声给的不是恐吓，是提前量。",
+    reading: "这卦主预兆。变化未必马上发生，但行业、关系、收入或内心已经有声音。你现在要做的是预备，不是表演镇定。",
+    action: "列一张预备清单：如果三个月内真的变化，你最先需要哪三样东西？先准备第一样。",
+    warning: "忌等雷劈到门口才相信天气变了。也忌听见雷声就把房子拆掉。",
+  },
+  {
+    sign: "泽边新盟",
+    tag: "兑泽之象",
+    symbol: "◈",
+    oracle: "有人的一句话、一个邀请，可能成为你下一段路的开端。",
+    story: "泽边有两个人交换火种，一个人以为自己只是借了火，后来才发现那晚的谈话改了路线。真正的机会不总是像公告，它有时像一句随口的“要不要一起试试”。",
+    reading: "这卦重人和。你当前的突破口可能不在独自苦想，而在新的连接、旧关系的新用法，或一次高质量对话。",
+    action: "找一个能给真实反馈的人，不求安慰，只问：如果是你，会先验证哪一步？",
+    warning: "忌只找认同你的人。真正有用的盟友，会温和但准确地指出盲点。",
+  },
+  {
+    sign: "天光压顶",
+    tag: "乾天之象",
+    symbol: "✶",
+    oracle: "上限正在召唤你，但别让野心把呼吸感挤没。",
+    story: "高塔顶端有光，年轻的法师一路往上跑，跑到胸口发紧才发现：光不是奖杯，是考题。越接近高处，越要知道自己为什么上去，否则塔会把人变成影子。",
+    reading: "这卦主上限与压力同来。你可能正在被更大的舞台吸引，但也容易把价值感全部押在结果上。野心可以有，呼吸也要有。",
+    action: "给野心写边界：你愿意为它投入什么，不愿意牺牲什么。没有边界的上升，会变成消耗。",
+    warning: "忌用更高目标惩罚现在的自己。上限不是绞索，是方向。",
+  },
+  {
+    sign: "雾里留灯",
+    tag: "守灯之象",
+    symbol: "◍",
+    oracle: "不确定不是失败。你现在最该保住的是那一点还没灭的光。",
+    story: "雾夜里，灯塔的光并不能照完整片海，只能一圈一圈扫过去。船长没有因此骂灯太小，他知道，只要光还在，船就不会把恐惧误认成方向。",
+    reading: "这卦很温柔，也很清醒。你现在也许看不远，但不代表走错。先保住让你还愿意继续的东西，判断力会慢慢回来。",
+    action: "别急着定终局。先做一件能恢复能量的小事，再处理一个能减少混乱的小决定。",
+    warning: "忌在低能量时给人生下重判。雾天不适合审判自己，适合守灯。",
+  },
+  {
+    sign: "星落背包",
+    tag: "蓄资之象",
+    symbol: "✹",
+    oracle: "先清点手里的筹码。真正能让你转身的，是可用资源。",
+    story: "流星落进旅人的背包，他以为那是神谕，打开一看，却是一枚很实用的指南针。命运有时不直接给答案，只提醒你：先看看自己已经带了什么。",
+    reading: "这卦主资源盘点。与其问能不能赢，不如先问：我现在有什么钱、技能、人脉、时间、退路？答案不在天上，在背包里。",
+    action: "今晚列出五个筹码：可用存款、可迁移技能、能请教的人、可展示作品、最坏情况下的退路。",
+    warning: "忌空手谈重启。真正的转身不是热血，是筹码摆齐之后的从容。",
+  },
 ];
+
+const hexagramLibrary = `
+乾为天|乾|天行刚健|天上有天，光从高处压下来。它问的不是你敢不敢，而是你有没有足够清醒地驾驭上升。|适合主动推进、争取资源、承担更大责任；先把目标写成可执行的三步。|忌只凭一口气硬冲，越是上升期越要留出休息和复盘。
+坤为地|坤|厚土承载|大地不催人，它只要求根扎稳。事情要成，先看承载力够不够。|先补地基：现金流、身体、基本功、稳定关系；让下一步站得住。|忌嫌慢，地基没干就盖高楼，后面每一步都会晃。
+水雷屯|屯|草木初生|雷在水下，芽在土中，开局混乱不是坏事，是新局正在挤出来。|把大事拆小，从第一个真实反馈开始；先活下来，再谈漂亮。|忌一开始就要求顺利，初生之局最怕急着证明自己。
+山水蒙|蒙|雾中启蒙|山下有水，雾气绕路。你不是没答案，是还缺一位老师或一组事实。|去问懂行的人，补最关键的一课；把不知道的地方诚实列出来。|忌装懂，也忌把迷茫包装成命运。
+水天需|需|云上等雨|云在天上，雨还没落。等待不是停滞，是给条件成熟留位置。|先备粮、备证据、备选项；等窗口出现时能马上行动。|忌在焦虑里提前消耗，也忌什么都不准备地等。
+天水讼|讼|言语成刃|天与水相背，局里有争执、误会或利益边界。先分清问题再开口。|把诉求写清楚，用事实而不是情绪沟通；必要时请第三方校准。|忌争输赢忘了目标，也忌忍到最后一次爆发。
+地水师|师|众人列阵|地下有水，队伍在暗处集结。此局重组织、纪律和可依靠的人。|找盟友，定规则，分任务；不要一个人扛完整场仗。|忌没有章法地动员，也忌把所有人都当成救命绳。
+水地比|比|近水结盟|水贴着地流，靠近能滋养，也会暴露边界。关系是资源也是考题。|选择可靠的人同行，明确彼此能给什么、不能给什么。|忌为了被接纳而失去判断，也忌独自硬撑。
+风天小畜|小畜|风收云气|风在天上聚云，还没到大雨。小积累正在形成，但火候未足。|先攒作品、案例、存款或证据；让小筹码连续出现。|忌刚有苗头就全押，云还没厚到能下雨。
+天泽履|履|踏薄冰|天在上，泽在下，脚下很亮也很滑。礼数、边界、顺序比勇气更重要。|按规则试探，先走一步看一步；关键沟通留痕。|忌踩线、越级、赌对方会懂你的潜台词。
+地天泰|泰|天地相交|天地交泰，上下通气。事情有顺流感，适合把积累推出去。|抓住顺势窗口，主动发起合作、面试、发布或谈判。|忌舒服到忘记升级，顺风也要掌舵。
+天地否|否|门窗闭合|天地不交，话到不了、人也不动。堵住的局要先找通气口。|先换沟通对象或信息渠道；别在同一扇不开的门前耗尽自己。|忌把暂时不通解释成自己不行。
+天火同人|同人|火下聚众|火在天光下，人因共同目标聚到一起。此局利同行、社群、共同创作。|把你的目标说出来，找到同频的人共做一件小事。|忌为了合群稀释自己的核心判断。
+火天大有|大有|光照仓廪|火在天上，仓库被照亮。你手里其实有可用筹码，只是还没整理成牌。|盘点资源，把作品、经历、关系重新包装成可交换价值。|忌只盯缺的，忽略已经在手里的。
+地山谦|谦|山藏地下|高山藏在地里，实力不必喧哗。低姿态能换到更长的路。|用请教、协作、复盘打开局面；把锋芒用在作品里。|忌自我贬低，谦不是缩小自己。
+雷地豫|豫|雷出地上|雷声出地，心先动起来。兴奋有用，但需要节奏承接。|趁有能量先启动小项目，别把热情全花在宣布上。|忌只追即时爽感，三天热度不是长期动力。
+泽雷随|随|泽中听雷|雷在泽下，外界信号会牵动你。跟随可以，但要知道跟谁、为何。|观察趋势，选择一个值得跟进的样本或导师。|忌盲目追热点，别人的路不是你的命盘。
+山风蛊|蛊|旧器生虫|山下有风，旧系统里有虫。不是换个外壳就能好，要清理根部。|修旧账、旧习惯、旧关系模式；先处理腐坏处。|忌只做表面改版，真正的问题会换个名字回来。
+地泽临|临|岸边将近|地临泽上，机会靠近了。你需要靠前一点，而不是远远观望。|主动靠近机会，发消息、约面谈、试一次真实合作。|忌明明门开了还继续等待完美时机。
+风地观|观|登台观象|风行地上，适合站高一点看全局。先观察格局，再决定站位。|做一次行业/关系/现金流全景图，找出真正牵动全局的点。|忌只盯眼前一件烦心事。
+火雷噬嗑|噬嗑|咬开硬结|火与雷同来，局里有硬结，必须咬开才会通。|处理一个拖很久的冲突或决定，明确规则和代价。|忌绕开核心问题，越绕越耗。
+山火贲|贲|山中有光|山里有火，外观开始重要。表达、包装、作品呈现会改变别人看你的方式。|整理简历、作品集、主页或提案，让价值被看见。|忌只做漂亮表面，光下面仍要有山。
+山地剥|剥|墙皮剥落|山附地上，旧保护层正在脱落。失去一些东西，反而露出真实结构。|减少消耗，保核心资产；该断舍离的先断。|忌在剥落期还拼命维持体面。
+地雷复|复|一阳来复|雷藏地下，微小的生机回来了。它不大，但是真的。|抓住一个能恢复行动感的小习惯或小机会。|忌嫌起点太小，复苏本来就从一线开始。
+天雷无妄|无妄|不妄自求|天上有雷，意外会来，但不是所有意外都该追。守正比投机重要。|回到事实和初心，按正道做该做的事。|忌把偶然当神谕，也忌用幻想替代准备。
+山天大畜|大畜|山中蓄力|山蓄天光，大能量被收住。不是不能动，是先蓄够。|沉淀硬技能、资金、作品或资历；准备一次更大的跃迁。|忌急着释放，蓄力不足会让好机会变成消耗。
+山雷颐|颐|养口养心|山下有雷，先养自己，才有力气处理外界。输入质量决定输出质量。|调整作息、信息源和学习内容；少吃噪音，多补营养。|忌用垃圾信息喂养焦虑。
+泽风大过|大过|梁木将弯|泽灭木，梁承重过大。你扛得太多，结构已经变形。|减负、求助、重排优先级；先救承重梁。|忌继续硬扛来证明价值。
+坎为水|坎|重水险行|水上加水，险处有险。不是不能过，而是要一格一格踩稳。|先识别风险源，做预案和止损线；小步过水。|忌在恐惧中猛跳，也忌假装水不深。
+离为火|离|双火照明|火上加火，事情被照得很亮。适合看清，也容易灼伤。|把事实摆出来，做清晰表达；让模糊处显形。|忌过度曝光或情绪上头。
+泽山咸|咸|心有所感|泽在山上，感应先于决定。有人、某件事或某条路正在触动你。|承认触动，再用事实校验；别压掉第一反应。|忌只凭心动做终局决定。
+雷风恒|恒|风雷长行|雷风相随，贵在持续。真正改变来自稳定重复，而不是戏剧性一跳。|建立一套能坚持四周的小系统。|忌三天换方向，恒心不是麻木，是有节奏。
+天山遁|遁|高处退身|天在山上，退不是输，是保全判断力。此局宜暂避锋芒。|先离开消耗场，保留资源和体面，再谋下一步。|忌把撤退当失败，也忌逃避该面对的账。
+雷天大壮|大壮|雷行天上|力量很足，声势也大。适合推进，但要有度。|把能量用在关键突破口，不要四处开战。|忌有力就乱撞，壮大最怕失控。
+火地晋|晋|日出地上|太阳升起，能见度提升。适合展示、晋级、争取更高位置。|把成果拿出来，主动争取评价、晋升或曝光。|忌躲在幕后等别人自动看见。
+地火明夷|明夷|光入地下|光被压在地里，外部环境不一定友善。先护住内在火种。|低调保存实力，减少正面冲突，等环境转向。|忌在不合适的场域证明自己。
+风火家人|家人|火在风中|家与团队是系统，不只是情绪。边界清楚，关系才有温度。|重新约定分工、期待和边界。|忌用沉默让别人猜你的需要。
+火泽睽|睽|火泽相背|火向上，泽向下，双方看法不合。分歧不是灾，是提醒你换角度。|先确认目标是否一致，再谈方法；允许不同立场存在。|忌为了统一而压扁真实差异。
+水山蹇|蹇|雪路难行|水在山上，路难走。此局不宜硬冲，宜借力和绕行。|找辅助路线：请教、合作、延后、减负。|忌把艰难误认为自己无能。
+雷水解|解|雷雨初散|雷动水上，结开始松。解决不是一刀切，是一点点解绑。|处理最容易解开的那个结，先让系统恢复流动。|忌把所有问题捆成一个巨兽。
+山泽损|损|有所减损|山下有泽，少一点反而清楚。减法会带来空间。|砍掉一个消耗项，把精力让给真正重要的事。|忌什么都想保留，背包太满就走不远。
+风雷益|益|风雷相助|风雷互助，增益来自行动和流动。越动越有资源。|主动输出、连接、交换，让资源在流动中变多。|忌闭门等好运，益卦怕停。
+泽天夬|夬|决口将开|泽上于天，水快溢出。该决断的事不能再拖。|说清决定，划出边界，给事情一个明确出口。|忌继续模糊，模糊会变成更大的决裂。
+天风姤|姤|偶遇来风|天下有风，偶遇带来变量。机会突然出现，但要辨别质量。|接触新机会，但先验真伪、看代价。|忌被新鲜感牵走全部判断。
+泽地萃|萃|人群聚集|泽在地上，人和资源聚到一起。此局利集结、活动、社群。|去到人群里，让别人知道你在做什么。|忌只围观不表达，资源不会自动认出你。
+地风升|升|木从地起|风木自地下升。上升是渐进的，不靠一夜翻盘。|选一条可持续上升曲线，坚持打磨和递进。|忌看不起慢增长，很多高处是一步步长出来的。
+泽水困|困|泽中无水|泽里缺水，外表还在，内里已耗。先承认困，再找出口。|减少承诺，补能量，找能给你水的人和事。|忌在枯竭时继续扮演丰盛。
+水风井|井|古井有泉|水在木上，井还在，只是需要修。旧资源可再用。|回到长期资产：专业、人脉、作品、信用，重新打井。|忌嫌旧资源普通，井水靠维护不是靠惊艳。
+泽火革|革|火炼旧皮|泽中有火，旧皮要换。变革会痛，但也会让形态更新。|选一个必须改的制度、身份或习惯，设定过渡期。|忌只喊改变，不设计承接结构。
+火风鼎|鼎|新器成形|火在风上，鼎成。适合把散乱材料炼成新作品、新身份。|整理方法论，做一个可展示的成果。|忌一直准备食材，却不真正开火。
+震为雷|震|雷声惊醒|雷上雷下，惊动很强。先稳住，再行动。|把突发消息转成清单：事实、影响、下一步。|忌被第一声雷吓到乱跑。
+艮为山|艮|止于其所|山上有山，止是智慧。该停的地方要停。|暂停无效消耗，守住边界，给判断力回血。|忌把停止误会成失败，止住才能看清。
+风山渐|渐|雁行渐进|风过山，雁一程一程飞。此局宜循序渐进。|给目标排阶段，不求一步到位。|忌拿别人的速度惩罚自己的节奏。
+雷泽归妹|归妹|仓促成约|雷动泽上，关系或合作来得快。心动之外要看结构。|看清角色、资源、责任，再决定是否进入。|忌因气氛热烈就答应长期绑定。
+雷火丰|丰|雷火盛大|雷火同明，局面很盛，信息也很满。适合收获，也要防过载。|抓关键成果，不要同时接太多舞台。|忌高峰期贪多，丰盛也会压垮人。
+火山旅|旅|旅人借宿|火在山上，人在途中。此局重临时性、适应力和边界。|把自己当旅人：轻装、观察、借力，不急着定居。|忌在临时局里投入永久成本。
+巽为风|巽|风入缝隙|风上风下，柔而能入。持续渗透比硬碰更有效。|用沟通、作品、长期出现一点点打开局。|忌太急着要结果，风靠持续不靠蛮力。
+兑为泽|兑|泽上有悦|泽上泽下，喜悦和表达能开局。轻松不是浅，真实的愉悦有方向。|找回让你愿意表达的事情，用对话打开机会。|忌用讨好换愉快，真正的悦不该透支自己。
+风水涣|涣|风散水面|风行水上，散开旧结。适合破冰、换气、重新流动。|先把卡住的事说开或拆开，让系统恢复流动。|忌继续憋着，水面不动会发闷。
+水泽节|节|水有堤岸|水在泽上，节制带来自由。边界不是限制，是让水不泛滥。|设预算、时间盒、沟通边界和试错期限。|忌把自由理解成无限消耗。
+风泽中孚|中孚|风过泽心|风在泽上，诚意能抵达人心。此局重信任和真实表达。|说真话，给证据，建立可信关系。|忌包装过度，别人会先感到不真。
+雷山小过|小过|小鸟过山|雷在山上，小事可以过，大事宜慎。先做小通过，不求大翻盘。|从小动作、小承诺、小验证开始。|忌小题大做，也忌大事草率。
+水火既济|既济|水火已交|水火相济，阶段性完成。完成之后更要维护。|复盘成果，修补漏洞，别马上开新战场。|忌以为完成就永远安全，已济之后仍会变。
+火水未济|未济|火水未交|火在水上，最后一段还没合上。未完成不是失败，是提醒你补最后一环。|找出离完成最近的缺口，补上一个关键动作。|忌临门一脚分心，最末段最考验稳定。
+`.trim().split("\n").map((line, index) => {
+  const [sign, tag, image, oracle, action, warning] = line.split("|");
+  return { sign, tag, image, oracle, action, warning, symbol: ["☰", "☷", "☵", "☲", "☳", "☶", "☴", "☱"][index % 8] };
+});
 
 window.addEventListener("DOMContentLoaded", () => {
   loadReferenceInsights();
@@ -352,7 +533,7 @@ function generateResult(a) {
 
   const events = pickEvents(a, risk);
   const saveId = `LV${ageLevel} · ${city} · ${playerType}`;
-  const narrative = getResultNarrative(a, playerType, fate, pressure, reference);
+  const narrative = getResultNarrative(a, playerType, fate, pressure, reference, { risk, wealth, growth, stability, paths });
   const persona = getPlayerPersona(playerType);
   const shareStory = getShareStory(a, playerType, fate, pressure);
   const shareLine = pressure > 70 ? "你不是没有路，只是雾太大，先把火把点亮。" : "人生不是选择题，是一局可以读档的长线游戏。";
@@ -477,22 +658,27 @@ function renderResult(data, options = {}) {
 function renderMobileConclusion(data) {
   const firstPath = data.paths[1] || data.paths[0];
   const next = data.narrative?.actionShort || data.narrative?.action || `先把「${data.fate.sign}」对应的问题拆成一个小动作。`;
-  const benchmark = data.reference?.benchmark || data.narrative.tension;
+  const benchmark = data.narrative?.decision || data.reference?.benchmark || data.narrative.tension;
   return `
     <div class="mobile-conclusion" data-mobile-conclusion>
       <div class="mobile-conclusion-main">
-        <span>参考读取</span>
+        <span>本次主判</span>
         <strong>${data.narrative.headline}</strong>
         <p>${benchmark}</p>
       </div>
       <div>
-        <span>更值得先试</span>
+        <span>先走哪步</span>
+        <strong>${data.narrative.firstMoveTitle}</strong>
+        <p>${data.narrative.firstMove}</p>
+      </div>
+      <div>
+        <span>路径建议</span>
         <strong>${firstPath.short}</strong>
         <p>${firstPath.mobile || firstPath.summary}</p>
       </div>
       <div>
-        <span>下一步</span>
-        <strong>先点一盏小灯</strong>
+        <span>7日验证</span>
+        <strong>不要空想</strong>
         <p>${next.replace(/^下一步：/, "")}</p>
       </div>
     </div>
@@ -627,7 +813,7 @@ function buildPaths(a, score, reference = getReferenceProfile(a)) {
       tone: "green",
       name: "A线 · 守城线",
       short: "守城线",
-      summary: `这条路不是“什么都不做”，而是先把基本盘修稳。适合你在 ${decision.stableWhen} 时选择：继续积累信用、现金流和体力，同时留意「${trouble}」有没有反复回来。${industryLens.stable}${resourceLens.stable}`,
+      summary: `这条路不是“什么都不做”，而是先把基本盘修稳。适合你在${decision.stableWhen}选择：继续积累信用、现金流和体力，同时留意「${trouble}」有没有反复回来。${industryLens.stable}${resourceLens.stable}`,
       mobile: `先稳现金流和体力，观察「${trouble}」是不是周期性反复。`,
       income: stableIncome,
       risk: pickBySeed("stable-risk", a, ["提醒：别把习惯误读成安全", "提醒：稳定也要给自己留窗口", "提醒：机会可能从旁边经过"]),
@@ -670,7 +856,7 @@ function buildPaths(a, score, reference = getReferenceProfile(a)) {
 
 function getDecisionLens(a, score, reference = getReferenceProfile(a)) {
   const trouble = Array.isArray(a.troubles) && a.troubles.length ? a.troubles[0] : "这件事";
-  const stableWhen = score.pressure > 70 ? "压力很高、判断力被噪音占满" : "还能积累资源、但需要保留选择权";
+  const stableWhen = score.pressure > 70 ? "压力很高、判断力被噪音占满的时候" : "仍能积累资源、但需要保留选择权的时候";
   const firstRepair = score.wealth < 46 ? "现金流" : score.pressure > 70 ? "睡眠和精力" : (reference.trouble?.label || trouble);
   const smallSteps = {
     "职业去留": "找两位同行聊真实岗位，不只看招聘 JD。",
@@ -740,16 +926,21 @@ function pickBySeed(label, a, list) {
   return list[Math.abs(hash(`${label}-${JSON.stringify(a)}`)) % list.length];
 }
 
-function getResultNarrative(a, playerType, fate, pressure, reference = getReferenceProfile(a)) {
+function getResultNarrative(a, playerType, fate, pressure, reference = getReferenceProfile(a), score = {}) {
   const trouble = Array.isArray(a.troubles) && a.troubles.length ? a.troubles[0] : "未来不确定";
   const secondTrouble = Array.isArray(a.troubles) && a.troubles[1] ? a.troubles[1] : "选择成本";
   const state = a.state || "当前章节";
   const pressureLine = pressure > 70 ? "先不要把短期焦虑误读成长期命令。" : "你现在适合让直觉和证据一起上桌。";
+  const decisionLens = getDecisionLens(a, { pressure, wealth: score.wealth ?? 50 }, reference);
+  const wealthLow = (score.wealth ?? 50) < 48;
+  const growthHigh = (score.growth ?? 50) > 68;
+  const riskHigh = (score.risk ?? 50) > 70;
+  const firstMoveTitle = wealthLow ? "先修现金流" : pressure > 70 ? "先降噪" : growthHigh ? "先拿反馈" : "先做小实验";
   const headline = pickBySeed("headline", a, [
-    `你不是卡住，你是在等证据`,
-    `你真正缺的不是答案，是一盏近一点的灯`,
-    `这不是单选题，是一场低成本侦察`,
-    `你的局面需要先降雾，再做决定`,
+    `先别急着改命，先确认哪扇门真的会开`,
+    `你现在缺的不是勇气，是可验证的证据`,
+    `这不是人生单选题，是一轮带护栏的探路`,
+    `雾还在，但第一盏灯已经能点了`,
   ]);
   const tension = pickBySeed("tension", a, [
     `表面问题是「${trouble}」，底层拉扯更像「${secondTrouble}」和安全感之间的拔河。`,
@@ -757,12 +948,35 @@ function getResultNarrative(a, playerType, fate, pressure, reference = getRefere
     `沙盘读到的不是逃跑信号，而是你想重新确认投入是否值得。`,
     `你不是没有行动力，是每一步背后的代价还没被写清楚。`,
   ]);
-  const actionShort = getDecisionLens(a, { pressure, wealth: 50 }, reference).smallStep;
+  const actionShort = decisionLens.smallStep;
+  const decision = wealthLow
+    ? `先不要把答案押在“大换地图”上。你的第一优先级是把安全垫补到能承受一次小试错。`
+    : riskHigh
+      ? `你可以往外冲，但要先写止损线：最多投入多少时间、多少钱、多少情绪。没有止损的勇敢会变成消耗。`
+      : growthHigh
+        ? `最值得走的是 B 线：用一个真实项目、一次面试或一次合作，把想象换成反馈。`
+        : `不要急着做终局选择。先用低成本动作验证，哪条路会给你回声。`;
+  const firstMove = wealthLow
+    ? `把未来 3 个月固定支出列出来，再决定试错幅度。`
+    : pressure > 70
+      ? `先删掉一个最吵的变量，睡眠、沟通或现金流先救一个。`
+      : actionShort;
+  const window = pickBySeed("window", a, [
+    `接下来 7 天适合拿一个外部反馈，30 天适合判断要不要加码。`,
+    `短期不要追求彻底翻盘，先追求一次能让你看清的回声。`,
+    `真正的窗口不是“好运来了”，而是你能把机会拆到可执行。`,
+  ]);
+  const guard = reference.guardrail || (riskHigh ? "先画止损线，再谈上限。" : "先确认安全垫，再决定动作大小。");
   return {
     headline,
     tension,
-    reference: `参考读取：${reference.age.label}、${reference.city.label}、${reference.industry.label}叠在一起时，最该先看的不是“要不要立刻改变”，而是「${reference.trouble.label}」背后的成本结构。${reference.guardrail}`,
-    seen: `沙盘先读到「${trouble}」，再读到你停在「${state}」。所以这次不是要立刻选边站，而是先分清：哪一部分是现实限制，哪一部分只是雾。`,
+    decision,
+    firstMoveTitle,
+    firstMove,
+    window,
+    guard,
+    reference: `${reference.age.label}、${reference.city.label}、${reference.industry.label}叠在一起时，最该先看的不是“要不要立刻改变”，而是「${reference.trouble.label}」背后的成本结构。${reference.guardrail}`,
+    seen: `沙盘先读到「${trouble}」，再读到你停在「${state}」。这说明问题不只在外部选择，也在你怎样给自己留退路。`,
     key: `你更像${playerType}。重点不是“敢不敢变”，而是“能不能用可承受的成本，换到足够真实的反馈”。`,
     action: `把「${trouble}」拆成一个 7 天内能完成的小验证：${actionShort}${pressureLine}`,
     actionShort,
@@ -772,14 +986,15 @@ function getResultNarrative(a, playerType, fate, pressure, reference = getRefere
 
 function renderResultNarrative(narrative) {
   return `
-    <span>魔法师批注</span>
+    <span>魔法师批注 · 重点已标注</span>
     <h3>${narrative.headline}</h3>
     <p class="narrative-lead">${narrative.tension}</p>
     <div class="narrative-points">
-      <div class="narrative-card focus"><b>参考</b><p>${narrative.reference}</p></div>
-      <div class="narrative-card"><b>看见</b><p>${narrative.seen}</p></div>
-      <div class="narrative-card"><b>重点</b><p>${narrative.key}</p></div>
-      <div class="narrative-card"><b>可做</b><p>${narrative.action}</p></div>
+      <div class="narrative-card focus"><b>主判</b><p>${narrative.decision}</p></div>
+      <div class="narrative-card"><b>窗口</b><p>${narrative.window}</p></div>
+      <div class="narrative-card"><b>护栏</b><p>${narrative.guard}</p></div>
+      <div class="narrative-card"><b>7日</b><p>${narrative.action}</p></div>
+      <div class="narrative-card"><b>参考</b><p>${narrative.reference}</p></div>
       <div class="narrative-card"><b>签面</b><p>${narrative.sign}</p></div>
     </div>
   `;
@@ -791,11 +1006,13 @@ function renderOracleNarrative(a, fate) {
   const tendency = cast.yangCount >= 4 ? "动象偏强，事情会先动后定" : cast.yangCount <= 2 ? "静象偏重，宜先蓄力再启程" : "动静相持，关键在于分辨哪一步该先落下";
   return `
     <span>时间卦解</span>
+    <h3>${fate.sign}：先看卦中那一幕</h3>
+    <p class="narrative-lead">你问的是「${question}」。此刻落下 ${cast.yangCount} 阳 ${6 - cast.yangCount} 阴，${tendency}。</p>
     <div class="narrative-points oracle-points">
-      <p><b>所问</b>「${question}」</p>
-      <p><b>卦面</b>此刻落卦为「${fate.sign}」，${cast.yangCount}阳${6 - cast.yangCount}阴，${tendency}。</p>
-      <p><b>暗线</b>${fate.oracle}</p>
-      <p><b>启发</b>先不要急着求一个绝对答案。把这件事拆成“现在能看见的信号”和“还没出现的证据”，再决定下一步。</p>
+      <p><b>卦中故事</b>${fate.story}</p>
+      <p><b>此刻暗线</b>${fate.reading}</p>
+      <p><b>可落一子</b>${fate.action}</p>
+      <p><b>避开误区</b>${fate.warning}</p>
     </div>
   `;
 }
@@ -804,7 +1021,7 @@ function getOracleOnlyNarrative(a, fate) {
   const question = a.oracleQuestion || "心中所求";
   const cast = fate.cast;
   const tendency = cast.yangCount >= 4 ? "动象偏强，事情会先动后定" : cast.yangCount <= 2 ? "静象偏重，宜先蓄力再启程" : "动静相持，关键在于分辨哪一步该先落下";
-  return `你问的是：「${question}」。此刻落卦为「${fate.sign}」，${cast.yangCount}阳${6 - cast.yangCount}阴，${tendency}。这不是替你断未来，而是把此刻的气口摊开：先看卦面，再看暗线，再决定要不要点下一盏灯。`;
+  return `你问的是：「${question}」。此刻落卦为「${fate.sign}」，${cast.yangCount}阳${6 - cast.yangCount}阴，${tendency}。${fate.reading} ${fate.action}`;
 }
 
 function getFateDetail(a, fate, playerType) {
@@ -812,36 +1029,31 @@ function getFateDetail(a, fate, playerType) {
   const moving = fate.cast.yangCount >= 4;
   const quiet = fate.cast.yangCount <= 2;
   const trouble = Array.isArray(a.troubles) && a.troubles.length ? a.troubles[0] : question;
-  const storyOpen = moving
-    ? "一个旅人夜里背着行囊赶路，远处已经有灯，但脚下的桥还没完全露出来。"
-    : quiet
-      ? "一个旅人坐在门口擦亮旧钥匙，外面风很大，可真正要开的门还在屋内。"
-      : "一个旅人把地图摊在桌上，一半被烛光照亮，一半还留在阴影里。";
-  const story = `${storyOpen}他问的不是“我会不会赢”，而是“我现在该把哪件东西放进背包”。这支「${fate.sign}」落在「${question}」上，提醒你先别急着给人生下结论：${fate.oracle}`;
+  const story = `这支「${fate.sign}」落在「${question}」上。${fate.story} ${fate.reading}`;
   return {
     story,
     signals: [
       {
-        title: "外部信号",
-        copy: moving ? "如果最近出现邀约、面试、合作或新机会，可以先接近观察，不必马上承诺。" : "如果外部迟迟没有明确反馈，先别硬推，信息不足本身也是卦面的一部分。",
+        title: moving ? "动象" : quiet ? "静象" : "相持",
+        copy: moving ? "盘面偏动，适合靠近真实机会，但先观察成本和边界。" : quiet ? "盘面偏静，适合补资源、补信息、补判断力，不急着硬推。" : "动静相持，关键不是快慢，而是哪一步最小、最真、最能换来反馈。",
       },
       {
-        title: "内心信号",
-        copy: quiet ? "你现在更需要恢复判断力，而不是用一个大动作证明自己还在前进。" : `真正耗你的可能不是「${trouble}」，而是你一直没有把代价写清楚。`,
+        title: "心口",
+        copy: quiet ? "你现在更需要恢复判断力，而不是用一个大动作证明自己还在前进。" : `真正耗你的可能不是「${trouble}」本身，而是这件事迟迟没有被拆成可验证的小问题。`,
       },
       {
-        title: "资源信号",
-        copy: playerType.includes("开拓") ? "野心可以保留，但现金流、时间和退路要先画出来。" : "先清点手里已有的能力、人脉和缓冲，很多门不是靠冲开，而是靠筹码打开。",
+        title: "落子",
+        copy: playerType.includes("开拓") ? `${fate.action} 野心可以保留，但现金流、时间和退路要先画出来。` : fate.action,
       },
     ],
-    action: moving ? "今天只做一件事：向一个真实的人打听这个方向的真实成本。" : quiet ? "今天只做一件事：写下你最怕失去的三样东西，再判断它们是否真的会失去。" : "今天只做一件事：把这个问题拆成“可试一天、可试一周、可试一月”三个版本。",
+    action: fate.warning,
   };
 }
 
 function getShareStory(a, playerType, fate, pressure) {
   const trouble = Array.isArray(a.troubles) && a.troubles.length ? a.troubles[0] : "未来看不清";
-  const opening = pressure > 70 ? "夜里，你把一个反复弹出的念头放进沙盘。" : "你把当前章节摊开，像把一张旧地图压在桌面。";
-  return `${opening}第一盏灯照到「${trouble}」，第二盏灯照出你是${playerType}。签面落下：「${fate.sign}」，它没有替你选路，只提醒你先看清雾从哪里来。`;
+  const opening = pressure > 70 ? "你把一个反复发烫的问题放进沙盘。" : "你把当前章节摊开，等法阵落下一盏灯。";
+  return `${opening}灯照到「${trouble}」，也照出你更像${playerType}。签面是「${fate.sign}」：${fate.reading}`;
 }
 
 function getFate(a, risk, pressure) {
@@ -854,20 +1066,55 @@ function getFate(a, risk, pressure) {
     riskScenario: a.riskScenario,
   });
   const cast = castTimeHexagram(a.castTime, salt);
-  const index = cast.seed % fateLibrary.length;
-  const base = fateLibrary[index];
+  const base = hexagramLibrary[cast.seed % hexagramLibrary.length] || fateLibrary[cast.seed % fateLibrary.length];
+  const enriched = composeHexagram(base, a, cast, risk, pressure);
   return {
-    ...base,
+    ...enriched,
     cast,
     meaning: a.mode === "命运模式" ? [
-      { label: "卦面", text: `以当前时间落出 ${cast.yangCount} 阳 ${6 - cast.yangCount} 阴。阳多则动，阴多则蓄；此卦偏「${cast.yangCount >= 4 ? "先动后定" : cast.yangCount <= 2 ? "先蓄后动" : "动静相持"}」。${base.oracle}` },
-      { label: "象意", text: pressure > 70 ? "气口急，心火旺。此时最怕把一时的烦躁当作天命。" : "卦气不散，说明你已经看见一部分答案，只是还缺最后一盏灯。" },
-      { label: "启示", text: risk > 70 ? "可向前，但先设结界：边界、期限、退路都要写清。" : "宜先观兆，再落小步。让时间替你筛掉一部分雾。" },
+      { label: "卦面", text: `以当前时间落出 ${cast.yangCount} 阳 ${6 - cast.yangCount} 阴。阳多则动，阴多则蓄；此卦偏「${cast.yangCount >= 4 ? "先动后定" : cast.yangCount <= 2 ? "先蓄后动" : "动静相持"}」。` },
+      { label: "象意", text: enriched.reading },
+      { label: "启示", text: enriched.action },
     ] : [
-      { label: "卦面", text: `以当前时间落出 ${cast.yangCount} 阳 ${6 - cast.yangCount} 阴。阳多则动，阴多则蓄；你的盘面更偏「${cast.yangCount >= 4 ? "先动后定" : cast.yangCount <= 2 ? "先蓄后动" : "动静相持"}」。${base.oracle}` },
-      { label: "现实层", text: pressure > 70 ? "当前压力噪音偏高，容易把短期情绪误判成长期趋势。" : "你已经拥有部分信息，但真正关键的变量还没有完全显形。" },
-      { label: "行动层", text: risk > 70 ? "可以靠近高塔，但先把止损线画在地上，让野心有边界。" : "先点一盏小灯，观察、试点、换角度，比一次性掀桌更容易看清路。" },
+      { label: "卦面", text: `以当前时间落出 ${cast.yangCount} 阳 ${6 - cast.yangCount} 阴。你的盘面更偏「${cast.yangCount >= 4 ? "先动后定" : cast.yangCount <= 2 ? "先蓄后动" : "动静相持"}」。` },
+      { label: "现实层", text: pressure > 70 ? `${enriched.reading} 当前压力噪音偏高，别把短期情绪误判成长期趋势。` : enriched.reading },
+      { label: "行动层", text: risk > 70 ? `${enriched.action} 但先把止损线画在地上，让野心有边界。` : enriched.action },
     ],
+  };
+}
+
+function composeHexagram(base, a, cast, risk, pressure) {
+  const question = a.oracleQuestion || (Array.isArray(a.troubles) && a.troubles.length ? a.troubles[0] : "眼前这件事");
+  const state = a.state || "当前章节";
+  const moving = cast.yangCount >= 4;
+  const quiet = cast.yangCount <= 2;
+  const rhythm = moving ? "动象偏强" : quiet ? "静象偏重" : "动静相持";
+  const pressureHint = pressure > 70
+    ? "你现在的心气有点满，先把最吵的情绪放低，卦面才会显出真正的路。"
+    : "你还有余地把直觉和证据放到同一张桌上。";
+  const riskHint = risk > 70
+    ? "你可以走快，但不要把退路烧掉。"
+    : risk < 45
+      ? "你适合稳稳试探，不必用大动作证明自己。"
+      : "你适合一边试探，一边保留回城路线。";
+  const storyOpeners = [
+    `卦中有一幕：${base.image}。有人站在灯下问「${question}」，没有立刻得到一句判词，只先看见局势的形状。`,
+    `这一卦像一幅夜图：${base.image}。你问的「${question}」落进去以后，最亮的不是答案，而是下一步该碰哪里。`,
+    `法阵里先出现的不是结论，而是画面：${base.image}。它把「${state}」这一页翻开，让你看见问题背后的力道。`,
+  ];
+  const story = pickBySeed(`hex-story-${base.sign}`, a, storyOpeners);
+  const reading = `${base.oracle} 落在「${question}」上，${rhythm}：${moving ? "适合靠近真实机会，先用行动换回声。" : quiet ? "适合补资源、补信息、补体力，先让判断力回来。" : "适合先分清哪一步该动、哪一步该守。"} ${pressureHint}`;
+  const action = `${base.action} ${riskHint}`;
+  const warning = `${base.warning} 尤其不要把一句卦象当成命令，它更像一盏灯：照亮代价、边界和下一步。`;
+  return {
+    sign: base.sign,
+    tag: base.tag,
+    symbol: base.symbol,
+    oracle: base.oracle,
+    story,
+    reading,
+    action,
+    warning,
   };
 }
 
