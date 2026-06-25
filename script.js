@@ -126,6 +126,7 @@ document.addEventListener("click", (event) => {
   const oraclePreset = event.target.closest("[data-oracle-preset]");
   const oracleBack = event.target.closest("[data-oracle-back]");
   const oracleCast = event.target.closest("[data-oracle-cast]");
+  const fateToggle = event.target.closest("[data-fate-toggle]");
 
   if (modeEntry) showModeSelect();
   if (modeChoice) chooseMode(modeChoice.dataset.modeChoice);
@@ -137,6 +138,7 @@ document.addEventListener("click", (event) => {
   if (oraclePreset) chooseOraclePreset(oraclePreset);
   if (oracleBack) showModeSelect();
   if (oracleCast) castOracleOnly();
+  if (fateToggle) toggleFateDetail(fateToggle);
 });
 
 function showHome() {
@@ -400,6 +402,24 @@ function renderResult(data, options = {}) {
   $("[data-fate-meaning]").innerHTML = data.fate.meaning.map((row) => `
     <div class="meaning-row"><strong>${row.label}</strong>${row.text}</div>
   `).join("");
+  const detail = getFateDetail(state.answers, data.fate, data.playerType);
+  $("[data-fate-detail]").innerHTML = `
+    <div class="fate-story-block">
+      <span>启发小故事</span>
+      <p>${detail.story}</p>
+    </div>
+    <div class="fate-signal-grid">
+      ${detail.signals.map((item) => `<div><strong>${item.title}</strong><p>${item.copy}</p></div>`).join("")}
+    </div>
+    <div class="fate-action"><strong>今日小动作</strong><p>${detail.action}</p></div>
+  `;
+  const toggle = $("[data-fate-toggle]");
+  const detailPanel = $("[data-fate-detail]");
+  if (toggle && detailPanel) {
+    toggle.textContent = "展开卦象故事";
+    toggle.setAttribute("aria-expanded", "false");
+    detailPanel.hidden = true;
+  }
 
   $("[data-paths]").innerHTML = data.paths.map((path) => `
     <article class="path-card ${path.tone}">
@@ -415,6 +435,15 @@ function renderResult(data, options = {}) {
   `).join("");
 
   $("[data-events]").innerHTML = data.events.map((event) => `<div class="event-pill">${event}</div>`).join("");
+}
+
+function toggleFateDetail(button) {
+  const detail = $("[data-fate-detail]");
+  if (!detail) return;
+  const willOpen = detail.hidden;
+  detail.hidden = !willOpen;
+  button.setAttribute("aria-expanded", String(willOpen));
+  button.textContent = willOpen ? "收起卦象故事" : "展开卦象故事";
 }
 
 async function initLiveStats() {
@@ -587,6 +616,37 @@ function getOracleOnlyNarrative(a, fate) {
   const cast = fate.cast;
   const tendency = cast.yangCount >= 4 ? "动象偏强，事情会先动后定" : cast.yangCount <= 2 ? "静象偏重，宜先蓄力再启程" : "动静相持，关键在于分辨哪一步该先落下";
   return `你问的是：「${question}」。此刻落卦为「${fate.sign}」，${cast.yangCount}阳${6 - cast.yangCount}阴，${tendency}。这不是替你断未来，而是把此刻的气口摊开：先看卦面，再看暗线，再决定要不要点下一盏灯。`;
+}
+
+function getFateDetail(a, fate, playerType) {
+  const question = a.oracleQuestion || (Array.isArray(a.troubles) && a.troubles[0]) || "眼前这件事";
+  const moving = fate.cast.yangCount >= 4;
+  const quiet = fate.cast.yangCount <= 2;
+  const trouble = Array.isArray(a.troubles) && a.troubles.length ? a.troubles[0] : question;
+  const storyOpen = moving
+    ? "一个旅人夜里背着行囊赶路，远处已经有灯，但脚下的桥还没完全露出来。"
+    : quiet
+      ? "一个旅人坐在门口擦亮旧钥匙，外面风很大，可真正要开的门还在屋内。"
+      : "一个旅人把地图摊在桌上，一半被烛光照亮，一半还留在阴影里。";
+  const story = `${storyOpen}他问的不是“我会不会赢”，而是“我现在该把哪件东西放进背包”。这支「${fate.sign}」落在「${question}」上，提醒你先别急着给人生下结论：${fate.oracle}`;
+  return {
+    story,
+    signals: [
+      {
+        title: "外部信号",
+        copy: moving ? "如果最近出现邀约、面试、合作或新机会，可以先接近观察，不必马上承诺。" : "如果外部迟迟没有明确反馈，先别硬推，信息不足本身也是卦面的一部分。",
+      },
+      {
+        title: "内心信号",
+        copy: quiet ? "你现在更需要恢复判断力，而不是用一个大动作证明自己还在前进。" : `真正耗你的可能不是「${trouble}」，而是你一直没有把代价写清楚。`,
+      },
+      {
+        title: "资源信号",
+        copy: playerType.includes("开拓") ? "野心可以保留，但现金流、时间和退路要先画出来。" : "先清点手里已有的能力、人脉和缓冲，很多门不是靠冲开，而是靠筹码打开。",
+      },
+    ],
+    action: moving ? "今天只做一件事：向一个真实的人打听这个方向的真实成本。" : quiet ? "今天只做一件事：写下你最怕失去的三样东西，再判断它们是否真的会失去。" : "今天只做一件事：把这个问题拆成“可试一天、可试一周、可试一月”三个版本。",
+  };
 }
 
 function getShareStory(a, playerType, fate, pressure) {

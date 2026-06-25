@@ -864,6 +864,63 @@ h1 {
 .fate-meaning { display: grid; gap: 12px; margin-top: 16px; }
 .meaning-row { padding-top: 12px; border-top: 1px solid var(--line); color: var(--soft); line-height: 1.65; }
 .meaning-row strong { color: var(--gold); margin-right: 8px; }
+.fate-detail-toggle {
+  width: 100%;
+  min-height: 44px;
+  margin-top: 16px;
+  border: 1px solid rgba(245,197,66,0.24);
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, rgba(245,197,66,0.12), rgba(108,92,231,0.1));
+  color: var(--gold);
+  font-weight: 900;
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+.fate-detail-toggle:hover {
+  transform: translateY(-2px);
+  border-color: rgba(245,197,66,0.56);
+  box-shadow: 0 0 30px rgba(245,197,66,0.12);
+}
+.fate-detail {
+  margin-top: 14px;
+  padding: 16px;
+  border: 1px solid rgba(245,197,66,0.22);
+  border-radius: var(--radius);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(245,197,66,0.12), transparent 34%),
+    rgba(8,11,18,0.46);
+  animation: unfold 260ms ease both;
+}
+.fate-story-block span,
+.fate-action strong {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--gold);
+  font-size: 12px;
+  font-weight: 900;
+}
+.fate-story-block p,
+.fate-action p {
+  margin: 0;
+  color: var(--soft);
+  line-height: 1.75;
+}
+.fate-signal-grid {
+  display: grid;
+  gap: 10px;
+  margin: 14px 0;
+}
+.fate-signal-grid div {
+  padding: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius);
+  background: rgba(255,255,255,0.04);
+}
+.fate-signal-grid strong { color: var(--gold); font-size: 13px; }
+.fate-signal-grid p { margin: 6px 0 0; color: var(--muted); line-height: 1.6; }
+.fate-action {
+  padding-top: 14px;
+  border-top: 1px solid rgba(245,197,66,0.16);
+}
 
 .paths-section,
 .event-section,
@@ -997,6 +1054,7 @@ h1 {
 @keyframes rowBoot { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
 @keyframes welcomeIn { 0% { opacity: 0; transform: scale(0.96); filter: blur(12px); } 28%, 100% { opacity: 1; transform: scale(1); filter: blur(0); } }
 @keyframes livePulse { 0%, 100% { opacity: 0.45; transform: scale(0.82); } 50% { opacity: 1; transform: scale(1.12); } }
+@keyframes unfold { from { opacity: 0; transform: translateY(-8px); filter: blur(6px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
 
 @media (max-width: 820px) {
   .hero-screen { place-items: end center; min-height: 100dvh; padding-top: 26px; }
