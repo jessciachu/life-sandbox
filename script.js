@@ -198,7 +198,7 @@ function castOracleOnly() {
     riskScenario: "先小范围试一下",
   };
   oracle.classList.add("hidden");
-  runSimulation();
+  runSimulation("oracle");
 }
 
 function startFlow() {
@@ -297,17 +297,18 @@ function nextStep() {
   runSimulation();
 }
 
-function runSimulation() {
+function runSimulation(flow = "simulation") {
   simulator.classList.add("hidden");
   loading.classList.remove("hidden");
   const modeName = state.answers.mode || "双模式融合";
   const castTime = new Date();
   state.answers.castTime = castTime.toISOString();
-  $("#loading .system-kicker").textContent = modeName === "命运模式" ? "TIME HEXAGRAM CASTING" : "SIMULATION RUNNING";
-  $("#loading h2").textContent = modeName === "命运模式" ? `正在以 ${formatCastTime(castTime)} 起卦` : modeName === "理性模式" ? "正在摊开白昼地图" : `正在以 ${formatCastTime(castTime)} 同时落卦与推演`;
+  const oracleOnly = flow === "oracle" || modeName === "命运模式";
+  $("#loading .system-kicker").textContent = oracleOnly ? "TIME HEXAGRAM CASTING" : "SIMULATION RUNNING";
+  $("#loading h2").textContent = oracleOnly ? `正在以 ${formatCastTime(castTime)} 起卦` : modeName === "理性模式" ? "正在摊开白昼地图" : `正在以 ${formatCastTime(castTime)} 同时落卦与推演`;
   setTimeout(() => {
     const data = generateResult(state.answers);
-    renderResult(data);
+    renderResult(data, { oracleOnly });
     postLiveEvent(`第 ${Math.max(Number(liveStats.total || 100) + 1, 101).toLocaleString("zh-CN")} 位求索者读到「${data.fate.sign}」`);
     loading.classList.add("hidden");
     result.classList.remove("hidden");
@@ -342,8 +343,8 @@ function generateResult(a) {
   const shareLine = pressure > 70 ? "你不是没有路，只是雾太大，先把火把点亮。" : "人生不是选择题，是一局可以读档的长线游戏。";
 
   return {
-    title: `你的${titleAge}岁人生存档已生成`,
-    subtitle: saveId,
+    title: a.mode === "命运模式" ? "此刻卦象已落定" : `你的${titleAge}岁人生存档已生成`,
+    subtitle: a.mode === "命运模式" ? `问事 · ${fate.sign} · ${fate.cast.time}` : saveId,
     riskType,
     playerType,
     playerCopy: getPlayerCopy(playerType),
@@ -358,8 +359,10 @@ function generateResult(a) {
   };
 }
 
-function renderResult(data) {
+function renderResult(data, options = {}) {
   latestResult = data;
+  const oracleOnly = Boolean(options.oracleOnly || state.answers.mode === "命运模式");
+  result.classList.toggle("oracle-result", oracleOnly);
   $("[data-result-title]").textContent = data.title;
   $("[data-result-subtitle]").textContent = data.subtitle;
   $("[data-player-type]").textContent = data.playerType;
@@ -377,7 +380,9 @@ function renderResult(data) {
   $("[data-share-line]").textContent = data.shareLine;
   $("[data-share-story]").textContent = data.shareStory;
   $("[data-share-text]").value = data.shareText;
-  $("[data-result-narrative]").innerHTML = `<span>魔法师批注</span><p>${data.narrative}</p>`;
+  $("[data-result-narrative]").innerHTML = oracleOnly
+    ? `<span>时间卦解</span><p>${getOracleOnlyNarrative(state.answers, data.fate)}</p>`
+    : `<span>魔法师批注</span><p>${data.narrative}</p>`;
   $("[data-share-portrait]").innerHTML = `
     <span>你的画像</span>
     <strong>${data.playerType}</strong>
@@ -460,7 +465,7 @@ function renderLiveStats() {
   document.querySelectorAll("[data-live-count], [data-live-count-result]").forEach((node) => {
     node.textContent = total;
   });
-  $("[data-live-action]").textContent = `已有 ${total} 位求索者读到自己的人生沙盘`;
+  $("[data-live-action]").textContent = "位求索者已读到自己的沙盘";
   $("[data-live-feed]").textContent = latest;
 }
 
@@ -575,6 +580,13 @@ function getResultNarrative(a, playerType, fate, pressure) {
   const trouble = Array.isArray(a.troubles) && a.troubles.length ? a.troubles[0] : "未来不确定";
   const pressureLine = pressure > 70 ? "你的火焰烧得有点急，容易把短期情绪看成长期命令。" : "你的沙盘还算清晰，直觉和现实证据可以一起上桌。";
   return `我先看见的是「${trouble}」，再看见你停在「${a.state || "当前章节"}」这一页。你不是单纯想逃离现状，更像一位${playerType}：一边想保住已有的光，一边又听见新门在响。签面落在「${fate.sign}」，意思不是替你做决定，而是提醒你：${pressureLine}`;
+}
+
+function getOracleOnlyNarrative(a, fate) {
+  const question = a.oracleQuestion || "心中所求";
+  const cast = fate.cast;
+  const tendency = cast.yangCount >= 4 ? "动象偏强，事情会先动后定" : cast.yangCount <= 2 ? "静象偏重，宜先蓄力再启程" : "动静相持，关键在于分辨哪一步该先落下";
+  return `你问的是：「${question}」。此刻落卦为「${fate.sign}」，${cast.yangCount}阳${6 - cast.yangCount}阴，${tendency}。这不是替你断未来，而是把此刻的气口摊开：先看卦面，再看暗线，再决定要不要点下一盏灯。`;
 }
 
 function getShareStory(a, playerType, fate, pressure) {
