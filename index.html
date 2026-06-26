@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>人生沙盘 Life Sandbox</title>
-    <link rel="stylesheet" href="./styles.css?v=20260626-fate-plain" />
+    <link rel="stylesheet" href="./styles.css?v=20260626-oracle-cards" />
   </head>
   <body>
     <main class="app-shell">
@@ -79,15 +79,21 @@
         <div class="ambient-grid"></div>
         <div class="oracle-panel reveal">
           <p class="system-kicker">TIME HEXAGRAM</p>
-          <h2 id="oracle-title">把心中所求放进法阵</h2>
-          <p>不用填写完整档案。写一句最近最想问的事，或先点一张问题牌，系统会按当前时间起卦。</p>
+          <h2 id="oracle-title">先选你要问的事</h2>
+          <p>选一张问题牌，系统会按这类事来解卦。补一句背景也可以，但不用写很长。</p>
           <div class="oracle-presets" aria-label="常见问题牌">
-            <button type="button" data-oracle-preset="我想知道现在该不该换工作">换工作</button>
-            <button type="button" data-oracle-preset="我想知道要不要转行或重选方向">转方向</button>
-            <button type="button" data-oracle-preset="我想知道副业或创业有没有窗口">做副业</button>
-            <button type="button" data-oracle-preset="我想知道接下来怎么缓解收入焦虑">问收入</button>
+            <button type="button" data-oracle-kind="work" data-oracle-title="该不该换工作" data-oracle-preset="我想知道现在该不该换工作"><strong>换工作</strong><span>留下、跳槽，还是先骑驴找马</span></button>
+            <button type="button" data-oracle-kind="direction" data-oracle-title="要不要换方向" data-oracle-preset="我想知道要不要转行或重选方向"><strong>换方向</strong><span>转行、读书、换赛道</span></button>
+            <button type="button" data-oracle-kind="side" data-oracle-title="副业能不能做" data-oracle-preset="我想知道副业或创业有没有窗口"><strong>副业创业</strong><span>能不能开局，要不要加码</span></button>
+            <button type="button" data-oracle-kind="money" data-oracle-title="钱什么时候稳一点" data-oracle-preset="我想知道接下来怎么缓解收入焦虑"><strong>收入金钱</strong><span>现金流、涨薪、存款焦虑</span></button>
+            <button type="button" data-oracle-kind="romance" data-oracle-title="这段关系要不要继续" data-oracle-preset="我想知道这段关系要不要继续"><strong>婚恋关系</strong><span>继续、沟通，还是放手</span></button>
+            <button type="button" data-oracle-kind="new-love" data-oracle-title="适不适合开始新关系" data-oracle-preset="我想知道现在适不适合开始新的感情"><strong>新的感情</strong><span>暧昧、复合、是否靠近</span></button>
+            <button type="button" data-oracle-kind="family" data-oracle-title="要不要和家人摊牌" data-oracle-preset="我想知道要不要和家人好好谈一次"><strong>家庭沟通</strong><span>父母、伴侣、边界和压力</span></button>
+            <button type="button" data-oracle-kind="people" data-oracle-title="这段人际是不是消耗我" data-oracle-preset="我想知道这段人际关系是不是正在消耗我"><strong>人际消耗</strong><span>朋友、同事、合作关系</span></button>
+            <button type="button" data-oracle-kind="study" data-oracle-title="要不要继续学习投入" data-oracle-preset="我想知道要不要考证、读研或继续进修"><strong>学习成长</strong><span>考证、读研、技能升级</span></button>
+            <button type="button" data-oracle-kind="city" data-oracle-title="要不要换城市" data-oracle-preset="我想知道现在适不适合换城市或搬家"><strong>城市迁移</strong><span>搬家、换城市、去远方</span></button>
           </div>
-          <textarea data-oracle-question placeholder="例：我最近很想离开现在的工作，但又怕重来太贵。"></textarea>
+          <textarea data-oracle-question placeholder="可选：补一句背景。例如：我们最近总吵架，但我还舍不得。"></textarea>
           <div class="oracle-actions">
             <button class="secondary-action" type="button" data-oracle-back>返回法阵</button>
             <button class="primary-action" type="button" data-oracle-cast>按此刻时间起卦</button>
@@ -198,6 +204,6 @@
 
     <div class="toast" data-toast>已复制</div>
     <script src="./assets/qrcode-generator.js"></script>
-    <script src="./script.js?v=20260626-fate-plain"></script>
+    <script src="./script.js?v=20260626-oracle-cards"></script>
   </body>
 </html>
