@@ -626,7 +626,7 @@ function renderResult(data, options = {}) {
   const toggle = $("[data-fate-toggle]");
   const detailPanel = $("[data-fate-detail]");
   if (toggle && detailPanel) {
-    toggle.textContent = "展开卦象故事";
+    toggle.textContent = "展开白话解读";
     toggle.setAttribute("aria-expanded", "false");
     detailPanel.hidden = true;
   }
@@ -686,7 +686,7 @@ function toggleFateDetail(button) {
   const willOpen = detail.hidden;
   detail.hidden = !willOpen;
   button.setAttribute("aria-expanded", String(willOpen));
-  button.textContent = willOpen ? "收起卦象故事" : "展开卦象故事";
+  button.textContent = willOpen ? "收起白话解读" : "展开白话解读";
 }
 
 async function initLiveStats() {
@@ -795,55 +795,52 @@ function getPlayerPersona(type) {
 
 function buildPaths(a, score, reference = getReferenceProfile(a)) {
   const trouble = Array.isArray(a.troubles) && a.troubles.length ? a.troubles[0] : "未来看不清";
-  const industryLens = getIndustryLens(a.industry);
-  const stateLens = getStateLens(a.state);
-  const resourceLens = getResourceLens(a.resources);
   const decision = getDecisionLens(a, score, reference);
-  const stableIncome = score.wealth > 68 ? pickBySeed("stable-rich", a, ["收入像城墙一样慢慢加厚", "金币池稳中抬升", "现金流开始出现余裕"]) : pickBySeed("stable-low", a, ["金币池缓慢修复", "收入小幅爬坡", "先把漏水的桶补上"]);
-  const optimizeIncome = score.growth > 68 ? pickBySeed("opt-growth", a, ["有阶梯式抬升机会", "技能变现窗口变亮", "会出现更好的议价点"]) : pickBySeed("opt-calm", a, ["温和抬升，代价可控", "先换节奏，再换价格", "小幅试错更容易成局"]);
-  const rebuildIncome = score.risk > 70 ? pickBySeed("rebuild-high", a, ["上限高，波动像潮汐", "可能打开新天花板", "前期乱流大，后期空间大"]) : pickBySeed("rebuild-low", a, ["前期大概率先交学费", "需要先储备半年火把", "回撤明显，但认知会升级"]);
+  const stableIncome = score.wealth > 68 ? "收入大概率稳中小涨" : "收入先求稳定，小幅改善";
+  const optimizeIncome = score.growth > 68 ? "有机会换到更高收入" : "收入可能小涨，重点是验证方向";
+  const rebuildIncome = score.risk > 70 ? "上限更高，但波动也更大" : "前期收入可能下降，需要准备缓冲";
 
   return [
     {
       tone: "green",
-      name: "A线 · 守城线",
-      short: "守城线",
-      summary: `这条路不是“什么都不做”，而是先把基本盘修稳。适合你在${decision.stableWhen}选择：继续积累信用、现金流和体力，同时留意「${trouble}」有没有反复回来。${industryLens.stable}${resourceLens.stable}`,
-      mobile: `先稳现金流和体力，观察「${trouble}」是不是周期性反复。`,
+      name: "A线 · 继续现在",
+      short: "继续现在",
+      summary: `适合你还没准备好大改变的时候。先保住当前收入和生活节奏，把「${trouble}」带来的压力降下来。它的好处是稳，坏处是问题可能过一阵还会回来。`,
+      mobile: `先保住收入和节奏，再观察「${trouble}」是不是反复出现。`,
       income: stableIncome,
-      risk: pickBySeed("stable-risk", a, ["提醒：别把习惯误读成安全", "提醒：稳定也要给自己留窗口", "提醒：机会可能从旁边经过"]),
+      risk: "风险：容易拖久了又开始焦虑",
       years: [
-        { year: "0-6个月", title: "修基本盘", copy: `先处理最吵的变量：${decision.firstRepair}。` },
-        { year: "6-18个月", title: "攒可迁移筹码", copy: "让作品、客户、证书、人脉或关键项目变得可展示。" },
-        { year: "18个月后", title: "决定是否开门", copy: "如果心里的噪音仍在，就不是累，是方向需要复盘。" },
+        { year: "现在", title: "先稳住", copy: `先处理最影响你的事：${decision.firstRepair}。` },
+        { year: "1-3个月", title: "补筹码", copy: "存一点钱，整理简历/作品，找人聊真实情况。" },
+        { year: "3个月后", title: "再判断", copy: "如果问题还反复出现，就说明不能只靠忍。" },
       ],
     },
     {
       tone: "blue",
-      name: "B线 · 点灯线",
-      short: "点灯线",
-      summary: `这条路最适合当前的你：不立刻掀桌，而是拿一个真实世界的小实验照亮下一步。${industryLens.optimize}${stateLens.optimize}${resourceLens.optimize}`,
-      mobile: `做一个小实验，比反复想更快知道路有没有亮。`,
+      name: "B线 · 小幅调整",
+      short: "小幅调整",
+      summary: `这是最建议先试的一条路。你不用马上辞职或重来，而是先做一个小测试：聊岗位、投简历、接项目、谈内部机会。它能帮你知道外面到底有没有路。`,
+      mobile: `先做一个小测试，比一直想更快知道有没有机会。`,
       income: optimizeIncome,
-      risk: pickBySeed("opt-risk", a, ["通关条件：把技能筹码摆上桌面", "通关条件：给试错设置截止日", "通关条件：先拿到真实反馈"]),
+      risk: "风险：测试不能无限拖，要设截止日",
       years: [
-        { year: "7天", title: "问一个真实的人", copy: decision.smallStep },
-        { year: "30天", title: "拿一次反馈", copy: "面试、试稿、试合作、内部沟通，至少完成一种。" },
-        { year: "90天", title: "决定加码或收回", copy: "有证据就加码，没反馈就换实验，不和情绪硬耗。" },
+        { year: "7天", title: "先问/先试", copy: decision.smallStep },
+        { year: "30天", title: "看反馈", copy: "至少完成一次面试、沟通、试稿、报价或合作尝试。" },
+        { year: "90天", title: "决定加码", copy: "有反馈就继续，没反馈就换方法，不要只靠感觉。" },
       ],
     },
     {
       tone: "red",
-      name: "C线 · 换地图线",
-      short: "换地图线",
-      summary: `这条路不是不能走，但它会先扣安全感，再给上限。只有当你已经写清止损线、现金流和学习成本时，它才像选择，不像逃离。${industryLens.rebuild}${stateLens.rebuild}${resourceLens.rebuild}`,
-      mobile: `能改写身份，但先写清止损线和现金流。`,
+      name: "C线 · 大幅改变",
+      short: "大幅改变",
+      summary: `这是换工作、转行、创业或换城市这种大动作。不是不能做，但要先算清钱、时间和退路。否则它看起来像改变，实际可能只是被压力推着逃走。`,
+      mobile: `可以大改，但先算清钱、时间和退路。`,
       income: rebuildIncome,
-      risk: pickBySeed("rebuild-risk", a, ["雾区等级：高", "代价：安全感会先被扣血", "提醒：先画止损线再进雾"]),
+      risk: "风险：前期不稳定，容易后悔或收入回撤",
       years: [
-        { year: "前3个月", title: "雾最大", copy: "信息混乱，容易后悔，所以先保留回城路线。" },
-        { year: "3-12个月", title: "重建定价", copy: "旧经验要翻译成新地图听得懂的语言。" },
-        { year: "第2年后", title: "身份重写", copy: "若跑通，你会换一套叙事；若没跑通，也会知道边界。" },
+        { year: "前3个月", title: "最不稳", copy: "会有不适应和反复怀疑，所以一定要留退路。" },
+        { year: "3-12个月", title: "重新证明", copy: "你要把旧经验变成新方向能看懂的能力。" },
+        { year: "1年后", title: "看是否跑通", copy: "跑通就继续加码，没跑通也要及时止损。" },
       ],
     },
   ];
@@ -1049,20 +1046,20 @@ function getFateDetail(a, fate, playerType) {
   const moving = fate.cast.yangCount >= 4;
   const quiet = fate.cast.yangCount <= 2;
   const trouble = Array.isArray(a.troubles) && a.troubles.length ? a.troubles[0] : question;
-  const story = `这支「${fate.sign}」落在「${question}」上。${fate.story}`;
+  const story = `可以把这卦理解成一个提醒：你现在问的不是“会不会成功”，而是“下一步要不要马上动”。「${fate.sign}」给出的方向是：先把问题拆小，别让它一直停在脑子里。`;
   return {
     story,
     signals: [
       {
-        title: moving ? "动象" : quiet ? "静象" : "相持",
-        copy: moving ? "盘面偏动，可以试着往前走一步，但要先看成本。" : quiet ? "盘面偏静，先补资源和信息，不急着硬推。" : "动静相持，先找最小、最真实的一步。",
+        title: moving ? "适合先动一下" : quiet ? "适合先准备" : "先动一小步",
+        copy: moving ? "可以先联系一个人、投一次简历、问一次报价，但不要一下子把退路断掉。" : quiet ? "现在先补信息、补钱、补精力。准备不够时，硬冲只会更慌。" : "不要直接做大决定，先做一个小动作，看有没有真实反馈。",
       },
       {
-        title: "心口",
-        copy: quiet ? "你现在更需要恢复判断力，而不是立刻证明自己。" : `真正耗你的可能不是「${trouble}」本身，而是它一直没有被拆小。`,
+        title: "真正卡住的点",
+        copy: quiet ? "你不是没有答案，是现在状态太紧，判断力被消耗了。" : `真正耗你的可能不是「${trouble}」本身，而是它太大、太模糊，所以你一直不知道从哪下手。`,
       },
       {
-        title: "落子",
+        title: "最小动作",
         copy: playerType.includes("开拓") ? `${fate.action} 可以有野心，但先留退路。` : fate.action,
       },
     ],
@@ -1118,9 +1115,9 @@ function composeHexagram(base, a, cast, risk, pressure) {
       ? "你适合稳一点试，不必用大动作证明自己。"
       : "你适合边试边看，不要一开始就押太满。";
   const storyOpeners = [
-    `卦中有一幕：${base.image}。有人站在灯下问「${question}」，没有立刻得到一句判词，只先看见局势的形状。`,
-    `这一卦像一幅夜图：${base.image}。你问的「${question}」落进去以后，最亮的不是答案，而是下一步该碰哪里。`,
-    `法阵里先出现的不是结论，而是画面：${base.image}。它把「${state}」这一页翻开，让你看见问题背后的力道。`,
+    `你可以把「${base.sign}」理解成一个现实场景：一个人站在岔路口，手里有想法，但还没把钱、时间和退路算清。`,
+    `这卦像是在提醒你：先别问最后会怎样，先问今天能不能做一个小验证，让「${question}」从想法变成事实。`,
+    `如果把「${state}」当成当前章节，这一卦不是让你立刻改命，而是让你先看清下一步的成本。`,
   ];
   const story = pickBySeed(`hex-story-${base.sign}`, a, storyOpeners);
   const reading = `这卦落在「${question}」上，意思是：${base.oracle} 简单说，${rhythm}。${pressureHint}`;
