@@ -805,10 +805,6 @@ function renderResult(data, options = {}) {
       ${path.recommended ? `<div class="path-recommend-badge">建议先试这条</div>` : ""}
       <h4>${path.name}</h4>
       <p>${path.summary}</p>
-      <div class="path-years">
-        ${path.years.map((year) => `<div><span>${year.year}</span><strong>${year.title}</strong><p>${year.copy}</p></div>`).join("")}
-      </div>
-      <div class="path-insight"><span>${path.income}</span><b>${path.risk}</b></div>
     </article>
   `).join("");
 
@@ -965,7 +961,6 @@ function getPlayerPersona(type) {
 
 function buildPaths(a, score, reference = getReferenceProfile(a)) {
   const trouble = Array.isArray(a.troubles) && a.troubles.length ? a.troubles[0] : "未来看不清";
-  const decision = getDecisionLens(a, score, reference);
   const stableIncome = score.wealth > 68 ? "收入大概率稳中小涨" : "收入先求稳定，小幅改善";
   const optimizeIncome = score.growth > 68 ? "有机会换到更高收入" : "收入可能小涨，重点是验证方向";
   const rebuildIncome = score.risk > 70 ? "上限更高，但波动也更大" : "前期收入可能下降，需要准备缓冲";
@@ -973,46 +968,31 @@ function buildPaths(a, score, reference = getReferenceProfile(a)) {
   return [
     {
       tone: "green",
-      name: "A线 · 继续现在",
+      name: "A线 · 先稳住",
       short: "继续现在",
-      summary: `适合你还没准备好大改变的时候。先保住当前收入和生活节奏，把「${trouble}」带来的压力降下来。它的好处是稳，坏处是问题可能过一阵还会回来。`,
+      summary: `不太建议把它当最终答案；它只是让你先缓一口气，等钱、精力和信息补齐后再看「${trouble}」。`,
       mobile: `先保住收入和节奏，再观察「${trouble}」是不是反复出现。`,
       income: stableIncome,
-      risk: "风险：容易拖久了又开始焦虑",
-      years: [
-        { year: "现在", title: "先稳住", copy: `先处理最影响你的事：${decision.firstRepair}。` },
-        { year: "1-3个月", title: "补筹码", copy: "存一点钱，整理简历/作品，找人聊真实情况。" },
-        { year: "3个月后", title: "再判断", copy: "如果问题还反复出现，就说明不能只靠忍。" },
-      ],
+      risk: "别拖成习惯性忍耐",
     },
     {
       tone: "blue",
       name: "B线 · 小幅调整",
       short: "小幅调整",
       recommended: true,
-      summary: `这是最建议先试的一条路。你不用马上辞职或重来，而是先做一个小测试：聊岗位、投简历、接项目、谈内部机会。它能帮你知道外面到底有没有路。`,
+      summary: `最建议先走：用一次低成本试探换真实反馈，别在脑子里反复纠结。`,
       mobile: `先做一个小测试，比一直想更快知道有没有机会。`,
       income: optimizeIncome,
-      risk: "风险：测试不能无限拖，要设截止日",
-      years: [
-        { year: "7天", title: "先问/先试", copy: decision.smallStep },
-        { year: "30天", title: "看反馈", copy: "至少完成一次面试、沟通、试稿、报价或合作尝试。" },
-        { year: "90天", title: "决定加码", copy: "有反馈就继续，没反馈就换方法，不要只靠感觉。" },
-      ],
+      risk: "测试要有截止日",
     },
     {
       tone: "red",
-      name: "C线 · 大幅改变",
+      name: "C线 · 大幅重来",
       short: "大幅改变",
-      summary: `这是换工作、转行、创业或换城市这种大动作。不是不能做，但要先算清钱、时间和退路。否则它看起来像改变，实际可能只是被压力推着逃走。`,
+      summary: `只有准备好存款、退路和截止日期时再选；否则它更像被压力推着逃离。`,
       mobile: `可以大改，但先算清钱、时间和退路。`,
       income: rebuildIncome,
-      risk: "风险：前期不稳定，容易后悔或收入回撤",
-      years: [
-        { year: "前3个月", title: "最不稳", copy: "会有不适应和反复怀疑，所以一定要留退路。" },
-        { year: "3-12个月", title: "重新证明", copy: "你要把旧经验变成新方向能看懂的能力。" },
-        { year: "1年后", title: "看是否跑通", copy: "跑通就继续加码，没跑通也要及时止损。" },
-      ],
+      risk: "前期最容易收入回撤",
     },
   ];
 }
@@ -1377,18 +1357,18 @@ function formatCastTime(date) {
 
 function pickEvents(a, risk) {
   const pool = [
-    { text: "有人把一个真实机会递到你面前，但它不会包装得很完美", base: 42, tone: "warm" },
-    { text: "行业风向有一次小转弯，旧经验需要换一种说法", base: 36, tone: "blue" },
-    { text: "副业或项目线索出现，适合先试卖一次，不适合立刻豪赌", base: 31, tone: "gold" },
-    { text: "家庭或关系议题临时加重，影响你做决定的速度", base: 28, tone: "red" },
-    { text: "旧技能撞到天花板，逼你补一个新筹码", base: 47, tone: "red" },
-    { text: "熟人带来一张入场券，但真正的门槛在后面", base: 24, tone: "gold" },
-    { text: "现金流提醒你放慢脚步，先算能承受几个月波动", base: 40, tone: "warm" },
-    { text: "一个被你低估的能力开始变值钱，值得重新包装", base: 34, tone: "blue" },
-    { text: "一次面试或聊天让你意识到，外面的标价和想象不同", base: 38, tone: "blue" },
-    { text: "你会突然厌倦原来的叙事，但这未必等于必须离开", base: 33, tone: "warm" },
-    { text: "某个长期搁置的技能开始召唤你，像旧抽屉里亮起的符号", base: 29, tone: "gold" },
-    { text: "压力在某个普通工作日集中爆发，提醒你该修系统了", base: 44, tone: "red" },
+    { text: "有人约你聊岗位或项目，先问清钱、时间和具体要做什么。", base: 42, tone: "warm" },
+    { text: "你会看到同行换了新方向，别急着羡慕，先问他真实成本。", base: 36, tone: "blue" },
+    { text: "会冒出一个副业想法，先卖一次小服务，不要一上来就囤货。", base: 31, tone: "gold" },
+    { text: "家里或关系里的事会占用精力，重要决定先缓一天再说。", base: 28, tone: "red" },
+    { text: "你会发现一个技能不够用了，先补最影响收入的那一项。", base: 47, tone: "red" },
+    { text: "熟人可能递来机会，但别只听好处，要问清门槛和风险。", base: 24, tone: "gold" },
+    { text: "一笔支出会提醒你重新算账，先确认能撑几个月。", base: 40, tone: "warm" },
+    { text: "一个旧经验可能派上用场，把它整理成简历、作品或报价。", base: 34, tone: "blue" },
+    { text: "一次面试或聊天会让你知道：外面的工资没有想象中那么虚。", base: 38, tone: "blue" },
+    { text: "你可能突然很烦现在的状态，先休息，再判断是不是真的要走。", base: 33, tone: "warm" },
+    { text: "搁置很久的技能会重新被用到，适合捡起来做个小作品。", base: 29, tone: "gold" },
+    { text: "某个普通工作日压力会爆一下，把它当成调整节奏的提醒。", base: 44, tone: "red" },
   ];
   const offset = Math.abs(hash(`${a.state}${a.resources}${risk}`)) % pool.length;
   return [0, 1, 2, 3].map((i) => {
