@@ -656,29 +656,24 @@ function renderResult(data, options = {}) {
 }
 
 function renderMobileConclusion(data) {
-  const firstPath = data.paths[1] || data.paths[0];
-  const next = data.narrative?.actionShort || data.narrative?.action || `先把「${data.fate.sign}」对应的问题拆成一个小动作。`;
-  const benchmark = data.narrative?.decision || data.reference?.benchmark || data.narrative.tension;
+  const next = data.narrative?.plainNext || data.narrative?.firstMove || data.narrative?.actionShort || `先把「${data.fate.sign}」对应的问题拆成一个小动作。`;
+  const situation = data.narrative?.plainSituation || data.narrative?.tension;
+  const advice = data.narrative?.plainAdvice || data.narrative?.decision;
   return `
     <div class="mobile-conclusion" data-mobile-conclusion>
       <div class="mobile-conclusion-main">
-        <span>本次主判</span>
-        <strong>${data.narrative.headline}</strong>
-        <p>${benchmark}</p>
+        <span>你现在的情况</span>
+        <strong>${data.narrative.plainTitle}</strong>
+        <p>${situation}</p>
       </div>
       <div>
-        <span>先走哪步</span>
+        <span>建议怎么做</span>
+        <strong>先别做大决定</strong>
+        <p>${advice}</p>
+      </div>
+      <div>
+        <span>今天先做什么</span>
         <strong>${data.narrative.firstMoveTitle}</strong>
-        <p>${data.narrative.firstMove}</p>
-      </div>
-      <div>
-        <span>路径建议</span>
-        <strong>${firstPath.short}</strong>
-        <p>${firstPath.mobile || firstPath.summary}</p>
-      </div>
-      <div>
-        <span>7日验证</span>
-        <strong>不要空想</strong>
         <p>${next.replace(/^下一步：/, "")}</p>
       </div>
     </div>
@@ -968,6 +963,30 @@ function getResultNarrative(a, playerType, fate, pressure, reference = getRefere
   ]);
   const guard = reference.guardrail || (riskHigh ? "先画止损线，再谈上限。" : "先确认安全垫，再决定动作大小。");
   const plainReference = `${reference.age.label}、${reference.city.label}、${reference.industry.label}这几个条件放在一起，最该先看的不是“要不要立刻改变”，而是改变的成本你能不能扛住。`;
+  const plainTitle = wealthLow
+    ? "先把钱稳住，再谈改变"
+    : pressure > 70
+      ? "你需要先降压力，再做选择"
+      : growthHigh
+        ? "可以试试新机会，但别一把梭"
+        : "先小步试，不要空想太久";
+  const plainSituation = wealthLow
+    ? `你现在最容易被「${trouble}」牵着走，但真正要先处理的是安全感。钱和退路不稳时，大改变会让压力更大。`
+    : pressure > 70
+      ? `你现在不是没想法，而是压力太满。这个状态下做决定，很容易把一时焦虑当成真正答案。`
+      : `你不是必须马上选一条路。现在更适合先做一个小测试，看看外面有没有真实机会。`;
+  const plainAdvice = wealthLow
+    ? "先不要急着裸辞、转行或创业。先把现金流和退路准备好，再做下一步。"
+    : riskHigh
+      ? "可以往前冲，但先写清楚最多投入多少时间和钱，失败了怎么退回来。"
+      : growthHigh
+        ? "先用一次面试、一个项目或一次合作测试机会，不要只在脑子里想。"
+        : "先用低成本方式试一下，有反馈再加码，没反馈就及时调整。";
+  const plainNext = wealthLow
+    ? "把未来 3 个月必须花的钱列出来，算清自己能承受多大的试错。"
+    : pressure > 70
+      ? "今天只处理一个最吵的问题：睡眠、沟通、现金流，先救一个。"
+      : actionShort;
   return {
     headline,
     tension,
@@ -976,6 +995,10 @@ function getResultNarrative(a, playerType, fate, pressure, reference = getRefere
     firstMove,
     window,
     guard,
+    plainTitle,
+    plainSituation,
+    plainAdvice,
+    plainNext,
     reference: `${plainReference}${reference.guardrail ? ` ${reference.guardrail}` : ""}`,
     seen: `沙盘先读到「${trouble}」，再读到你停在「${state}」。这说明你要处理的不是一个选择，而是选择背后的压力。`,
     key: `你更像${playerType}。重点不是敢不敢变，而是能不能用可承受的成本换到真实反馈。`,
