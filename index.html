@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>人生沙盘 Life Sandbox</title>
-    <link rel="stylesheet" href="./styles.css?v=20260626-path-one-line" />
+    <link rel="stylesheet" href="./styles.css?v=20260626-mobile-magic-final32" />
   </head>
   <body>
     <main class="app-shell">
@@ -14,11 +14,11 @@
           <span></span><span></span><span></span>
         </div>
         <div class="boot-sequence">
-          <p class="boot-line boot-line-a">正在接入人生模拟系统...</p>
+          <p class="boot-line boot-line-a">正在接入人生模拟系统</p>
           <p class="boot-line boot-line-b">权限验证通过</p>
           <div class="engine-card">
             <p class="system-kicker">Life Sandbox Engine v1.0</p>
-            <h2>Initializing...</h2>
+            <h2>法阵启动中</h2>
             <ul>
               <li>✓ Personality Matrix</li>
               <li>✓ Life Variables</li>
@@ -50,7 +50,7 @@
           <span class="live-dot" aria-hidden="true"></span>
           <p><strong data-live-count>100</strong><span data-live-action>位求索者已读到自己的沙盘</span></p>
         </aside>
-        <div class="scroll-hint" aria-hidden="true">SYSTEM READY</div>
+        <div class="scroll-hint" aria-hidden="true"></div>
       </section>
 
       <section class="mode-screen hidden" id="mode" aria-labelledby="mode-title">
@@ -58,17 +58,17 @@
         <div class="mode-wrap reveal">
           <p class="system-kicker">ORACLE TABLE</p>
           <h2 id="mode-title">选择开阵方式</h2>
-          <p class="mode-copy">想看现实怎么走，选双生；只想问一件事，选夜色。</p>
+          <p class="mode-copy">选一种开阵方式。一个看现实和预兆，一个只解你心里的这一问。</p>
           <div class="mode-grid two-mode">
             <button class="mode-card featured sandbox-card" type="button" data-mode-choice="双模式融合">
               <span class="mode-glyph">TWIN</span>
               <strong>双生法阵</strong>
-              <em>给你三条现实路径，再配一支时间卦。适合问跳槽、转行、创业、感情和城市选择。</em>
+              <em>适合工作、收入、转向。看现实条件，也给一条能马上试的路。</em>
             </button>
             <button class="mode-card oracle-card" type="button" data-mode-choice="命运模式">
               <span class="mode-glyph">FATE</span>
               <strong>夜色法阵</strong>
-              <em>不用填资料。写下心里那件事，按当前时间起卦，只看卦象白话解读。</em>
+              <em>适合感情、家人、人际。按此刻起卦，只解眼前这一件事。</em>
             </button>
           </div>
           <button class="secondary-action" type="button" data-home-back>返回入口</button>
@@ -129,7 +129,7 @@
         <div class="result-hero reveal">
           <p class="system-kicker">SAVE FILE GENERATED</p>
           <h2 data-result-title>你的生活存档已生成</h2>
-          <p data-result-subtitle>LV28 · 新一线 · 平衡型玩家</p>
+          <p data-result-subtitle>新一线 · 平衡型玩家</p>
           <div class="result-actions">
             <button class="primary-action" type="button" data-export-card>生成人生存档图</button>
             <button class="secondary-action" type="button" data-copy>复制分享咒语</button>
@@ -139,7 +139,7 @@
             <span>魔法师批注</span>
             <p>沙盘已经读到你的当前章节。真正重要的不是立刻选择哪条路，而是看见哪条路正在反复召唤你。</p>
           </div>
-          <div class="live-strip" aria-label="实时使用动态">
+          <div class="live-strip" aria-label="沙盘动态">
             <span data-live-count-result>100</span>
             <p data-live-feed>份人生说明书已在本机生成</p>
           </div>
@@ -171,14 +171,14 @@
 
         <div class="paths-section reveal">
           <div class="section-head">
-            <p class="panel-label">理性人生模拟</p>
-            <h3>三条可能路径</h3>
+            <p class="panel-label">路线判断</p>
+            <h3>三条路怎么选</h3>
           </div>
           <div class="path-grid" data-paths></div>
         </div>
 
         <div class="event-section reveal">
-          <p class="panel-label">未来30天可能遇到的信号</p>
+          <p class="panel-label">未来30天可能出现的小信号</p>
           <div class="event-list" data-events></div>
         </div>
 
@@ -204,6 +204,6 @@
 
     <div class="toast" data-toast>已复制</div>
     <script src="./assets/qrcode-generator.js"></script>
-    <script src="./script.js?v=20260626-path-one-line"></script>
+    <script src="./script.js?v=20260626-mobile-magic-final32"></script>
   </body>
 </html>

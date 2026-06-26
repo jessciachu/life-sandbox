@@ -2,77 +2,77 @@ const questions = [
   {
     key: "age",
     title: "你现在的人生等级是？",
-    hint: "每个等级都有自己的主线任务，系统需要先确认你站在哪一章。",
+    hint: "选当前阶段就好。不会展示年龄，只用来判断选择成本。",
     options: ["22-25", "26-30", "31-35", "36-40", "41+"],
-    descriptions: ["新手村刚出门，地图很大", "主线展开，开始有代价", "装备成型，也背上负重", "资源更稳，转向更贵", "老玩家视角，少走弯路"],
+    descriptions: ["刚起步，机会多", "开始承担代价", "能力成型，负重也多", "资源更稳，转向更贵", "经验更足，求稳求准"],
   },
   {
     key: "city",
     title: "你现在所在的城市层级是？",
-    hint: "不用精确到城市名。系统只读取机会密度、生活成本和转身难度。",
+    hint: "不用填城市名，只看机会密度和生活成本。",
     compact: true,
     options: ["一线城市", "新一线城市", "二线城市", "三四线城市", "县城/小城", "海外/流动中"],
-    descriptions: ["如北上广深：机会密，消耗也高", "如杭州/成都/南京：上升通道多，节奏分化", "省会或强区域城市：稳定与机会并存", "熟人网络更强，转换成本更低", "生活半径小，安全感和天花板同时存在", "坐标不固定，人生地图正在重绘"],
+    descriptions: ["机会多，消耗也高", "机会不少，节奏分化", "稳定和机会并存", "熟人网络更强", "安全感强，天花板也近", "坐标正在变化"],
   },
   {
     key: "industry",
     title: "你的主要工作场域更接近哪类？",
-    hint: "选最像你日常的那一类，不需要完全准确。系统会用它判断增长速度和抗风险方式。",
+    hint: "选最像你日常的那一类，用来判断增长和风险。",
     compact: true,
     options: ["互联网/AI/产品技术", "金融/咨询/专业服务", "消费/品牌/运营销售", "制造/供应链/工程", "教育/医疗/公共服务", "内容/设计/自由职业", "体制内/国企/稳定组织", "其他/复合职业"],
-    descriptions: ["变化快，技能迭代压力明显", "结果导向强，资源和人脉权重高", "靠市场嗅觉、表达和执行吃饭", "重流程、重经验、重长期积累", "责任感强，节奏更受制度影响", "自由度更高，收入波动也更真实", "稳定性更强，突破常在边界之外", "身份不止一种，系统按复合路径读取"],
+    descriptions: ["变化快，技能更新快", "重结果，也重人脉", "靠表达、渠道和执行", "重流程、经验和耐力", "责任重，节奏受制度影响", "自由度高，收入波动也高", "稳定强，突破慢", "按复合路径读取"],
   },
   {
     key: "position",
     title: "你在队伍里更像什么位置？",
-    hint: "系统会根据你当前站位，判断是升级装备、换地图，还是重开流派。",
+    hint: "用来判断你适合升级、换岗，还是重开方向。",
     options: ["初级", "中级", "高级", "管理", "独立经营"],
-    descriptions: ["还在攒经验值", "开始承担关键任务", "有技能树，也有天花板", "带队通关，消耗更大", "自己开局，自己结算"],
+    descriptions: ["还在积累经验", "开始扛关键任务", "能力强，也有天花板", "带队，消耗更大", "自己负责结果"],
   },
   {
     key: "income",
     title: "你的金币池大概在哪一档？",
-    hint: "金币不是人生分数，但会影响你能不能从容试错。",
+    hint: "只看缓冲，不代表人生分数。",
     options: ["<10w", "10-30w", "30-50w", "50-100w", "100w+"],
-    descriptions: ["生存关卡优先", "有缓冲，但不厚", "开始有选择权", "能买到时间", "高阶资源位"],
+    descriptions: ["先保生存", "有缓冲但不厚", "开始有选择权", "能买到时间", "选择余地更大"],
   },
   {
     key: "state",
     title: "最近你的角色状态栏显示什么？",
-    hint: "别急着解释它，先让系统读到真实的体感。",
+    hint: "选最接近最近一个月的体感。",
     options: ["稳定但无聊", "忙但有成长", "焦虑但不敢动", "想改变但犹豫", "正在转型", "半躺平"],
-    descriptions: ["血量稳，灵魂缺蓝", "疲惫，但经验在涨", "警报响了，脚还没动", "站在传送门前", "旧身份正在卸载", "进入低功耗模式"],
+    descriptions: ["稳定，但没什么兴奋感", "累，但确实在进步", "很焦虑，但还没行动", "想变，又怕代价", "旧身份正在松动", "先省电，恢复状态"],
   },
   {
     key: "troubles",
     title: "最近最耗你的，是哪几类人生噪音？",
-    hint: "多选一到三项就好。系统会把它们压缩成当前主线冲突。",
+    hint: "多选一到三项。选完再继续，不会自动跳页。",
     multi: true,
     compact: true,
     options: ["职业去留", "方向重选", "自己做事", "钱不够稳", "意义感变低", "关系消耗", "未来看不清"],
-    descriptions: ["例：要不要跳槽、换团队、离开现在的位置", "例：转行、读书、换赛道，担心重来太贵", "例：创业、副业、接项目，想自己开一局", "例：收入、房贷、存款、现金流一直报警", "例：做得下去，但越来越不知道为了什么", "例：同事、客户、家庭沟通让你持续掉血", "例：不是没路，是每条路都像有雾"],
+    descriptions: ["跳槽、换团队、离开现在", "转行、读书、换赛道", "创业、副业、接项目", "收入、房贷、存款焦虑", "能做，但不知道为啥", "同事、客户、家人很耗", "每条路都像有雾"],
   },
   {
     key: "family",
     title: "你的羁绊系统现在如何？",
-    hint: "羁绊会给人护盾，也会占用背包格。这里没有评判，只有读取。",
+    hint: "这里没有评判，只看责任和支持系统。",
     options: ["单身/无孩", "恋爱中", "已婚", "已婚有娃", "离异/重启中"],
-    descriptions: ["单人行动，机动性高", "双人剧情开启", "共同账户与共同天气", "护盾更厚，责任也更重", "旧剧情结算，新章节待开"],
+    descriptions: ["机动性更高", "关系正在推进", "共同承担更多", "责任更重，护盾也厚", "旧章结束，新章待开"],
   },
   {
     key: "resources",
     title: "如果你想试错，手里有哪些缓冲？",
-    hint: "这里读的是安全垫，不是评判。选最接近你现在真实情况的一项。",
+    hint: "选最接近的安全垫。",
     compact: true,
     options: ["几乎没缓冲", "能撑1-3个月", "能撑3-6个月", "有副业/项目收入", "家人能托底", "现金流比较稳"],
-    descriptions: ["例：存款少，断收入会立刻紧张", "例：短期空窗可以扛，但不能拖太久", "例：能认真试一轮，但需要计划", "例：主业外已有一点收入或客户线索", "例：必要时家里能帮一把或住回去", "例：存款/收入足够给选择留余地"],
+    descriptions: ["断收入会很紧张", "能扛短期空窗", "能认真试一轮", "已有一点额外收入", "必要时有人能托底", "收入和存款较稳"],
   },
   {
     key: "riskScenario",
     title: "现在有个机会摆在你面前，你会怎么处理？",
-    hint: "例：一个更高薪但不确定的 offer、一个副业机会、一次转岗邀请。系统会从你的反应推断行动流派。",
+    hint: "比如高薪 offer、副业机会、转岗邀请。你通常怎么反应？",
     options: ["先不动，查清楚再说", "先小范围试一下", "设好底线后认真冲", "看当下感觉决定"],
-    descriptions: ["例：问清薪资、团队、风险，没有把握不换", "例：先面试/兼职/试合作，给自己留退路", "例：定好存款底线和截止日期，然后全力推进", "例：相信直觉和时机，状态对了就上"],
+    descriptions: ["先问清风险，没有把握不换", "先面试/兼职/试合作", "定好底线和截止日再冲", "状态对了就上"],
   },
 ];
 
@@ -608,17 +608,17 @@ function renderQuestion() {
     const isSelected = Array.isArray(selected) ? selected.includes(option) : selected === option;
     const desc = q.descriptions?.[index] || getOptionDescription(q.key, option);
     return `
-      <button class="option-card ${isSelected ? "selected" : ""}" type="button" data-option="${option}">
-        <strong>${option}</strong>
-        <span>${desc}</span>
+      <button class="option-card ${isSelected ? "selected" : ""}" type="button" data-option="${escapeAttr(option)}">
+        <strong>${escapeHtml(option)}</strong>
+        <span>${escapeHtml(desc)}</span>
       </button>
     `;
   }).join("");
 
   panel.innerHTML = `
     <p class="system-kicker">ARCHIVE NODE ${current}</p>
-    <h2>${q.title}</h2>
-    <p>${q.hint}</p>
+    <h2>${escapeHtml(q.title)}</h2>
+    <p>${escapeHtml(q.hint)}</p>
     <div class="option-grid">${cards}</div>
     ${q.multi ? `<div class="multi-actions"><button class="primary-action" type="button" data-next ${canContinue ? "" : "disabled"}>继续读取</button></div>` : ""}
   `;
@@ -682,7 +682,6 @@ function runSimulation(flow = "simulation") {
 function generateResult(a) {
   const riskMap = { "稳健型": 34, "平衡型": 56, "冒险型": 78, "随机型": 66 };
   const incomeMap = { "<10w": 28, "10-30w": 46, "30-50w": 62, "50-100w": 76, "100w+": 88 };
-  const ageLevel = Number((a.age || "26-30").match(/\d+/)?.[0] || 28);
   const stressBase = ["焦虑但不敢动", "想改变但犹豫", "正在转型"].includes(a.state) ? 76 : 48;
   const growthBase = ["忙但有成长", "正在转型", "想改变但犹豫"].includes(a.state) ? 74 : 52;
   const resourceBoost = ["家人能托底", "现金流比较稳", "有副业/项目收入", "能撑3-6个月"].includes(a.resources) ? 12 : -4;
@@ -700,14 +699,14 @@ function generateResult(a) {
   const paths = buildPaths(a, { risk, wealth, growth, stability, pressure }, reference);
 
   const events = pickEvents(a, risk);
-  const saveId = `LV${ageLevel} · ${city} · ${playerType}`;
+  const saveId = `${city} · ${playerType}`;
   const narrative = getResultNarrative(a, playerType, fate, pressure, reference, { risk, wealth, growth, stability, paths });
   const persona = getPlayerPersona(playerType);
   const shareStory = getShareStory(a, playerType, fate, pressure);
   const shareLine = pressure > 70 ? "你不是没有路，只是雾太大，先把火把点亮。" : "人生不是选择题，是一局可以读档的长线游戏。";
 
   return {
-    title: a.mode === "命运模式" ? "此刻卦象已落定" : "你的人生存档已生成",
+    title: a.mode === "命运模式" ? "此刻卦象已落定" : "你的沙盘结论已生成",
     subtitle: a.mode === "命运模式" ? `问事 · ${fate.sign} · ${fate.cast.time}` : saveId,
     riskType,
     playerType,
@@ -784,63 +783,66 @@ function renderResult(data, options = {}) {
   const detail = getFateDetail(state.answers, data.fate, data.playerType);
   $("[data-fate-detail]").innerHTML = `
     <div class="fate-story-block">
-      <span>这卦怎么用</span>
-      <p>${detail.story}</p>
+      <span>卦象提示</span>
+      <p>${escapeHtml(detail.story)}</p>
     </div>
     <div class="fate-signal-grid">
-      ${detail.signals.map((item) => `<div><strong>${item.title}</strong><p>${item.copy}</p></div>`).join("")}
+      ${detail.signals.map((item) => `<div><strong>${escapeHtml(item.title)}</strong><p>${escapeHtml(item.copy)}</p></div>`).join("")}
     </div>
-    <div class="fate-action"><strong>今日小动作</strong><p>${detail.action}</p></div>
+    <div class="fate-action"><strong>先别急着做</strong><p>${escapeHtml(detail.action)}</p></div>
   `;
   const toggle = $("[data-fate-toggle]");
   const detailPanel = $("[data-fate-detail]");
   if (toggle && detailPanel) {
-    toggle.textContent = "展开这卦怎么用";
+    toggle.textContent = "展开卦象提示";
     toggle.setAttribute("aria-expanded", "false");
     detailPanel.hidden = true;
   }
 
   $("[data-paths]").innerHTML = data.paths.map((path) => `
     <article class="path-card ${path.tone}${path.recommended ? " recommended" : ""}">
-      ${path.recommended ? `<div class="path-recommend-badge">建议先试这条</div>` : ""}
-      <h4>${path.name}</h4>
-      <p>${path.summary}</p>
+      ${path.recommended ? `<div class="path-recommend-badge">建议先走</div>` : ""}
+      <div class="path-title-row"><span class="path-verdict">${escapeHtml(path.verdict)}</span><h4>${escapeHtml(path.name)}</h4></div>
+      <p>${escapeHtml(path.summary)}</p>
+      ${path.recommended ? `<small>${escapeHtml(path.next || data.narrative.actionShort || "7 天内拿一次真实反馈。")}</small>` : ""}
     </article>
   `).join("");
 
   $("[data-share-paths]").innerHTML = data.paths.map((path) => `
-    <div class="share-mini"><span>${path.short}</span><b>${path.income}</b></div>
+    <div class="share-mini"><span>${escapeHtml(path.short)}</span><b>${escapeHtml(path.income)}</b></div>
   `).join("");
 
   $("[data-events]").innerHTML = data.events.map((event) => `
     <div class="event-pill ${event.tone}">
-      <span>${event.probability}%</span>
-      <p>${event.text}</p>
+      <div class="event-mark ${event.iconClass}" aria-hidden="true"><span>${event.icon}</span></div>
+      <div class="event-copy">
+          <span class="event-prob">30天内可能遇到 · ${event.probability}%</span>
+        <p>${escapeHtml(event.text)}</p>
+      </div>
       <i style="width:${event.probability}%"></i>
     </div>
   `).join("");
 }
 
 function renderMobileConclusion(data) {
-  const next = data.narrative?.plainNext || data.narrative?.firstMove || data.narrative?.actionShort || `先把「${data.fate.sign}」对应的问题拆成一个小动作。`;
-  const situation = data.narrative?.plainSituation || data.narrative?.tension;
-  const advice = data.narrative?.plainAdvice || data.narrative?.decision;
+  const next = data.narrative?.mobileNext || data.narrative?.plainNext || data.narrative?.firstMove || data.narrative?.actionShort || `先把「${data.fate.sign}」对应的问题拆成一个小动作。`;
+  const situation = data.narrative?.mobileSituation || data.narrative?.plainSituation || data.narrative?.tension;
+  const advice = data.narrative?.mobileAdvice || data.narrative?.plainAdvice || data.narrative?.decision;
+  const recommended = data.paths?.find((path) => path.recommended) || data.paths?.[1];
+  const route = recommended?.mobile || recommended?.summary || advice;
+  const guardText = data.narrative?.mobileGuard || data.narrative?.guard || advice;
   return `
     <div class="mobile-conclusion" data-mobile-conclusion>
+      <div class="mobile-conclusion-sigil" aria-hidden="true"><span></span></div>
       <div class="mobile-conclusion-main">
-        <span>你现在的情况</span>
-        <strong>${data.narrative.plainTitle}</strong>
-        <p>${situation}</p>
+        <span>本次判断</span>
+        <strong>${escapeHtml(data.narrative.plainTitle)}</strong>
+        <p>${escapeHtml(situation)}</p>
       </div>
-      <div>
-        <span>建议怎么做</span>
-        <strong>先别做大决定</strong>
-        <p>${advice}</p>
-      </div>
-      <div>
-        <span>今天先做什么</span>
-        <strong>${data.narrative.firstMoveTitle}</strong>
-        <p>${next.replace(/^下一步：/, "")}</p>
+      <div class="mobile-conclusion-rows">
+        <p><span>先走</span><strong>${escapeHtml(recommended?.name || "B线 · 先试一次")}</strong><em>${escapeHtml(route)}</em></p>
+        <p><span>别做</span><strong>不要全押</strong><em>${escapeHtml(guardText)}</em></p>
+        <p><span>今天</span><strong>${escapeHtml(data.narrative.firstMoveTitle)}</strong><em>${escapeHtml(next.replace(/^下一步：/, ""))}</em></p>
       </div>
     </div>
   `;
@@ -852,7 +854,7 @@ function toggleFateDetail(button) {
   const willOpen = detail.hidden;
   detail.hidden = !willOpen;
   button.setAttribute("aria-expanded", String(willOpen));
-  button.textContent = willOpen ? "收起解读" : "展开这卦怎么用";
+  button.textContent = willOpen ? "收起卦象提示" : "展开卦象提示";
 }
 
 async function initLiveStats() {
@@ -899,11 +901,11 @@ async function postLiveEvent(label) {
 
 function renderLiveStats() {
   const total = Math.max(Number(liveStats.total || 100), 100).toLocaleString("zh-CN");
-  const latest = liveStats.events?.[0]?.text || `已有 ${total} 位求索者读到自己的人生沙盘`;
+  const latest = liveStats.events?.[0]?.text || `${total} 位求索者已经读到自己的沙盘`;
   document.querySelectorAll("[data-live-count], [data-live-count-result]").forEach((node) => {
     node.textContent = total;
   });
-  $("[data-live-action]").textContent = "位求索者已读到自己的沙盘";
+  $("[data-live-action]").textContent = "位求索者读过沙盘";
   $("[data-live-feed]").textContent = latest;
 }
 
@@ -941,11 +943,11 @@ function getPlayerType(a, risk, growth, riskType) {
 
 function getPlayerCopy(type) {
   return {
-    "风险开拓者": "你会被高上限吸引，但需要给现金流设置护栏。",
-    "转型探索者": "旧身份正在松动，新身份还没完全显形。你适合用小实验替自己点灯。",
-    "稳健执行者": "你擅长把日子修成堡垒，但也需要定期打开一扇新窗。",
-    "观察型玩家": "你能听见风向变化，适合先收集信号，再选择下一次落子。",
-    "平衡型玩家": "你不是不敢赌，而是更适合带着回城卷轴穿过雾区。",
+    "风险开拓者": "你适合追高上限，但先写好止损线。",
+    "转型探索者": "你已经想换活法了，先用小实验验证。",
+    "稳健执行者": "你很会稳住生活，也需要留一点新机会。",
+    "观察型玩家": "你适合先拿反馈，再决定下一步。",
+    "平衡型玩家": "你可以试新路，但要保留退路。",
   }[type];
 }
 
@@ -961,37 +963,93 @@ function getPlayerPersona(type) {
 
 function buildPaths(a, score, reference = getReferenceProfile(a)) {
   const trouble = Array.isArray(a.troubles) && a.troubles.length ? a.troubles[0] : "未来看不清";
-  const stableIncome = score.wealth > 68 ? "收入大概率稳中小涨" : "收入先求稳定，小幅改善";
-  const optimizeIncome = score.growth > 68 ? "有机会换到更高收入" : "收入可能小涨，重点是验证方向";
-  const rebuildIncome = score.risk > 70 ? "上限更高，但波动也更大" : "前期收入可能下降，需要准备缓冲";
+  const pathContext = {
+    "职业去留": {
+      a: "先保住收入，简历今晚补完。",
+      b: "投 3 个岗位，聊 2 个同行，看外面值不值得去。",
+      c: "拿到靠谱 offer，再谈离开。",
+      next: "今晚只做一件事：补简历里最能证明你的成果。",
+    },
+    "方向重选": {
+      a: "旧路先不断，摸清新方向门槛。",
+      b: "7 天做个小作品，看自己愿不愿继续。",
+      c: "有作品或收入线索，再切换。",
+      next: "选一个新方向，用 7 天做出一个能给别人看的样品。",
+    },
+    "自己做事": {
+      a: "先别辞职，把想法拆成一次小售卖。",
+      b: "先卖一次：发报价、接小单、问真实客户。",
+      c: "有存款、有客户，再认真开局。",
+      next: "今天先问 5 个潜在客户：这个东西他们愿不愿意付钱。",
+    },
+    "钱不够稳": {
+      a: "先算清 3 个月支出，堵住一个漏钱点。",
+      b: "谈一次涨薪，或接一个能收钱的小项目。",
+      c: "没有新收入前，先别做大动作。",
+      next: "把未来 3 个月固定支出写出来，再找一个能加钱的入口。",
+    },
+    "意义感变低": {
+      a: "先别推翻生活，先找出最耗你的那一块。",
+      b: "做一件看得见成果的小事，先找回劲头。",
+      c: "确认新目标能长期做，再谈重来。",
+      next: "挑一件能当天完成的小事，让自己先看到一点结果。",
+    },
+    "关系消耗": {
+      a: "先少答应一次，把自己的节奏拿回来。",
+      b: "设一个小边界，看对方是否尊重。",
+      c: "边界反复被踩，再考虑拉开距离。",
+      next: "下一次被消耗时，只说清一个边界，不解释太久。",
+    },
+    "未来看不清": {
+      a: "先把最担心的事写成三个具体问题。",
+      b: "挑一个问题，用 7 天拿一次真实反馈。",
+      c: "信息清楚后，再做难回头的决定。",
+      next: "把最担心的事写成一句能回答的问题。",
+    },
+  };
+  const copy = pathContext[trouble] || pathContext["未来看不清"];
+
+  const names = {
+    "职业去留": ["A · 暂时不走", "B · 先看机会", "C · 有 offer 再走"],
+    "方向重选": ["A · 旧路先留", "B · 做个样品", "C · 有反馈再换"],
+    "自己做事": ["A · 不先辞职", "B · 先卖一次", "C · 有客户再开局"],
+    "钱不够稳": ["A · 先堵漏", "B · 多开收入口", "C · 稳了再换"],
+    "意义感变低": ["A · 先找耗点", "B · 做件有劲的事", "C · 看清目标再重来"],
+    "关系消耗": ["A · 少答应一点", "B · 先设边界", "C · 不尊重就拉开"],
+    "未来看不清": ["A · 写清问题", "B · 7天验证", "C · 看清再定"],
+  }[trouble] || ["A · 先稳住", "B · 先试一次", "C · 大改之前"];
 
   return [
     {
-      tone: "green",
-      name: "A线 · 先稳住",
-      short: "继续现在",
-      summary: `不太建议把它当最终答案；它只是让你先缓一口气，等钱、精力和信息补齐后再看「${trouble}」。`,
-      mobile: `先保住收入和节奏，再观察「${trouble}」是不是反复出现。`,
-      income: stableIncome,
+      tone: "guard",
+      name: names[0],
+      short: "保底线",
+      summary: copy.a,
+      verdict: "保底",
+      mobile: copy.a,
+      income: score.wealth > 68 ? "稳住基本盘" : "先稳现金流",
       risk: "别拖成习惯性忍耐",
     },
     {
-      tone: "blue",
-      name: "B线 · 小幅调整",
-      short: "小幅调整",
+      tone: "chosen",
+      name: names[1],
+      short: "小测试",
       recommended: true,
-      summary: `最建议先走：用一次低成本试探换真实反馈，别在脑子里反复纠结。`,
-      mobile: `先做一个小测试，比一直想更快知道有没有机会。`,
-      income: optimizeIncome,
+      summary: copy.b,
+      verdict: "推荐",
+      mobile: copy.b,
+      next: copy.next,
+      income: score.growth > 68 ? "最值得先试" : "先拿反馈",
       risk: "测试要有截止日",
     },
     {
-      tone: "red",
-      name: "C线 · 大幅重来",
-      short: "大幅改变",
-      summary: `只有准备好存款、退路和截止日期时再选；否则它更像被压力推着逃离。`,
-      mobile: `可以大改，但先算清钱、时间和退路。`,
-      income: rebuildIncome,
+      tone: "bold",
+      name: names[2],
+      short: "大动作",
+      summary: copy.c,
+      verdict: "慎选",
+      mobile: copy.c,
+      income: score.risk > 70 ? "上限高但波动大" : "先别急着全换",
       risk: "前期最容易收入回撤",
     },
   ];
@@ -1071,70 +1129,100 @@ function pickBySeed(label, a, list) {
 
 function getResultNarrative(a, playerType, fate, pressure, reference = getReferenceProfile(a), score = {}) {
   const trouble = Array.isArray(a.troubles) && a.troubles.length ? a.troubles[0] : "未来不确定";
-  const secondTrouble = Array.isArray(a.troubles) && a.troubles[1] ? a.troubles[1] : "选择成本";
   const state = a.state || "当前章节";
-  const pressureLine = pressure > 70 ? "你现在压力偏高，先别在情绪最满的时候做大决定。" : "你可以开始试探，但要用真实反馈校准。";
+  const pressureLine = pressure > 70 ? "先别在最烦的时候拍板。" : "先试一次，再决定要不要加码。";
   const decisionLens = getDecisionLens(a, { pressure, wealth: score.wealth ?? 50 }, reference);
   const wealthLow = (score.wealth ?? 50) < 48;
   const growthHigh = (score.growth ?? 50) > 68;
   const riskHigh = (score.risk ?? 50) > 70;
-  const firstMoveTitle = wealthLow ? "先稳住钱" : pressure > 70 ? "先降压力" : growthHigh ? "先拿反馈" : "先小步试";
-  const headline = pickBySeed("headline", a, [
-    `先别急着推翻生活，先找一条能试的小路`,
-    `你现在需要的不是答案，是一次真实验证`,
-    `别把人生当单选题，先做一个可承受的试验`,
-    `方向还没完全亮，但可以先点第一盏灯`,
-  ]);
-  const tension = pickBySeed("tension", a, [
-    `你纠结的表面是「${trouble}」，真正卡住你的多半是「${secondTrouble}」和安全感的拉扯。`,
-    `你现在像处在「${state}」：还能撑，但已经不想只靠忍耐往前走。`,
-    `这不是简单想逃离现状，更像是在问：我继续投入，还值不值？`,
-    `你不是完全没行动力，而是还没看清每条路要付什么代价。`,
-  ]);
+  const firstMoveTitle = wealthLow ? "算现金流" : pressure > 70 ? "先降压力" : growthHigh ? "拿真实反馈" : "小步试一次";
+  const adviceTitle = wealthLow ? "先别裸辞" : riskHigh ? "能冲但留退路" : growthHigh ? "先去验证" : "别只空想";
+  const headline = wealthLow
+    ? "先把钱稳住"
+    : pressure > 70
+      ? "先别在压力里拍板"
+      : growthHigh
+        ? "这件事值得试一次"
+        : "先拿一次真实反馈";
+  const tension = wealthLow
+    ? `你现在想处理「${trouble}」，但最先要保住的是收入和退路。`
+    : pressure > 70
+      ? `你不是没有答案，是最近太累，容易把烦躁当成决定。`
+      : `你卡在「${trouble}」。别先想终局，先拿一次现实反馈。`;
   const actionShort = decisionLens.smallStep;
   const decision = wealthLow
-    ? `先别急着换工作、转行或创业。先把现金流稳住，让自己至少能承受一次小试错。`
+    ? `先别裸辞。收入稳住后，再试一个不会伤筋动骨的小动作。`
     : riskHigh
-      ? `你可以往外冲，但要先写清止损线：最多投入多少时间、多少钱，失败后怎么退回来。`
+      ? `可以往前走，但先写好底线：花多少钱、试多久、怎么退。`
       : growthHigh
-        ? `更值得先走优化线：用一次面试、一个项目或一次合作，看外面到底有没有机会。`
-        : `不要急着做终局选择。先用低成本动作试一下，哪条路有反馈，再继续加码。`;
+        ? `先小幅调整。面试一次、接个小项目，看看外面是否真有路。`
+        : `先低成本试一次。有回应就继续，没回应就换办法。`;
   const firstMove = wealthLow
-    ? `先列出未来 3 个月必须花的钱，再决定自己能试多大。`
+    ? `列出未来 3 个月必须花的钱，再决定自己能试多大。`
     : pressure > 70
       ? `先解决一个最吵的问题：睡眠、沟通、现金流，先救一个就好。`
       : actionShort;
   const window = pickBySeed("window", a, [
-    `接下来 7 天适合做一次验证，30 天后再判断要不要继续。`,
-    `短期不要追求彻底翻盘，先追求一次看得见的反馈。`,
-    `机会不是等来的，是你把它拆成一个能做的动作之后才会出现。`,
+    `接下来 7 天只做一次验证，30 天后再决定。`,
+    `短期别追求翻盘，先拿一次真实反馈。`,
+    `把机会拆成一个今天能做的小动作。`,
   ]);
   const guard = reference.guardrail || (riskHigh ? "先画止损线，再谈上限。" : "先确认安全垫，再决定动作大小。");
-  const plainReference = `${reference.age.label}、${reference.city.label}、${reference.industry.label}这几个条件放在一起，最该先看的不是“要不要立刻改变”，而是改变的成本你能不能扛住。`;
+  const mobileGuard = wealthLow
+    ? "至少留出 3 个月生活费，再做大动作。"
+    : riskHigh
+      ? "先写清最多投入多少时间和钱。"
+      : pressure > 70
+        ? "别在最烦的时候拍板，先睡一晚。"
+        : "先做小测试，不要一次全押。";
   const plainTitle = wealthLow
     ? "先把钱稳住，再谈改变"
     : pressure > 70
-      ? "你需要先降压力，再做选择"
+      ? "先把压力降下来"
       : growthHigh
-        ? "可以试试新机会，但别一把梭"
-        : "先小步试，不要空想太久";
+        ? "可以试新机会，但别全押"
+        : "先小步试，别一直想";
   const plainSituation = wealthLow
-    ? `你现在最容易被「${trouble}」牵着走，但真正要先处理的是安全感。钱和退路不稳时，大改变会让压力更大。`
+    ? `你想处理「${trouble}」，但现在最怕断收入。先别让钱突然变紧。`
     : pressure > 70
-      ? `你现在不是没想法，而是压力太满。这个状态下做决定，很容易把一时焦虑当成真正答案。`
-      : `你不是必须马上选一条路。现在更适合先做一个小测试，看看外面有没有真实机会。`;
+      ? `你已经很累了。先别在这个状态下做大决定。`
+    : `这件事不需要今天定终局。先试一次，看现实怎么回应你。`;
   const plainAdvice = wealthLow
-    ? "先不要急着裸辞、转行或创业。先把现金流和退路准备好，再做下一步。"
+    ? "先保住收入，再找一个低成本试法。钱稳一点，选择会清楚很多。"
     : riskHigh
-      ? "可以往前冲，但先写清楚最多投入多少时间和钱，失败了怎么退回来。"
+      ? "你可以往前走，但先写好底线：试多久、花多少钱、失败了怎么退。"
       : growthHigh
-        ? "先用一次面试、一个项目或一次合作测试机会，不要只在脑子里想。"
-        : "先用低成本方式试一下，有反馈再加码，没反馈就及时调整。";
+      ? "先拿真实反馈。比如面试一次、聊一个客户、做一个小作品。"
+      : "先小试一次。能得到回应就继续，没回应就换办法。";
   const plainNext = wealthLow
     ? "把未来 3 个月必须花的钱列出来，算清自己能承受多大的试错。"
     : pressure > 70
       ? "今天只处理一个最吵的问题：睡眠、沟通、现金流，先救一个。"
       : actionShort;
+  const mobileSituation = wealthLow
+    ? `想处理「${trouble}」，先别让收入断掉。`
+    : pressure > 70
+      ? "先别在最累的时候做大决定。"
+      : `先试一次，别只在脑子里打转。`;
+  const mobileAdvice = wealthLow
+    ? "别裸辞，也别一次性大转向。"
+    : riskHigh
+      ? "能往前走，但先写好止损线。"
+      : growthHigh
+        ? "先拿真实反馈，再决定要不要加码。"
+        : "先低成本试一次，有回应再继续。";
+  const mobileNext = wealthLow
+    ? "今晚算清 3 个月固定支出。"
+    : pressure > 70
+      ? "今天先解决一个最吵的问题。"
+      : decisionLens.smallStep.replace(/。$/, "。");
+  const practicalKey = wealthLow
+    ? "钱不稳时，最大的答案不是换路，是先别让自己断粮。"
+    : riskHigh
+      ? "你不是不能冲，是要知道冲到哪里停。"
+      : growthHigh
+        ? "这件事值得试，但要让真实反馈来证明。"
+        : "先把问题拆小，拿到一个反馈。";
   return {
     headline,
     tension,
@@ -1143,13 +1231,18 @@ function getResultNarrative(a, playerType, fate, pressure, reference = getRefere
     firstMove,
     window,
     guard,
+    adviceTitle,
     plainTitle,
     plainSituation,
     plainAdvice,
     plainNext,
-    reference: `${plainReference}${reference.guardrail ? ` ${reference.guardrail}` : ""}`,
-    seen: `沙盘先读到「${trouble}」，再读到你停在「${state}」。这说明你要处理的不是一个选择，而是选择背后的压力。`,
-    key: `你更像${playerType}。重点不是敢不敢变，而是能不能用可承受的成本换到真实反馈。`,
+    mobileSituation,
+    mobileAdvice,
+    mobileNext,
+    mobileGuard,
+    reference: practicalKey,
+    seen: `你现在最耗的是「${trouble}」，状态停在「${state}」。先把最吵的那件事处理掉。`,
+    key: `你更像${playerType}。不是不能变，是要用你承受得起的方式变。`,
     action: `把「${trouble}」拆成一个 7 天内能完成的小动作：${actionShort}${pressureLine}`,
     actionShort,
     sign: `签面「${fate.sign}」的意思很简单：${fate.oracle}`,
@@ -1157,40 +1250,68 @@ function getResultNarrative(a, playerType, fate, pressure, reference = getRefere
 }
 
 function renderResultNarrative(narrative) {
+  const guard = narrative.mobileGuard || narrative.guard;
   return `
-    <span>沙盘解读 · 先看这三句</span>
-    <h3>${narrative.headline}</h3>
-    <p class="narrative-lead">${narrative.tension}</p>
+    <span>魔法师批注</span>
+    <h3>${escapeHtml(narrative.headline)}</h3>
+    <p class="narrative-lead">${escapeHtml(narrative.tension)}</p>
     <div class="narrative-points">
-      <div class="narrative-card focus"><b>结论</b><p>${narrative.decision}</p></div>
-      <div class="narrative-card"><b>理由</b><p>${narrative.reference}</p></div>
-      <div class="narrative-card"><b>下一步</b><p>${narrative.firstMove}</p></div>
+      <div class="narrative-card focus"><b>判断</b><p>${escapeHtml(narrative.decision)}</p></div>
+      <div class="narrative-card"><b>现在做</b><p>${escapeHtml(narrative.firstMove)}</p></div>
+      <div class="narrative-card detail-card"><b>别急</b><p>${escapeHtml(guard)}</p></div>
     </div>
   `;
 }
 
 function renderOracleNarrative(a, fate) {
-  const question = a.oracleQuestion || "心中所求";
+  const question = getOracleQuestionDisplay(a);
+  const note = (a.oracleNote || "").trim().replace(/[。！？!?.,，、；;\s]+$/, "");
   const lens = getOracleLens(a);
   const cast = fate.cast;
-  const tendency = cast.yangCount >= 4 ? "可以行动，但别一次押太大" : cast.yangCount <= 2 ? "先别硬冲，准备不够会更累" : "先小试，再决定要不要加码";
+  const tendency = getOracleTendency(a, cast);
   return `
-    <span>时间卦解 · ${lens.label}</span>
-    <h3>${fate.sign}：${tendency}</h3>
-    <p class="narrative-lead">你问的是「${question}」。这次先看卦象落在什么位置，再看眼前最该处理的那一步。</p>
+    <span>时间卦解 · ${escapeHtml(lens.label)}</span>
+    <h3>${escapeHtml(fate.sign)}：${escapeHtml(tendency)}</h3>
+    <p class="narrative-lead">你问的是「${escapeHtml(question)}」。${note ? `背景是：${escapeHtml(note)}。` : ""}这卦只看眼前：先把卡点看清，再做一个不伤身的小动作。</p>
     <div class="narrative-points oracle-points">
-      <p><b>卡点</b>${fate.plainProblem}</p>
-      <p><b>先做</b>${fate.plainAction}</p>
-      <p><b>别急</b>${fate.plainAvoid}</p>
+      <div class="narrative-card focus"><b>卡点</b><p>${escapeHtml(fate.plainProblem)}</p></div>
+      <div class="narrative-card"><b>先做</b><p>${escapeHtml(fate.plainAction)}</p></div>
+      <div class="narrative-card detail-card"><b>别急</b><p>${escapeHtml(fate.plainAvoid)}</p></div>
     </div>
   `;
+}
+
+function getOracleTendency(a, cast) {
+  const kind = a.oracleKind || inferOracleKind(a.oracleQuestion);
+  const moving = cast.yangCount >= 4;
+  const quiet = cast.yangCount <= 2;
+  const map = {
+    work: moving ? "先验证机会" : quiet ? "先别裸辞" : "先骑驴找马",
+    direction: moving ? "先做样品" : quiet ? "先补准备" : "先试一小段",
+    side: moving ? "先卖一次" : quiet ? "先别砸钱" : "先低成本试",
+    money: moving ? "先开收入口" : quiet ? "先算清现金流" : "先堵一个漏点",
+    romance: moving ? "认真谈一次" : quiet ? "先看行动" : "先给观察期",
+    "new-love": moving ? "可以靠近看看" : quiet ? "先慢一点" : "先看相处感",
+    family: moving ? "把话说清楚" : quiet ? "先整理边界" : "先谈一个点",
+    people: moving ? "先设边界" : quiet ? "少消耗自己" : "先减少一次答应",
+    study: moving ? "先做出作品" : quiet ? "先别冲动报名" : "先试学一周",
+    city: moving ? "先查落脚点" : quiet ? "先别急着搬" : "先算成本",
+  };
+  return map[kind] || (moving ? "先往前一步" : quiet ? "先准备清楚" : "先小试一次");
+}
+
+function getOracleQuestionDisplay(a) {
+  const preset = (a.oraclePreset || "").replace(/^我想知道/, "").trim();
+  const question = (a.oracleQuestion || "").trim();
+  if (preset) return preset;
+  return question || "心中所求";
 }
 
 function getOracleOnlyNarrative(a, fate) {
   const question = a.oracleQuestion || "心中所求";
   const lens = getOracleLens(a);
   const cast = fate.cast;
-  const tendency = cast.yangCount >= 4 ? "可以行动，但别一次押太大" : cast.yangCount <= 2 ? "先别硬冲，准备不够会更累" : "先小试，再决定要不要加码";
+  const tendency = getOracleTendency(a, cast);
   return `你问的是：「${question}」。这次按「${lens.label}」解。此刻落卦为「${fate.sign}」，${cast.yangCount}阳${6 - cast.yangCount}阴。${tendency}。${fate.plainAction}`;
 }
 
@@ -1204,15 +1325,15 @@ function getFateDetail(a, fate, playerType) {
     story,
     signals: [
       {
-        title: "这卦落在哪里",
-        copy: moving ? `落在“可以推进，但别失控”的位置。${lens.issue}` : quiet ? `落在“先补准备，再做决定”的位置。${lens.issue}` : `落在“先试一下，不急着定终身”的位置。${lens.issue}`,
+        title: "卦象提醒",
+        copy: moving ? `可以往前一步，但别一次押完。${lens.issue}` : quiet ? `先把准备补齐，再决定。${lens.issue}` : `先试一次小的，不急着定终身。${lens.issue}`,
       },
       {
-        title: "真正卡住的点",
+        title: "卡住你的点",
         copy: getOracleStuckPoint(a, lens, question),
       },
       {
-        title: "今天怎么用",
+        title: "今天先做",
         copy: playerType.includes("开拓") ? `${fate.plainAction} 你可以冲，但先写好底线。` : fate.plainAction,
       },
     ],
@@ -1223,19 +1344,19 @@ function getFateDetail(a, fate, playerType) {
 function getOracleStory(a, fate, lens, moving, quiet) {
   const kind = a.oracleKind || inferOracleKind(a.oracleQuestion);
   const question = a.oracleQuestion || lens.question;
-  const motion = moving ? "已经有风，适合让事情往前走一点" : quiet ? "雾还没散，适合先把准备补齐" : "一半有动静，一半还要观察";
+  const motion = moving ? "先往前一步，边走边看" : quiet ? "先别硬冲，把话和准备补齐" : "先做一次小测试，看反馈再说";
   const stories = {
-    work: `你问的是工作去留，这卦像周五晚上还亮着的办公室。你已经知道哪里让你累，但新位置还没真正给出答案。「${fate.sign}」提醒你：先别把辞职当出口，先去看市场有没有门。${motion}。`,
-    direction: `你问的是换方向，这卦像一张摊开的课程表和一份旧简历。旧路不是完全没用，新路也不是只靠热情就能走。「${fate.sign}」提醒你：先找能迁移的技能，再做一次小验证。${motion}。`,
-    side: `你问的是副业或创业，这卦像夜里刚点亮的小摊。灯亮了，但还不知道有没有人停下。「${fate.sign}」提醒你：先卖出一小份、问到一个真实价格，再决定要不要加大投入。${motion}。`,
-    money: `你问的是收入和钱，这卦像一只放在桌上的钱袋。最重要的不是马上装满，而是先确认哪里在漏。「${fate.sign}」提醒你：先看现金流、固定支出和能马上争取的钱。${motion}。`,
-    romance: `你问的是这段关系，这卦像两个人坐在同一张桌前，中间有一盏灯。灯还没灭，但也不能只靠回忆续着。「${fate.sign}」提醒你：看对方有没有行动，不只听对方怎么说。${motion}。`,
-    "new-love": `你问的是新的感情，这卦像雾里有人递来一盏灯。可以靠近，但别急着把对方想成答案。「${fate.sign}」提醒你：多看一次现实相处，别只看心动那一下。${motion}。`,
-    family: `你问的是家里的沟通，这卦像一张饭桌，大家都在，但真正的话还没说出口。「${fate.sign}」提醒你：先讲清自己的压力和底线，不要一开口就变成翻旧账。${motion}。`,
-    people: `你问的是一段消耗你的人际关系，这卦像手腕上拴着一根细线。它不一定要剪断，但你要知道是谁一直在拉。「${fate.sign}」提醒你：先设一个小边界，看关系会不会变轻。${motion}。`,
-    study: `你问的是学习投入，这卦像书页里夹着一把钥匙。钥匙不该只被收藏，它要能打开现实里的门。「${fate.sign}」提醒你：先选一个能产出作品、证书或机会的目标。${motion}。`,
-    city: `你问的是城市迁移，这卦像桌上的一张车票。想走是真的，但目的地也要能接住你。「${fate.sign}」提醒你：先算工作、住处、成本和孤独感，再决定要不要动身。${motion}。`,
-    general: `你问的是「${question}」，这卦像一团线放在手心。先别急着剪断，也别继续揉成一团。「${fate.sign}」提醒你：先找到线头，把问题拆成一个今天能验证的小动作。${motion}。`,
+    work: `这卦像你站在公司门口。里面有稳定工资，外面有新机会，但门牌还没看清。先别裸辞，先确认岗位、薪资和团队。${motion}。`,
+    direction: `这卦像旧路旁边亮起一条窄路。你不用把过去清零，先带着旧经验试走一小段。${motion}。`,
+    side: `这卦像夜里点起一个小摊。灯可以先亮，但不要一开始就租店、囤货、砸钱。先卖出第一单。${motion}。`,
+    money: `这卦像一只钱袋被你摊在桌上。别先幻想暴涨，先看收入、固定支出和应急钱。${motion}。`,
+    romance: `这卦像两个人坐在一盏灯旁。别只问爱不爱，先看问题出现时，对方愿不愿意一起修。${motion}。`,
+    "new-love": `这卦像雾里有人递来一盏灯。可以靠近看看，但别太快把对方当答案。${motion}。`,
+    family: `这卦像你把一句话含了很久。重点不是吵赢，而是说清压力、边界和你希望被怎样支持。${motion}。`,
+    people: `这卦像一张越聊越累的桌子。先少答应一次，少解释一点，看关系会不会轻一些。${motion}。`,
+    study: `这卦像书桌上亮起的一页。学习可以继续，但要落到作品、证书、机会或收入上。${motion}。`,
+    city: `这卦像一张还没标好落脚点的车票。先确认工作、住处和生活成本，再谈远方。${motion}。`,
+    general: `这卦不替你把「${question}」判死。它只提醒你：先拆成今天能做的一步，做完再看下一步。${motion}。`,
   };
   return stories[kind] || stories.general;
 }
@@ -1280,13 +1401,13 @@ function getFate(a, risk, pressure) {
     ...enriched,
     cast,
     meaning: a.mode === "命运模式" ? [
-      { label: "这卦在说", text: enriched.plainMeaning },
-      { label: "对应现实", text: enriched.plainProblem },
-      { label: "下一步", text: enriched.plainAction },
+      { label: "提醒", text: enriched.plainMeaning },
+      { label: "卡点", text: enriched.plainProblem },
+      { label: "先做", text: enriched.plainAction },
     ] : [
-      { label: "这卦在说", text: enriched.plainMeaning },
-      { label: "对应现实", text: pressure > 70 ? `${enriched.plainProblem} 你现在压力偏高，先别在情绪最满的时候拍板。` : enriched.plainProblem },
-      { label: "下一步", text: risk > 70 ? `${enriched.plainAction} 但先把止损线写清楚。` : enriched.plainAction },
+      { label: "提醒", text: enriched.plainMeaning },
+      { label: "卡点", text: enriched.plainProblem },
+      { label: "先做", text: risk > 70 ? `${enriched.plainAction} 但先把止损线写清楚。` : enriched.plainAction },
     ],
   };
 }
@@ -1306,11 +1427,11 @@ function composeHexagram(base, a, cast, risk, pressure) {
     : risk < 45
       ? "你适合稳一点试，不必用大动作证明自己。"
       : "你适合边试边看，不要一开始就押太满。";
-  const storyOpeners = [lens.story, `你可以把「${base.sign}」理解成一个提醒：别急着问结局，先问下一步怎么让自己更清醒。`, `如果把「${state}」当成当前章节，这一卦是在提醒你先把代价和边界看清。`];
+  const storyOpeners = [lens.story, `这卦提醒你：别急着问结局，先看下一步怎么走。`, `你现在处在「${state}」。先看代价，再决定动作大小。`];
   const story = pickBySeed(`hex-story-${base.sign}`, a, storyOpeners);
-  const reading = `这卦落在「${question}」上，意思是：${base.oracle} 简单说，${rhythm}。${pressureHint}`;
+  const reading = `这卦落在「${question}」上。${base.oracle} ${rhythm}。${pressureHint}`;
   const action = `${base.action} ${riskHint}`;
-  const warning = `${base.warning} 不要把卦象当命令，它只是提醒你先看清代价和边界。`;
+  const warning = `${base.warning} 卦象不是命令，只提醒你先看清代价和边界。`;
   const plainMeaning = moving ? `卦象偏动：这件事可以往前推，但要留好退路。` : quiet ? `卦象偏静：现在先准备，别急着做大动作。` : `卦象半动半守：先小试一次，再决定要不要继续。`;
   const plainProblem = pressure > 70 ? `${lens.issue} 但你现在情绪偏满，先别在最焦虑的时候拍板。` : lens.issue;
   const plainAction = moving ? lens.moving : quiet ? lens.quiet : lens.mixed;
@@ -1356,25 +1477,51 @@ function formatCastTime(date) {
 }
 
 function pickEvents(a, risk) {
-  const pool = [
-    { text: "有人约你聊岗位或项目，先问清钱、时间和具体要做什么。", base: 42, tone: "warm" },
-    { text: "你会看到同行换了新方向，别急着羡慕，先问他真实成本。", base: 36, tone: "blue" },
-    { text: "会冒出一个副业想法，先卖一次小服务，不要一上来就囤货。", base: 31, tone: "gold" },
-    { text: "家里或关系里的事会占用精力，重要决定先缓一天再说。", base: 28, tone: "red" },
-    { text: "你会发现一个技能不够用了，先补最影响收入的那一项。", base: 47, tone: "red" },
-    { text: "熟人可能递来机会，但别只听好处，要问清门槛和风险。", base: 24, tone: "gold" },
-    { text: "一笔支出会提醒你重新算账，先确认能撑几个月。", base: 40, tone: "warm" },
-    { text: "一个旧经验可能派上用场，把它整理成简历、作品或报价。", base: 34, tone: "blue" },
-    { text: "一次面试或聊天会让你知道：外面的工资没有想象中那么虚。", base: 38, tone: "blue" },
-    { text: "你可能突然很烦现在的状态，先休息，再判断是不是真的要走。", base: 33, tone: "warm" },
-    { text: "搁置很久的技能会重新被用到，适合捡起来做个小作品。", base: 29, tone: "gold" },
-    { text: "某个普通工作日压力会爆一下，把它当成调整节奏的提醒。", base: 44, tone: "red" },
+  const trouble = Array.isArray(a.troubles) && a.troubles.length ? a.troubles[0] : "未来看不清";
+  const pools = {
+    "职业去留": [
+      ["聊", "event-chat", "有人找你聊岗位。先问薪资、团队、加班。", 46],
+      ["面", "event-chat", "一次面试会让你看清外面的真实价格。", 42],
+      ["历", "event-archive", "你会想改简历。今天先补一个成果。", 38],
+      ["停", "event-rest", "某天会特别想辞职。先睡一晚，别当天决定。", 34],
+    ],
+    "方向重选": [
+      ["课", "event-skill", "你会看到一门课或新方向。先试听，不急着报名。", 40],
+      ["作", "event-skill", "一个小作品会帮你判断新方向适不适合。", 44],
+      ["问", "event-route", "找业内人聊一次，比自己想一周更有用。", 36],
+      ["门", "event-door", "新路会露出入口，但先看门槛。", 32],
+    ],
+    "自己做事": [
+      ["试", "event-side", "会冒出一个点子。先问 5 个人愿不愿意买。", 42],
+      ["钱", "event-money", "会有人问价格。别免费做太久。", 34],
+      ["门", "event-door", "一个熟人可能递来小单。先把交付说清。", 38],
+      ["停", "event-rest", "别急着砸钱。先卖出第一单。", 36],
+    ],
+    "钱不够稳": [
+      ["钱", "event-money", "一笔支出会提醒你算账。先看存款能撑几个月。", 48],
+      ["聊", "event-chat", "适合谈一次涨薪或报价。先准备证据。", 35],
+      ["试", "event-side", "可以接一个小项目补现金流。别贪大。", 32],
+      ["停", "event-rest", "想花钱缓解焦虑时，先等 24 小时。", 39],
+    ],
+    "关系消耗": [
+      ["界", "event-home", "会有一次边界被试探。少解释，直接说不。", 43],
+      ["聊", "event-chat", "一次沟通能看清对方愿不愿意调整。", 37],
+      ["停", "event-rest", "你会想逃开所有人。先减少一件消耗。", 34],
+      ["问", "event-route", "互动后如果更累，就别继续硬撑。", 40],
+    ],
+  };
+  const rawPool = pools[trouble] || [
+    ["问", "event-route", `你会再次想到「${trouble}」。把它写成一个具体问题。`, 38],
+    ["聊", "event-chat", "一次聊天会给你新信息。重点听事实，不听空话。", 34],
+    ["试", "event-side", "有个小机会会出现。先小试，不要全押。", 36],
+    ["停", "event-rest", "状态很乱时，先停一下再决定。", 32],
   ];
+  const pool = rawPool.map(([icon, iconClass, text, base]) => ({ text, base, tone: "signal", icon, iconClass }));
   const offset = Math.abs(hash(`${a.state}${a.resources}${risk}`)) % pool.length;
   return [0, 1, 2, 3].map((i) => {
     const item = pool[(offset + i) % pool.length];
     const drift = Math.abs(hash(`${item.text}-${JSON.stringify(a)}-${i}`)) % 23;
-    const riskBoost = risk > 70 && ["gold", "red"].includes(item.tone) ? 10 : 0;
+    const riskBoost = risk > 70 && ["家", "技", "压"].includes(item.icon) ? 10 : 0;
     return { ...item, probability: clamp(item.base + drift + riskBoost, 18, 82) };
   });
 }
@@ -1426,7 +1573,7 @@ async function exportShareCard() {
 
   const gradient = ctx.createLinearGradient(0, 0, width, height);
   gradient.addColorStop(0, "#090b16");
-  gradient.addColorStop(0.48, "#1a1333");
+  gradient.addColorStop(0.48, "#17130e");
   gradient.addColorStop(1, "#080b12");
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, width, height);
@@ -1444,7 +1591,7 @@ async function exportShareCard() {
   ctx.lineWidth = 2;
   roundRect(ctx, 50, 50, 800, 1100, 10);
   ctx.stroke();
-  ctx.strokeStyle = "rgba(77,163,255,0.18)";
+  ctx.strokeStyle = "rgba(245,221,146,0.16)";
   roundRect(ctx, 74, 74, 752, 1052, 8);
   ctx.stroke();
   ctx.restore();
@@ -1514,19 +1661,19 @@ async function exportShareCard() {
     wrapCanvasText(ctx, data.fate.oracle, 330, 980, 340, 30, 3);
   } else {
     paths.slice(0, 3).forEach((path, index) => {
-    const x = 110 + index * 214;
-    ctx.fillStyle = "rgba(255,255,255,0.055)";
-    roundRect(ctx, x, cardY, 194, 88, 8);
-    ctx.fill();
-    ctx.strokeStyle = index === 0 ? "rgba(57,217,138,0.38)" : index === 1 ? "rgba(77,163,255,0.38)" : "rgba(255,77,79,0.34)";
-    ctx.stroke();
-    ctx.textAlign = "left";
-    ctx.fillStyle = "#f5c542";
-    ctx.font = "900 18px sans-serif";
-    ctx.fillText(path.short, x + 16, cardY + 32);
-    ctx.fillStyle = "#d7d9e3";
-    ctx.font = "600 17px sans-serif";
-    wrapCanvasText(ctx, path.income, x + 16, cardY + 60, 160, 22, 2);
+      const x = 110 + index * 214;
+      ctx.fillStyle = path.recommended ? "rgba(245,197,66,0.12)" : "rgba(255,255,255,0.055)";
+      roundRect(ctx, x, cardY, 194, 88, 8);
+      ctx.fill();
+      ctx.strokeStyle = path.recommended ? "rgba(245,197,66,0.56)" : "rgba(245,197,66,0.2)";
+      ctx.stroke();
+      ctx.textAlign = "left";
+      ctx.fillStyle = path.recommended ? "#f8d879" : "#f5c542";
+      ctx.font = "900 18px sans-serif";
+      ctx.fillText(path.short, x + 16, cardY + 32);
+      ctx.fillStyle = "#d7d9e3";
+      ctx.font = "600 17px sans-serif";
+      wrapCanvasText(ctx, path.verdict || path.income, x + 16, cardY + 60, 160, 22, 2);
     });
   }
 
@@ -1559,7 +1706,7 @@ function drawMagicCircle(ctx, cx, cy, radius) {
     ctx.arc(0, 0, r, 0, Math.PI * 2);
     ctx.stroke();
   });
-  ctx.strokeStyle = "rgba(77,163,255,0.24)";
+  ctx.strokeStyle = "rgba(245,221,146,0.22)";
   for (let i = 0; i < 12; i += 1) {
     const angle = (Math.PI * 2 * i) / 12;
     const inner = radius * 0.52;
@@ -1654,7 +1801,7 @@ function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight, maxLines = Infini
     const test = line + char;
     if (ctx.measureText(test).width > maxWidth && line) {
       if (lines >= maxLines - 1) {
-        ctx.fillText(`${line.slice(0, Math.max(0, line.length - 1))}…`, x, y);
+        ctx.fillText(line.slice(0, Math.max(0, line.length - 1)), x, y);
         return y + lineHeight;
       }
       ctx.fillText(line, x, y);
@@ -1677,6 +1824,19 @@ function roundRect(ctx, x, y, width, height, radius) {
   ctx.arcTo(x, y + height, x, y, radius);
   ctx.arcTo(x, y, x + width, y, radius);
   ctx.closePath();
+}
+
+function escapeHtml(value = "") {
+  return String(value).replace(/[&<>"]/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    "\"": "&quot;",
+  }[char]));
+}
+
+function escapeAttr(value = "") {
+  return escapeHtml(value).replace(/'/g, "&#39;");
 }
 
 function showToast(text) {
