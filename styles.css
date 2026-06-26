@@ -450,6 +450,29 @@ h1 {
   animation: mistTurn 18s linear infinite;
 }
 
+.mode-card::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 190px;
+  height: 190px;
+  border: 1px solid rgba(245,197,66,0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background:
+    radial-gradient(circle, transparent 44%, rgba(245,197,66,0.1) 45%, transparent 46%),
+    conic-gradient(from 0deg, transparent, rgba(245,197,66,0.18), transparent, rgba(77,163,255,0.16), transparent);
+  opacity: 0.72;
+  animation: mistTurn 16s linear infinite reverse;
+}
+
+.mode-card:hover::after,
+.mode-card.selected::after {
+  opacity: 1;
+  box-shadow: 0 0 34px rgba(245,197,66,0.2);
+}
+
 .mode-card > * { position: relative; z-index: 1; }
 
 .mode-card:nth-child(3) { animation-delay: 520ms; }
@@ -1193,11 +1216,33 @@ h1 {
   .boot-sequence { min-height: 420px; }
   .boot-line { white-space: normal; border-right: 0; }
   .engine-card { padding: 22px; }
+  .mode-screen { padding: 12px; align-items: start; }
+  .mode-wrap { min-height: calc(100dvh - 24px); display: grid; grid-template-rows: auto auto auto auto auto; align-content: center; }
+  .mode-wrap .system-kicker { margin-bottom: 5px; font-size: 10px; }
+  .mode-wrap h2 { margin-bottom: 8px; font-size: clamp(32px, 10vw, 42px); line-height: 0.98; }
+  .mode-copy { max-width: 28ch; margin-bottom: 10px; font-size: 13px; line-height: 1.42; }
   .mode-grid,
-  .mode-grid.two-mode { grid-template-columns: 1fr; }
+  .mode-grid.two-mode { grid-template-columns: 1fr; gap: 9px; margin-bottom: 10px; }
   .mode-card,
-  .mode-card.featured { min-height: 178px; }
-  .mode-glyph { margin-bottom: 24px; }
+  .mode-card.featured {
+    min-height: 128px;
+    padding: 13px 13px 13px 100px;
+    border-radius: 8px;
+    animation-duration: 6.5s;
+  }
+  .mode-card::after { left: 51px; top: 50%; width: 88px; height: 88px; }
+  .mode-glyph {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    width: 68px;
+    height: 68px;
+    margin: 0;
+    transform: translateY(-50%);
+    background: rgba(7,10,18,0.42);
+  }
+  .mode-card strong { margin-bottom: 5px; font-size: 23px; line-height: 1.08; }
+  .mode-card em { font-size: 12.5px; line-height: 1.38; }
   .simulator-screen { min-height: 100dvh; padding: 8px; overflow: hidden; }
   .topbar { grid-template-columns: 34px 1fr 40px; gap: 8px; margin-bottom: 8px; }
   .icon-button { width: 36px; height: 36px; font-size: 24px; }
