@@ -777,7 +777,8 @@ function renderResult(data, options = {}) {
     </div>
   `).join("");
 
-  $("[data-fate-meaning]").innerHTML = data.fate.meaning.map((row) => `
+  const fateMeaning = $("[data-fate-meaning]");
+  fateMeaning.innerHTML = oracleOnly ? "" : data.fate.meaning.map((row) => `
     <div class="meaning-row"><strong>${row.label}</strong>${row.text}</div>
   `).join("");
   const detail = getFateDetail(state.answers, data.fate, data.playerType);
@@ -800,7 +801,8 @@ function renderResult(data, options = {}) {
   }
 
   $("[data-paths]").innerHTML = data.paths.map((path) => `
-    <article class="path-card ${path.tone}">
+    <article class="path-card ${path.tone}${path.recommended ? " recommended" : ""}">
+      ${path.recommended ? `<div class="path-recommend-badge">建议先试这条</div>` : ""}
       <h4>${path.name}</h4>
       <p>${path.summary}</p>
       <div class="path-years">
@@ -987,6 +989,7 @@ function buildPaths(a, score, reference = getReferenceProfile(a)) {
       tone: "blue",
       name: "B线 · 小幅调整",
       short: "小幅调整",
+      recommended: true,
       summary: `这是最建议先试的一条路。你不用马上辞职或重来，而是先做一个小测试：聊岗位、投简历、接项目、谈内部机会。它能帮你知道外面到底有没有路。`,
       mobile: `先做一个小测试，比一直想更快知道有没有机会。`,
       income: optimizeIncome,
@@ -1194,7 +1197,7 @@ function renderOracleNarrative(a, fate) {
   return `
     <span>时间卦解 · ${lens.label}</span>
     <h3>${fate.sign}：${tendency}</h3>
-    <p class="narrative-lead">你问的是「${question}」。我会按「${lens.label}」来解，不把它说成玄乎的大道理。</p>
+    <p class="narrative-lead">你问的是「${question}」。这次先看卦象落在什么位置，再看眼前最该处理的那一步。</p>
     <div class="narrative-points oracle-points">
       <p><b>卡点</b>${fate.plainProblem}</p>
       <p><b>先做</b>${fate.plainAction}</p>
@@ -1208,7 +1211,7 @@ function getOracleOnlyNarrative(a, fate) {
   const lens = getOracleLens(a);
   const cast = fate.cast;
   const tendency = cast.yangCount >= 4 ? "可以行动，但别一次押太大" : cast.yangCount <= 2 ? "先别硬冲，准备不够会更累" : "先小试，再决定要不要加码";
-  return `你问的是：「${question}」。这次按「${lens.label}」解。此刻落卦为「${fate.sign}」，${cast.yangCount}阳${6 - cast.yangCount}阴。说人话：${tendency}。${fate.plainAction}`;
+  return `你问的是：「${question}」。这次按「${lens.label}」解。此刻落卦为「${fate.sign}」，${cast.yangCount}阳${6 - cast.yangCount}阴。${tendency}。${fate.plainAction}`;
 }
 
 function getFateDetail(a, fate, playerType) {
@@ -1216,17 +1219,17 @@ function getFateDetail(a, fate, playerType) {
   const lens = getOracleLens(a);
   const moving = fate.cast.yangCount >= 4;
   const quiet = fate.cast.yangCount <= 2;
-  const story = `${lens.story}「${fate.sign}」落在这件事上，重点不是替你拍板，而是提醒你先看哪一步最该动。`;
+  const story = getOracleStory(a, fate, lens, moving, quiet);
   return {
     story,
     signals: [
       {
-        title: "这卦在说什么",
-        copy: moving ? `这件事可以往前推，但要先控住代价。${lens.issue}` : quiet ? `先别硬冲。${lens.issue}` : `可以小试，不适合一口气定终身。${lens.issue}`,
+        title: "这卦落在哪里",
+        copy: moving ? `落在“可以推进，但别失控”的位置。${lens.issue}` : quiet ? `落在“先补准备，再做决定”的位置。${lens.issue}` : `落在“先试一下，不急着定终身”的位置。${lens.issue}`,
       },
       {
-        title: "对应到你这件事",
-        copy: `你问「${question}」，先不要追求一个绝对答案。更有用的是把它拆成：我能验证什么、我能承受什么、我不能再忍什么。`,
+        title: "真正卡住的点",
+        copy: getOracleStuckPoint(a, lens, question),
       },
       {
         title: "今天怎么用",
@@ -1235,6 +1238,44 @@ function getFateDetail(a, fate, playerType) {
     ],
     action: fate.plainAvoid,
   };
+}
+
+function getOracleStory(a, fate, lens, moving, quiet) {
+  const kind = a.oracleKind || inferOracleKind(a.oracleQuestion);
+  const question = a.oracleQuestion || lens.question;
+  const motion = moving ? "已经有风，适合让事情往前走一点" : quiet ? "雾还没散，适合先把准备补齐" : "一半有动静，一半还要观察";
+  const stories = {
+    work: `你问的是工作去留，这卦像周五晚上还亮着的办公室。你已经知道哪里让你累，但新位置还没真正给出答案。「${fate.sign}」提醒你：先别把辞职当出口，先去看市场有没有门。${motion}。`,
+    direction: `你问的是换方向，这卦像一张摊开的课程表和一份旧简历。旧路不是完全没用，新路也不是只靠热情就能走。「${fate.sign}」提醒你：先找能迁移的技能，再做一次小验证。${motion}。`,
+    side: `你问的是副业或创业，这卦像夜里刚点亮的小摊。灯亮了，但还不知道有没有人停下。「${fate.sign}」提醒你：先卖出一小份、问到一个真实价格，再决定要不要加大投入。${motion}。`,
+    money: `你问的是收入和钱，这卦像一只放在桌上的钱袋。最重要的不是马上装满，而是先确认哪里在漏。「${fate.sign}」提醒你：先看现金流、固定支出和能马上争取的钱。${motion}。`,
+    romance: `你问的是这段关系，这卦像两个人坐在同一张桌前，中间有一盏灯。灯还没灭，但也不能只靠回忆续着。「${fate.sign}」提醒你：看对方有没有行动，不只听对方怎么说。${motion}。`,
+    "new-love": `你问的是新的感情，这卦像雾里有人递来一盏灯。可以靠近，但别急着把对方想成答案。「${fate.sign}」提醒你：多看一次现实相处，别只看心动那一下。${motion}。`,
+    family: `你问的是家里的沟通，这卦像一张饭桌，大家都在，但真正的话还没说出口。「${fate.sign}」提醒你：先讲清自己的压力和底线，不要一开口就变成翻旧账。${motion}。`,
+    people: `你问的是一段消耗你的人际关系，这卦像手腕上拴着一根细线。它不一定要剪断，但你要知道是谁一直在拉。「${fate.sign}」提醒你：先设一个小边界，看关系会不会变轻。${motion}。`,
+    study: `你问的是学习投入，这卦像书页里夹着一把钥匙。钥匙不该只被收藏，它要能打开现实里的门。「${fate.sign}」提醒你：先选一个能产出作品、证书或机会的目标。${motion}。`,
+    city: `你问的是城市迁移，这卦像桌上的一张车票。想走是真的，但目的地也要能接住你。「${fate.sign}」提醒你：先算工作、住处、成本和孤独感，再决定要不要动身。${motion}。`,
+    general: `你问的是「${question}」，这卦像一团线放在手心。先别急着剪断，也别继续揉成一团。「${fate.sign}」提醒你：先找到线头，把问题拆成一个今天能验证的小动作。${motion}。`,
+  };
+  return stories[kind] || stories.general;
+}
+
+function getOracleStuckPoint(a, lens, question) {
+  const kind = a.oracleKind || inferOracleKind(question);
+  const points = {
+    work: "卡住你的不是“要不要走”四个字，而是新机会还没有被验证，旧工作的成本又每天都在消耗你。",
+    direction: "卡住你的是重来成本。你需要先确认新方向能不能承接你的旧经验，而不是把过去全部清零。",
+    side: "卡住你的是市场反馈。没有真实客户、报价或订单之前，再多想法都还只是想法。",
+    money: "卡住你的是现金流不清楚。收入、固定支出、债务和应急钱没有摊开，焦虑就会一直放大。",
+    romance: "卡住你的是行动和承诺不一致。你要看的不是对方说得多好，而是问题出现后有没有一起修。",
+    "new-love": "卡住你的是节奏。太快会把期待投射上去，太慢又会一直停在暧昧里。",
+    family: "卡住你的是边界。你既想被理解，又怕一说出口就伤人，所以一直憋着。",
+    people: "卡住你的是消耗感。你可能已经不舒服了，但还在替对方找理由。",
+    study: "卡住你的是投入产出。学习本身没错，但它要能变成作品、机会、证书或更清楚的选择。",
+    city: "卡住你的是落脚点。换城市不是换心情，新地方要有工作、住处和支持系统。",
+    general: `卡住你的不是「${question}」本身，而是它还没有被拆成能验证、能沟通、能承担的小问题。`,
+  };
+  return points[kind] || lens.issue;
 }
 
 function getShareStory(a, playerType, fate, pressure) {
