@@ -1377,18 +1377,18 @@ function formatCastTime(date) {
 
 function pickEvents(a, risk) {
   const pool = [
-    { text: "有人把一个真实机会递到你面前，但它不会包装得很完美", base: 42, tone: "warm" },
-    { text: "行业风向有一次小转弯，旧经验需要换一种说法", base: 36, tone: "blue" },
-    { text: "副业或项目线索出现，适合先试卖一次，不适合立刻豪赌", base: 31, tone: "gold" },
-    { text: "家庭或关系议题临时加重，影响你做决定的速度", base: 28, tone: "red" },
-    { text: "旧技能撞到天花板，逼你补一个新筹码", base: 47, tone: "red" },
-    { text: "熟人带来一张入场券，但真正的门槛在后面", base: 24, tone: "gold" },
-    { text: "现金流提醒你放慢脚步，先算能承受几个月波动", base: 40, tone: "warm" },
-    { text: "一个被你低估的能力开始变值钱，值得重新包装", base: 34, tone: "blue" },
-    { text: "一次面试或聊天让你意识到，外面的标价和想象不同", base: 38, tone: "blue" },
-    { text: "你会突然厌倦原来的叙事，但这未必等于必须离开", base: 33, tone: "warm" },
-    { text: "某个长期搁置的技能开始召唤你，像旧抽屉里亮起的符号", base: 29, tone: "gold" },
-    { text: "压力在某个普通工作日集中爆发，提醒你该修系统了", base: 44, tone: "red" },
+    { text: "有人约你聊岗位或项目，先问清钱、时间和具体要做什么。", base: 42, tone: "warm" },
+    { text: "你会看到同行换了新方向，别急着羡慕，先问他真实成本。", base: 36, tone: "blue" },
+    { text: "会冒出一个副业想法，先卖一次小服务，不要一上来就囤货。", base: 31, tone: "gold" },
+    { text: "家里或关系里的事会占用精力，重要决定先缓一天再说。", base: 28, tone: "red" },
+    { text: "你会发现一个技能不够用了，先补最影响收入的那一项。", base: 47, tone: "red" },
+    { text: "熟人可能递来机会，但别只听好处，要问清门槛和风险。", base: 24, tone: "gold" },
+    { text: "一笔支出会提醒你重新算账，先确认能撑几个月。", base: 40, tone: "warm" },
+    { text: "一个旧经验可能派上用场，把它整理成简历、作品或报价。", base: 34, tone: "blue" },
+    { text: "一次面试或聊天会让你知道：外面的工资没有想象中那么虚。", base: 38, tone: "blue" },
+    { text: "你可能突然很烦现在的状态，先休息，再判断是不是真的要走。", base: 33, tone: "warm" },
+    { text: "搁置很久的技能会重新被用到，适合捡起来做个小作品。", base: 29, tone: "gold" },
+    { text: "某个普通工作日压力会爆一下，把它当成调整节奏的提醒。", base: 44, tone: "red" },
   ];
   const offset = Math.abs(hash(`${a.state}${a.resources}${risk}`)) % pool.length;
   return [0, 1, 2, 3].map((i) => {
