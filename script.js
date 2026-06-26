@@ -805,10 +805,6 @@ function renderResult(data, options = {}) {
       ${path.recommended ? `<div class="path-recommend-badge">建议先试这条</div>` : ""}
       <h4>${path.name}</h4>
       <p>${path.summary}</p>
-      <div class="path-points">
-        ${path.points.map((point) => `<div><span>${point.label}</span><p>${point.text}</p></div>`).join("")}
-      </div>
-      <div class="path-insight"><span>${path.income}</span><b>${path.risk}</b></div>
     </article>
   `).join("");
 
@@ -965,7 +961,6 @@ function getPlayerPersona(type) {
 
 function buildPaths(a, score, reference = getReferenceProfile(a)) {
   const trouble = Array.isArray(a.troubles) && a.troubles.length ? a.troubles[0] : "未来看不清";
-  const decision = getDecisionLens(a, score, reference);
   const stableIncome = score.wealth > 68 ? "收入大概率稳中小涨" : "收入先求稳定，小幅改善";
   const optimizeIncome = score.growth > 68 ? "有机会换到更高收入" : "收入可能小涨，重点是验证方向";
   const rebuildIncome = score.risk > 70 ? "上限更高，但波动也更大" : "前期收入可能下降，需要准备缓冲";
@@ -975,44 +970,29 @@ function buildPaths(a, score, reference = getReferenceProfile(a)) {
       tone: "green",
       name: "A线 · 先稳住",
       short: "继续现在",
-      summary: `先别急着重来。把钱、精力和信息补齐，再判断「${trouble}」是不是现在就要处理。`,
+      summary: `不太建议把它当最终答案；它只是让你先缓一口气，等钱、精力和信息补齐后再看「${trouble}」。`,
       mobile: `先保住收入和节奏，再观察「${trouble}」是不是反复出现。`,
       income: stableIncome,
       risk: "别拖成习惯性忍耐",
-      points: [
-        { label: "适合", text: "存款偏薄、压力偏高，或者还没看清新方向。" },
-        { label: "先做", text: `先处理：${decision.firstRepair}。再找两个人问真实情况。` },
-        { label: "止损", text: "30天后问题还反复出现，就别继续只靠忍。" },
-      ],
     },
     {
       tone: "blue",
       name: "B线 · 小幅调整",
       short: "小幅调整",
       recommended: true,
-      summary: `最建议先走。不要马上辞职或重来，先用一次小测试确认外面到底有没有路。`,
+      summary: `最建议先走：用一次低成本试探换真实反馈，别在脑子里反复纠结。`,
       mobile: `先做一个小测试，比一直想更快知道有没有机会。`,
       income: optimizeIncome,
       risk: "测试要有截止日",
-      points: [
-        { label: "适合", text: "心里想动，但还不确定新路值不值得押。" },
-        { label: "先做", text: decision.smallStep },
-        { label: "判断", text: "7到30天内拿到一次真实反馈，再决定要不要加码。" },
-      ],
     },
     {
       tone: "red",
       name: "C线 · 大幅重来",
       short: "大幅改变",
-      summary: `可以大改，但别靠一口气。先算清钱、时间和退路，不然改变会变成逃离。`,
+      summary: `只有准备好存款、退路和截止日期时再选；否则它更像被压力推着逃离。`,
       mobile: `可以大改，但先算清钱、时间和退路。`,
       income: rebuildIncome,
       risk: "前期最容易收入回撤",
-      points: [
-        { label: "适合", text: "旧路已经明显消耗你，且你有3到6个月缓冲。" },
-        { label: "先做", text: "写清最低存款、最晚日期、失败后回到哪里。" },
-        { label: "别做", text: "不要在情绪最差的一周做不可逆决定。" },
-      ],
     },
   ];
 }
