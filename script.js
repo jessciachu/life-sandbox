@@ -930,43 +930,44 @@ function getResultNarrative(a, playerType, fate, pressure, reference = getRefere
   const trouble = Array.isArray(a.troubles) && a.troubles.length ? a.troubles[0] : "未来不确定";
   const secondTrouble = Array.isArray(a.troubles) && a.troubles[1] ? a.troubles[1] : "选择成本";
   const state = a.state || "当前章节";
-  const pressureLine = pressure > 70 ? "先不要把短期焦虑误读成长期命令。" : "你现在适合让直觉和证据一起上桌。";
+  const pressureLine = pressure > 70 ? "你现在压力偏高，先别在情绪最满的时候做大决定。" : "你可以开始试探，但要用真实反馈校准。";
   const decisionLens = getDecisionLens(a, { pressure, wealth: score.wealth ?? 50 }, reference);
   const wealthLow = (score.wealth ?? 50) < 48;
   const growthHigh = (score.growth ?? 50) > 68;
   const riskHigh = (score.risk ?? 50) > 70;
-  const firstMoveTitle = wealthLow ? "先修现金流" : pressure > 70 ? "先降噪" : growthHigh ? "先拿反馈" : "先做小实验";
+  const firstMoveTitle = wealthLow ? "先稳住钱" : pressure > 70 ? "先降压力" : growthHigh ? "先拿反馈" : "先小步试";
   const headline = pickBySeed("headline", a, [
-    `先别急着改命，先确认哪扇门真的会开`,
-    `你现在缺的不是勇气，是可验证的证据`,
-    `这不是人生单选题，是一轮带护栏的探路`,
-    `雾还在，但第一盏灯已经能点了`,
+    `先别急着推翻生活，先找一条能试的小路`,
+    `你现在需要的不是答案，是一次真实验证`,
+    `别把人生当单选题，先做一个可承受的试验`,
+    `方向还没完全亮，但可以先点第一盏灯`,
   ]);
   const tension = pickBySeed("tension", a, [
-    `表面问题是「${trouble}」，底层拉扯更像「${secondTrouble}」和安全感之间的拔河。`,
-    `你现在的状态是「${state}」：能量没有完全熄灭，但已经不想再靠忍耐通关。`,
-    `沙盘读到的不是逃跑信号，而是你想重新确认投入是否值得。`,
-    `你不是没有行动力，是每一步背后的代价还没被写清楚。`,
+    `你纠结的表面是「${trouble}」，真正卡住你的多半是「${secondTrouble}」和安全感的拉扯。`,
+    `你现在像处在「${state}」：还能撑，但已经不想只靠忍耐往前走。`,
+    `这不是简单想逃离现状，更像是在问：我继续投入，还值不值？`,
+    `你不是完全没行动力，而是还没看清每条路要付什么代价。`,
   ]);
   const actionShort = decisionLens.smallStep;
   const decision = wealthLow
-    ? `先不要把答案押在“大换地图”上。你的第一优先级是把安全垫补到能承受一次小试错。`
+    ? `先别急着换工作、转行或创业。先把现金流稳住，让自己至少能承受一次小试错。`
     : riskHigh
-      ? `你可以往外冲，但要先写止损线：最多投入多少时间、多少钱、多少情绪。没有止损的勇敢会变成消耗。`
+      ? `你可以往外冲，但要先写清止损线：最多投入多少时间、多少钱，失败后怎么退回来。`
       : growthHigh
-        ? `最值得走的是 B 线：用一个真实项目、一次面试或一次合作，把想象换成反馈。`
-        : `不要急着做终局选择。先用低成本动作验证，哪条路会给你回声。`;
+        ? `更值得先走优化线：用一次面试、一个项目或一次合作，看外面到底有没有机会。`
+        : `不要急着做终局选择。先用低成本动作试一下，哪条路有反馈，再继续加码。`;
   const firstMove = wealthLow
-    ? `把未来 3 个月固定支出列出来，再决定试错幅度。`
+    ? `先列出未来 3 个月必须花的钱，再决定自己能试多大。`
     : pressure > 70
-      ? `先删掉一个最吵的变量，睡眠、沟通或现金流先救一个。`
+      ? `先解决一个最吵的问题：睡眠、沟通、现金流，先救一个就好。`
       : actionShort;
   const window = pickBySeed("window", a, [
-    `接下来 7 天适合拿一个外部反馈，30 天适合判断要不要加码。`,
-    `短期不要追求彻底翻盘，先追求一次能让你看清的回声。`,
-    `真正的窗口不是“好运来了”，而是你能把机会拆到可执行。`,
+    `接下来 7 天适合做一次验证，30 天后再判断要不要继续。`,
+    `短期不要追求彻底翻盘，先追求一次看得见的反馈。`,
+    `机会不是等来的，是你把它拆成一个能做的动作之后才会出现。`,
   ]);
   const guard = reference.guardrail || (riskHigh ? "先画止损线，再谈上限。" : "先确认安全垫，再决定动作大小。");
+  const plainReference = `${reference.age.label}、${reference.city.label}、${reference.industry.label}这几个条件放在一起，最该先看的不是“要不要立刻改变”，而是改变的成本你能不能扛住。`;
   return {
     headline,
     tension,
@@ -975,27 +976,24 @@ function getResultNarrative(a, playerType, fate, pressure, reference = getRefere
     firstMove,
     window,
     guard,
-    reference: `${reference.age.label}、${reference.city.label}、${reference.industry.label}叠在一起时，最该先看的不是“要不要立刻改变”，而是「${reference.trouble.label}」背后的成本结构。${reference.guardrail}`,
-    seen: `沙盘先读到「${trouble}」，再读到你停在「${state}」。这说明问题不只在外部选择，也在你怎样给自己留退路。`,
-    key: `你更像${playerType}。重点不是“敢不敢变”，而是“能不能用可承受的成本，换到足够真实的反馈”。`,
-    action: `把「${trouble}」拆成一个 7 天内能完成的小验证：${actionShort}${pressureLine}`,
+    reference: `${plainReference}${reference.guardrail ? ` ${reference.guardrail}` : ""}`,
+    seen: `沙盘先读到「${trouble}」，再读到你停在「${state}」。这说明你要处理的不是一个选择，而是选择背后的压力。`,
+    key: `你更像${playerType}。重点不是敢不敢变，而是能不能用可承受的成本换到真实反馈。`,
+    action: `把「${trouble}」拆成一个 7 天内能完成的小动作：${actionShort}${pressureLine}`,
     actionShort,
-    sign: `签面「${fate.sign}」提醒你：${fate.oracle}`,
+    sign: `签面「${fate.sign}」的意思很简单：${fate.oracle}`,
   };
 }
 
 function renderResultNarrative(narrative) {
   return `
-    <span>魔法师批注 · 重点已标注</span>
+    <span>沙盘解读 · 先看这三句</span>
     <h3>${narrative.headline}</h3>
     <p class="narrative-lead">${narrative.tension}</p>
     <div class="narrative-points">
-      <div class="narrative-card focus"><b>主判</b><p>${narrative.decision}</p></div>
-      <div class="narrative-card"><b>窗口</b><p>${narrative.window}</p></div>
-      <div class="narrative-card"><b>护栏</b><p>${narrative.guard}</p></div>
-      <div class="narrative-card"><b>7日</b><p>${narrative.action}</p></div>
-      <div class="narrative-card"><b>参考</b><p>${narrative.reference}</p></div>
-      <div class="narrative-card"><b>签面</b><p>${narrative.sign}</p></div>
+      <div class="narrative-card focus"><b>结论</b><p>${narrative.decision}</p></div>
+      <div class="narrative-card"><b>理由</b><p>${narrative.reference}</p></div>
+      <div class="narrative-card"><b>下一步</b><p>${narrative.firstMove}</p></div>
     </div>
   `;
 }
@@ -1003,16 +1001,15 @@ function renderResultNarrative(narrative) {
 function renderOracleNarrative(a, fate) {
   const question = a.oracleQuestion || "心中所求";
   const cast = fate.cast;
-  const tendency = cast.yangCount >= 4 ? "动象偏强，事情会先动后定" : cast.yangCount <= 2 ? "静象偏重，宜先蓄力再启程" : "动静相持，关键在于分辨哪一步该先落下";
+  const tendency = cast.yangCount >= 4 ? "事情会先动起来，再慢慢定下来" : cast.yangCount <= 2 ? "现在不宜硬推，先把准备补齐" : "有的部分该动，有的部分要先守住";
   return `
-    <span>时间卦解</span>
-    <h3>${fate.sign}：先看卦中那一幕</h3>
-    <p class="narrative-lead">你问的是「${question}」。此刻落下 ${cast.yangCount} 阳 ${6 - cast.yangCount} 阴，${tendency}。</p>
+    <span>时间卦解 · 说人话版</span>
+    <h3>${fate.sign}：这件事先别急着定输赢</h3>
+    <p class="narrative-lead">你问的是「${question}」。这一卦的提示是：${tendency}。</p>
     <div class="narrative-points oracle-points">
-      <p><b>卦中故事</b>${fate.story}</p>
-      <p><b>此刻暗线</b>${fate.reading}</p>
-      <p><b>可落一子</b>${fate.action}</p>
-      <p><b>避开误区</b>${fate.warning}</p>
+      <p><b>现在卡点</b>${fate.reading}</p>
+      <p><b>可以先做</b>${fate.action}</p>
+      <p><b>别踩的坑</b>${fate.warning}</p>
     </div>
   `;
 }
@@ -1020,8 +1017,8 @@ function renderOracleNarrative(a, fate) {
 function getOracleOnlyNarrative(a, fate) {
   const question = a.oracleQuestion || "心中所求";
   const cast = fate.cast;
-  const tendency = cast.yangCount >= 4 ? "动象偏强，事情会先动后定" : cast.yangCount <= 2 ? "静象偏重，宜先蓄力再启程" : "动静相持，关键在于分辨哪一步该先落下";
-  return `你问的是：「${question}」。此刻落卦为「${fate.sign}」，${cast.yangCount}阳${6 - cast.yangCount}阴，${tendency}。${fate.reading} ${fate.action}`;
+  const tendency = cast.yangCount >= 4 ? "事情会先动起来，再慢慢定下来" : cast.yangCount <= 2 ? "现在不宜硬推，先把准备补齐" : "有的部分该动，有的部分要先守住";
+  return `你问的是：「${question}」。此刻落卦为「${fate.sign}」，${cast.yangCount}阳${6 - cast.yangCount}阴。简单说：${tendency}。${fate.reading} ${fate.action}`;
 }
 
 function getFateDetail(a, fate, playerType) {
@@ -1029,21 +1026,21 @@ function getFateDetail(a, fate, playerType) {
   const moving = fate.cast.yangCount >= 4;
   const quiet = fate.cast.yangCount <= 2;
   const trouble = Array.isArray(a.troubles) && a.troubles.length ? a.troubles[0] : question;
-  const story = `这支「${fate.sign}」落在「${question}」上。${fate.story} ${fate.reading}`;
+  const story = `这支「${fate.sign}」落在「${question}」上。${fate.story}`;
   return {
     story,
     signals: [
       {
         title: moving ? "动象" : quiet ? "静象" : "相持",
-        copy: moving ? "盘面偏动，适合靠近真实机会，但先观察成本和边界。" : quiet ? "盘面偏静，适合补资源、补信息、补判断力，不急着硬推。" : "动静相持，关键不是快慢，而是哪一步最小、最真、最能换来反馈。",
+        copy: moving ? "盘面偏动，可以试着往前走一步，但要先看成本。" : quiet ? "盘面偏静，先补资源和信息，不急着硬推。" : "动静相持，先找最小、最真实的一步。",
       },
       {
         title: "心口",
-        copy: quiet ? "你现在更需要恢复判断力，而不是用一个大动作证明自己还在前进。" : `真正耗你的可能不是「${trouble}」本身，而是这件事迟迟没有被拆成可验证的小问题。`,
+        copy: quiet ? "你现在更需要恢复判断力，而不是立刻证明自己。" : `真正耗你的可能不是「${trouble}」本身，而是它一直没有被拆小。`,
       },
       {
         title: "落子",
-        copy: playerType.includes("开拓") ? `${fate.action} 野心可以保留，但现金流、时间和退路要先画出来。` : fate.action,
+        copy: playerType.includes("开拓") ? `${fate.action} 可以有野心，但先留退路。` : fate.action,
       },
     ],
     action: fate.warning,
@@ -1088,24 +1085,24 @@ function composeHexagram(base, a, cast, risk, pressure) {
   const state = a.state || "当前章节";
   const moving = cast.yangCount >= 4;
   const quiet = cast.yangCount <= 2;
-  const rhythm = moving ? "动象偏强" : quiet ? "静象偏重" : "动静相持";
+  const rhythm = moving ? "事情更容易被推动" : quiet ? "现在更适合先准备" : "一半要动，一半要守";
   const pressureHint = pressure > 70
-    ? "你现在的心气有点满，先把最吵的情绪放低，卦面才会显出真正的路。"
-    : "你还有余地把直觉和证据放到同一张桌上。";
+    ? "你现在压力偏高，先别把焦虑当成答案。"
+    : "你还有余地慢慢判断，不必一次做完决定。";
   const riskHint = risk > 70
-    ? "你可以走快，但不要把退路烧掉。"
+    ? "你可以走快一点，但要先留退路。"
     : risk < 45
-      ? "你适合稳稳试探，不必用大动作证明自己。"
-      : "你适合一边试探，一边保留回城路线。";
+      ? "你适合稳一点试，不必用大动作证明自己。"
+      : "你适合边试边看，不要一开始就押太满。";
   const storyOpeners = [
     `卦中有一幕：${base.image}。有人站在灯下问「${question}」，没有立刻得到一句判词，只先看见局势的形状。`,
     `这一卦像一幅夜图：${base.image}。你问的「${question}」落进去以后，最亮的不是答案，而是下一步该碰哪里。`,
     `法阵里先出现的不是结论，而是画面：${base.image}。它把「${state}」这一页翻开，让你看见问题背后的力道。`,
   ];
   const story = pickBySeed(`hex-story-${base.sign}`, a, storyOpeners);
-  const reading = `${base.oracle} 落在「${question}」上，${rhythm}：${moving ? "适合靠近真实机会，先用行动换回声。" : quiet ? "适合补资源、补信息、补体力，先让判断力回来。" : "适合先分清哪一步该动、哪一步该守。"} ${pressureHint}`;
+  const reading = `这卦落在「${question}」上，意思是：${base.oracle} 简单说，${rhythm}。${pressureHint}`;
   const action = `${base.action} ${riskHint}`;
-  const warning = `${base.warning} 尤其不要把一句卦象当成命令，它更像一盏灯：照亮代价、边界和下一步。`;
+  const warning = `${base.warning} 不要把卦象当命令，它只是提醒你先看清代价和边界。`;
   return {
     sign: base.sign,
     tag: base.tag,
