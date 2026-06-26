@@ -1092,11 +1092,10 @@ h1 {
 }
 .path-card h4 { margin: 0 0 10px; font-size: 22px; }
 .path-card p { color: var(--muted); line-height: 1.65; }
-.path-years { display: grid; gap: 10px; margin: 16px 0; }
-.path-years div { padding: 12px; border: 1px solid rgba(255,255,255,0.09); border-radius: var(--radius); background: rgba(8,11,18,0.28); }
-.path-years span { color: var(--gold); font-size: 12px; font-weight: 900; }
-.path-years strong { display: block; margin: 4px 0; color: var(--soft); }
-.path-years p { margin: 0; font-size: 13px; line-height: 1.55; }
+.path-points { display: grid; gap: 8px; margin: 14px 0; }
+.path-points div { display: grid; grid-template-columns: 44px 1fr; gap: 10px; align-items: start; padding: 10px 0; border-top: 1px solid rgba(255,255,255,0.09); }
+.path-points span { color: var(--gold); font-size: 12px; font-weight: 900; }
+.path-points p { margin: 0; color: var(--soft); font-size: 14px; line-height: 1.55; }
 .path-insight { display: grid; gap: 8px; padding-top: 12px; border-top: 1px solid var(--line); color: var(--soft); font-size: 14px; }
 .path-insight b { color: var(--muted); font-weight: 600; }
 
@@ -1460,25 +1459,13 @@ h1 {
   .path-recommend-badge { margin-bottom: 7px; padding: 4px 8px; font-size: 11px; }
   .path-card h4 { margin-bottom: 6px; font-size: 18px; }
   .path-card > p {
-    display: -webkit-box;
-    overflow: hidden;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
     font-size: 12px;
     line-height: 1.55;
   }
-  .path-years { gap: 6px; margin: 10px 0; }
-  .path-years div { display: grid; grid-template-columns: 48px 1fr; gap: 2px 8px; padding: 8px; border-radius: 8px; }
-  .path-years span { grid-row: 1 / span 2; font-size: 11px; }
-  .path-years strong { margin: 0; font-size: 13px; }
-  .path-years p {
-    display: -webkit-box;
-    overflow: hidden;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    font-size: 11px;
-    line-height: 1.38;
-  }
+  .path-points { gap: 0; margin: 8px 0; }
+  .path-points div { grid-template-columns: 38px 1fr; gap: 8px; padding: 7px 0; }
+  .path-points span { font-size: 11px; }
+  .path-points p { font-size: 11px; line-height: 1.45; }
   .path-insight { gap: 4px; padding-top: 8px; font-size: 12px; }
   .event-list { gap: 8px; }
   .event-pill { min-height: 72px; padding: 10px; border-radius: 8px; }

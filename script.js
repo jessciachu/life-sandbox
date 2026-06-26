@@ -805,8 +805,8 @@ function renderResult(data, options = {}) {
       ${path.recommended ? `<div class="path-recommend-badge">建议先试这条</div>` : ""}
       <h4>${path.name}</h4>
       <p>${path.summary}</p>
-      <div class="path-years">
-        ${path.years.map((year) => `<div><span>${year.year}</span><strong>${year.title}</strong><p>${year.copy}</p></div>`).join("")}
+      <div class="path-points">
+        ${path.points.map((point) => `<div><span>${point.label}</span><p>${point.text}</p></div>`).join("")}
       </div>
       <div class="path-insight"><span>${path.income}</span><b>${path.risk}</b></div>
     </article>
@@ -973,16 +973,16 @@ function buildPaths(a, score, reference = getReferenceProfile(a)) {
   return [
     {
       tone: "green",
-      name: "A线 · 继续现在",
+      name: "A线 · 先稳住",
       short: "继续现在",
-      summary: `适合你还没准备好大改变的时候。先保住当前收入和生活节奏，把「${trouble}」带来的压力降下来。它的好处是稳，坏处是问题可能过一阵还会回来。`,
+      summary: `先别急着重来。把钱、精力和信息补齐，再判断「${trouble}」是不是现在就要处理。`,
       mobile: `先保住收入和节奏，再观察「${trouble}」是不是反复出现。`,
       income: stableIncome,
-      risk: "风险：容易拖久了又开始焦虑",
-      years: [
-        { year: "现在", title: "先稳住", copy: `先处理最影响你的事：${decision.firstRepair}。` },
-        { year: "1-3个月", title: "补筹码", copy: "存一点钱，整理简历/作品，找人聊真实情况。" },
-        { year: "3个月后", title: "再判断", copy: "如果问题还反复出现，就说明不能只靠忍。" },
+      risk: "别拖成习惯性忍耐",
+      points: [
+        { label: "适合", text: "存款偏薄、压力偏高，或者还没看清新方向。" },
+        { label: "先做", text: `先处理：${decision.firstRepair}。再找两个人问真实情况。` },
+        { label: "止损", text: "30天后问题还反复出现，就别继续只靠忍。" },
       ],
     },
     {
@@ -990,28 +990,28 @@ function buildPaths(a, score, reference = getReferenceProfile(a)) {
       name: "B线 · 小幅调整",
       short: "小幅调整",
       recommended: true,
-      summary: `这是最建议先试的一条路。你不用马上辞职或重来，而是先做一个小测试：聊岗位、投简历、接项目、谈内部机会。它能帮你知道外面到底有没有路。`,
+      summary: `最建议先走。不要马上辞职或重来，先用一次小测试确认外面到底有没有路。`,
       mobile: `先做一个小测试，比一直想更快知道有没有机会。`,
       income: optimizeIncome,
-      risk: "风险：测试不能无限拖，要设截止日",
-      years: [
-        { year: "7天", title: "先问/先试", copy: decision.smallStep },
-        { year: "30天", title: "看反馈", copy: "至少完成一次面试、沟通、试稿、报价或合作尝试。" },
-        { year: "90天", title: "决定加码", copy: "有反馈就继续，没反馈就换方法，不要只靠感觉。" },
+      risk: "测试要有截止日",
+      points: [
+        { label: "适合", text: "心里想动，但还不确定新路值不值得押。" },
+        { label: "先做", text: decision.smallStep },
+        { label: "判断", text: "7到30天内拿到一次真实反馈，再决定要不要加码。" },
       ],
     },
     {
       tone: "red",
-      name: "C线 · 大幅改变",
+      name: "C线 · 大幅重来",
       short: "大幅改变",
-      summary: `这是换工作、转行、创业或换城市这种大动作。不是不能做，但要先算清钱、时间和退路。否则它看起来像改变，实际可能只是被压力推着逃走。`,
+      summary: `可以大改，但别靠一口气。先算清钱、时间和退路，不然改变会变成逃离。`,
       mobile: `可以大改，但先算清钱、时间和退路。`,
       income: rebuildIncome,
-      risk: "风险：前期不稳定，容易后悔或收入回撤",
-      years: [
-        { year: "前3个月", title: "最不稳", copy: "会有不适应和反复怀疑，所以一定要留退路。" },
-        { year: "3-12个月", title: "重新证明", copy: "你要把旧经验变成新方向能看懂的能力。" },
-        { year: "1年后", title: "看是否跑通", copy: "跑通就继续加码，没跑通也要及时止损。" },
+      risk: "前期最容易收入回撤",
+      points: [
+        { label: "适合", text: "旧路已经明显消耗你，且你有3到6个月缓冲。" },
+        { label: "先做", text: "写清最低存款、最晚日期、失败后回到哪里。" },
+        { label: "别做", text: "不要在情绪最差的一周做不可逆决定。" },
       ],
     },
   ];
