@@ -615,7 +615,7 @@ function renderResult(data, options = {}) {
   const detail = getFateDetail(state.answers, data.fate, data.playerType);
   $("[data-fate-detail]").innerHTML = `
     <div class="fate-story-block">
-      <span>启发小故事</span>
+      <span>这卦怎么用</span>
       <p>${detail.story}</p>
     </div>
     <div class="fate-signal-grid">
@@ -626,7 +626,7 @@ function renderResult(data, options = {}) {
   const toggle = $("[data-fate-toggle]");
   const detailPanel = $("[data-fate-detail]");
   if (toggle && detailPanel) {
-    toggle.textContent = "展开白话解读";
+    toggle.textContent = "展开这卦怎么用";
     toggle.setAttribute("aria-expanded", "false");
     detailPanel.hidden = true;
   }
@@ -686,7 +686,7 @@ function toggleFateDetail(button) {
   const willOpen = detail.hidden;
   detail.hidden = !willOpen;
   button.setAttribute("aria-expanded", String(willOpen));
-  button.textContent = willOpen ? "收起白话解读" : "展开白话解读";
+  button.textContent = willOpen ? "收起解读" : "展开这卦怎么用";
 }
 
 async function initLiveStats() {
@@ -1021,15 +1021,15 @@ function renderResultNarrative(narrative) {
 function renderOracleNarrative(a, fate) {
   const question = a.oracleQuestion || "心中所求";
   const cast = fate.cast;
-  const tendency = cast.yangCount >= 4 ? "事情会先动起来，再慢慢定下来" : cast.yangCount <= 2 ? "现在不宜硬推，先把准备补齐" : "有的部分该动，有的部分要先守住";
+  const tendency = cast.yangCount >= 4 ? "可以行动，但别一次押太大" : cast.yangCount <= 2 ? "先别硬冲，准备不够会更累" : "先小试，再决定要不要加码";
   return `
     <span>时间卦解 · 说人话版</span>
-    <h3>${fate.sign}：这件事先别急着定输赢</h3>
-    <p class="narrative-lead">你问的是「${question}」。这一卦的提示是：${tendency}。</p>
+    <h3>${fate.sign}：先把问题缩小一点</h3>
+    <p class="narrative-lead">你问的是「${question}」。这卦不是说一定成或一定不成，而是提醒你：${tendency}。</p>
     <div class="narrative-points oracle-points">
-      <p><b>现在卡点</b>${fate.reading}</p>
-      <p><b>可以先做</b>${fate.action}</p>
-      <p><b>别踩的坑</b>${fate.warning}</p>
+      <p><b>现在卡点</b>${fate.plainProblem}</p>
+      <p><b>先做一步</b>${fate.plainAction}</p>
+      <p><b>先别做</b>${fate.plainAvoid}</p>
     </div>
   `;
 }
@@ -1037,8 +1037,8 @@ function renderOracleNarrative(a, fate) {
 function getOracleOnlyNarrative(a, fate) {
   const question = a.oracleQuestion || "心中所求";
   const cast = fate.cast;
-  const tendency = cast.yangCount >= 4 ? "事情会先动起来，再慢慢定下来" : cast.yangCount <= 2 ? "现在不宜硬推，先把准备补齐" : "有的部分该动，有的部分要先守住";
-  return `你问的是：「${question}」。此刻落卦为「${fate.sign}」，${cast.yangCount}阳${6 - cast.yangCount}阴。简单说：${tendency}。${fate.reading} ${fate.action}`;
+  const tendency = cast.yangCount >= 4 ? "可以行动，但别一次押太大" : cast.yangCount <= 2 ? "先别硬冲，准备不够会更累" : "先小试，再决定要不要加码";
+  return `你问的是：「${question}」。此刻落卦为「${fate.sign}」，${cast.yangCount}阳${6 - cast.yangCount}阴。说人话：${tendency}。${fate.plainAction}`;
 }
 
 function getFateDetail(a, fate, playerType) {
@@ -1046,24 +1046,24 @@ function getFateDetail(a, fate, playerType) {
   const moving = fate.cast.yangCount >= 4;
   const quiet = fate.cast.yangCount <= 2;
   const trouble = Array.isArray(a.troubles) && a.troubles.length ? a.troubles[0] : question;
-  const story = `可以把这卦理解成一个提醒：你现在问的不是“会不会成功”，而是“下一步要不要马上动”。「${fate.sign}」给出的方向是：先把问题拆小，别让它一直停在脑子里。`;
+  const story = `把「${question}」先当成一个需要验证的问题，不要当成一场必须马上定输赢的考试。「${fate.sign}」的意思是：先做一个小动作，看现实有没有回应。`;
   return {
     story,
     signals: [
       {
-        title: moving ? "适合先动一下" : quiet ? "适合先准备" : "先动一小步",
-        copy: moving ? "可以先联系一个人、投一次简历、问一次报价，但不要一下子把退路断掉。" : quiet ? "现在先补信息、补钱、补精力。准备不够时，硬冲只会更慌。" : "不要直接做大决定，先做一个小动作，看有没有真实反馈。",
+        title: "这卦在说什么",
+        copy: moving ? "可以开始推进，但不要一上来就辞职、分手、All in 或把退路断掉。" : quiet ? "现在更像准备期。先补信息、钱、精力或证据，再做大决定。" : "现在适合小范围试一下。先拿反馈，再判断要不要继续。",
       },
       {
-        title: "真正卡住的点",
-        copy: quiet ? "你不是没有答案，是现在状态太紧，判断力被消耗了。" : `真正耗你的可能不是「${trouble}」本身，而是它太大、太模糊，所以你一直不知道从哪下手。`,
+        title: "对应到你这件事",
+        copy: quiet ? "你不是完全没答案，而是现在状态太紧，容易把害怕和判断混在一起。" : `真正让你难受的，可能不是「${trouble}」本身，而是它一直没有被拆成能执行的小问题。`,
       },
       {
-        title: "最小动作",
-        copy: playerType.includes("开拓") ? `${fate.action} 可以有野心，但先留退路。` : fate.action,
+        title: "今天怎么用",
+        copy: playerType.includes("开拓") ? `${fate.plainAction} 你可以冲，但先写好底线。` : fate.plainAction,
       },
     ],
-    action: fate.warning,
+    action: fate.plainAvoid,
   };
 }
 
@@ -1089,13 +1089,13 @@ function getFate(a, risk, pressure) {
     ...enriched,
     cast,
     meaning: a.mode === "命运模式" ? [
-      { label: "卦面", text: `以当前时间落出 ${cast.yangCount} 阳 ${6 - cast.yangCount} 阴。阳多则动，阴多则蓄；此卦偏「${cast.yangCount >= 4 ? "先动后定" : cast.yangCount <= 2 ? "先蓄后动" : "动静相持"}」。` },
-      { label: "象意", text: enriched.reading },
-      { label: "启示", text: enriched.action },
+      { label: "这卦在说", text: enriched.plainMeaning },
+      { label: "对应现实", text: enriched.plainProblem },
+      { label: "下一步", text: enriched.plainAction },
     ] : [
-      { label: "卦面", text: `以当前时间落出 ${cast.yangCount} 阳 ${6 - cast.yangCount} 阴。你的盘面更偏「${cast.yangCount >= 4 ? "先动后定" : cast.yangCount <= 2 ? "先蓄后动" : "动静相持"}」。` },
-      { label: "现实层", text: pressure > 70 ? `${enriched.reading} 当前压力噪音偏高，别把短期情绪误判成长期趋势。` : enriched.reading },
-      { label: "行动层", text: risk > 70 ? `${enriched.action} 但先把止损线画在地上，让野心有边界。` : enriched.action },
+      { label: "这卦在说", text: enriched.plainMeaning },
+      { label: "对应现实", text: pressure > 70 ? `${enriched.plainProblem} 你现在压力偏高，先别在情绪最满的时候拍板。` : enriched.plainProblem },
+      { label: "下一步", text: risk > 70 ? `${enriched.plainAction} 但先把止损线写清楚。` : enriched.plainAction },
     ],
   };
 }
@@ -1123,6 +1123,18 @@ function composeHexagram(base, a, cast, risk, pressure) {
   const reading = `这卦落在「${question}」上，意思是：${base.oracle} 简单说，${rhythm}。${pressureHint}`;
   const action = `${base.action} ${riskHint}`;
   const warning = `${base.warning} 不要把卦象当命令，它只是提醒你先看清代价和边界。`;
+  const plainMeaning = moving ? `卦象偏动。意思是：这件事可以推进，但要先控风险。` : quiet ? `卦象偏静。意思是：现在先准备，不适合硬冲。` : `卦象一半动、一半守。意思是：先小试，不要马上做终局决定。`;
+  const plainProblem = pressure > 70
+    ? `你现在最容易被焦虑推着走，所以要先把问题写清楚，再决定。`
+    : `你真正需要的不是更多想象，而是一个能验证现实的小反馈。`;
+  const plainAction = moving
+    ? `今天先推进一个低成本动作：发消息、约沟通、投一次、问一次价格或找人确认。`
+    : quiet
+      ? `今天先补一个准备项：算钱、查资料、整理作品、问懂行的人或休息一下。`
+      : `今天先做一个小实验：只花 30 分钟验证一个问题，不要立刻把整条路都换掉。`;
+  const plainAvoid = risk > 70
+    ? `不要因为一时上头就全押。先写清楚最多亏多少、多久没结果就停。`
+    : `不要反复想却不验证。也不要把卦象当命令，最后还是要看现实反馈。`;
   return {
     sign: base.sign,
     tag: base.tag,
@@ -1132,6 +1144,10 @@ function composeHexagram(base, a, cast, risk, pressure) {
     reading,
     action,
     warning,
+    plainMeaning,
+    plainProblem,
+    plainAction,
+    plainAvoid,
   };
 }
 
