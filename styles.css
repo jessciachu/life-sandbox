@@ -1275,12 +1275,15 @@ h1 {
   .question-panel.compact .option-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 7px;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 2px;
     align-content: start;
   }
   .option-card,
   .question-panel.compact .option-card {
     min-height: 58px;
+    height: auto;
     padding: 8px;
     border-radius: 8px;
   }
@@ -1293,14 +1296,14 @@ h1 {
   }
   .option-card span,
   .question-panel.compact .option-card span {
-    display: -webkit-box;
-    overflow: hidden;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
+    display: block;
+    overflow: visible;
+    white-space: normal;
+    word-break: break-word;
     font-size: 10.5px;
     line-height: 1.25;
   }
-  .question-panel.compact .option-card span { -webkit-line-clamp: 1; }
+  .question-panel.compact .option-card span { display: block; }
   .multi-actions { margin-top: 10px; }
   .multi-actions .primary-action { min-height: 40px; }
   .result-screen { padding: 14px 12px 42px; }
@@ -1444,11 +1447,11 @@ h1 {
 
 @media (max-width: 390px) {
   .option-card,
-  .question-panel.compact .option-card { min-height: 50px; padding: 7px; }
+  .question-panel.compact .option-card { min-height: 50px; height: auto; padding: 7px; }
   .option-card strong,
   .question-panel.compact .option-card strong { font-size: 13px; }
   .option-card span,
-  .question-panel.compact .option-card span { font-size: 10px; -webkit-line-clamp: 1; }
+  .question-panel.compact .option-card span { font-size: 10px; }
   .question-panel h2,
   .question-panel.compact h2 { font-size: 20px; }
   .question-panel > p,
