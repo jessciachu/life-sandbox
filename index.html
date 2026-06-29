@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>人生沙盘 Life Sandbox</title>
-    <link rel="stylesheet" href="./styles.css?v=20260626-clarity-final36" />
+    <link rel="stylesheet" href="./styles.css?v=20260629-magic-oracle119" />
   </head>
   <body>
     <main class="app-shell">
@@ -15,7 +15,7 @@
         </div>
         <div class="boot-sequence">
           <p class="boot-line boot-line-a">正在接入人生模拟系统</p>
-          <p class="boot-line boot-line-b">权限验证通过</p>
+          <p class="boot-line boot-line-b">系统连接完成</p>
           <div class="engine-card">
             <p class="system-kicker">Life Sandbox Engine v1.0</p>
             <h2>法阵启动中</h2>
@@ -40,11 +40,11 @@
           <img src="./assets/life-os-hero.png" alt="" />
         </div>
         <div class="hero-content reveal">
-          <p class="system-kicker">LIFE SANDBOX · RPG EDITION</p>
+          <p class="system-kicker">LIFE SANDBOX</p>
           <h1 id="hero-title">人生沙盘</h1>
-          <p class="hero-copy">一台正在低声运转的人生模拟引擎，等你放入第一枚变量。</p>
+          <p class="hero-copy">把最近卡住你的事交给沙盘，看见这一局的路、风险和下一步。</p>
           <button class="primary-action" type="button" data-mode-entry>进入人生沙盘</button>
-          <p class="hero-note">不是测试，是一次存档读取。</p>
+          <p class="hero-note">雾升起来以后，答案会从细节里浮出来。</p>
         </div>
         <aside class="live-oracle reveal" aria-label="实时沙盘动态">
           <span class="live-dot" aria-hidden="true"></span>
@@ -58,17 +58,17 @@
         <div class="mode-wrap reveal">
           <p class="system-kicker">ORACLE TABLE</p>
           <h2 id="mode-title">选择开阵方式</h2>
-          <p class="mode-copy">选一种开阵方式。一个看现实和预兆，一个只解你心里的这一问。</p>
+          <p class="mode-copy">选一种方式：双生法阵给你现实建议，夜色法阵只解你心里那一个问题。</p>
           <div class="mode-grid two-mode">
             <button class="mode-card featured sandbox-card" type="button" data-mode-choice="双模式融合">
               <span class="mode-glyph">TWIN</span>
               <strong>双生法阵</strong>
-              <em>适合工作、收入、转向。看现实条件，也给一条能马上试的路。</em>
+              <em>现实分析 + 时间卦。适合工作、收入、转向、要不要改变。</em>
             </button>
             <button class="mode-card oracle-card" type="button" data-mode-choice="命运模式">
               <span class="mode-glyph">FATE</span>
               <strong>夜色法阵</strong>
-              <em>适合感情、家人、人际。按此刻起卦，只解眼前这一件事。</em>
+              <em>只按当前时间起卦。适合感情、家人、人际、心里放不下的事。</em>
             </button>
           </div>
           <button class="secondary-action" type="button" data-home-back>返回入口</button>
@@ -84,7 +84,7 @@
           <div class="oracle-presets" aria-label="常见问题牌">
             <button type="button" data-oracle-kind="work" data-oracle-title="该不该换工作" data-oracle-preset="我想知道现在该不该换工作"><strong>换工作</strong><span>留下、跳槽，还是先骑驴找马</span></button>
             <button type="button" data-oracle-kind="direction" data-oracle-title="要不要换方向" data-oracle-preset="我想知道要不要转行或重选方向"><strong>换方向</strong><span>转行、读书、换赛道</span></button>
-            <button type="button" data-oracle-kind="side" data-oracle-title="副业能不能做" data-oracle-preset="我想知道副业或创业有没有窗口"><strong>副业创业</strong><span>能不能开局，要不要加码</span></button>
+            <button type="button" data-oracle-kind="side" data-oracle-title="副业能不能做" data-oracle-preset="我想知道副业或创业有没有窗口"><strong>副业创业</strong><span>能不能开局，要不要继续投</span></button>
             <button type="button" data-oracle-kind="money" data-oracle-title="钱什么时候稳一点" data-oracle-preset="我想知道接下来怎么缓解收入焦虑"><strong>收入金钱</strong><span>现金流、涨薪、存款焦虑</span></button>
             <button type="button" data-oracle-kind="romance" data-oracle-title="这段关系要不要继续" data-oracle-preset="我想知道这段关系要不要继续"><strong>婚恋关系</strong><span>继续、沟通，还是放手</span></button>
             <button type="button" data-oracle-kind="new-love" data-oracle-title="适不适合开始新关系" data-oracle-preset="我想知道现在适不适合开始新的感情"><strong>新的感情</strong><span>暧昧、复合、是否靠近</span></button>
@@ -127,31 +127,31 @@
 
       <section class="result-screen hidden" id="result">
         <div class="result-hero reveal">
-          <p class="system-kicker">SAVE FILE GENERATED</p>
-          <h2 data-result-title>你的生活存档已生成</h2>
-          <p data-result-subtitle>新一线 · 平衡型玩家</p>
+          <p class="system-kicker">RESULT READY</p>
+          <h2 data-result-title>你的沙盘结论已生成</h2>
+          <p data-result-subtitle>新一线 · 平衡试探者</p>
           <div class="result-actions">
-            <button class="primary-action" type="button" data-export-card>生成人生存档图</button>
-            <button class="secondary-action" type="button" data-copy>复制分享咒语</button>
-            <button class="secondary-action" type="button" data-restart>重洗命运牌</button>
+            <button class="primary-action" type="button" data-export-card>生成结论分享图</button>
+            <button class="secondary-action" type="button" data-copy>复制结论</button>
+            <button class="secondary-action" type="button" data-restart>重开沙盘</button>
           </div>
           <div class="oracle-narration" data-result-narrative>
             <span>判断依据</span>
-            <p>沙盘已经读到你的当前章节。真正重要的不是立刻选择哪条路，而是看见哪条路正在反复召唤你。</p>
+            <p>这里会把你的选择整理成三句话：现在卡在哪里、先做哪一步、什么暂时别做。</p>
           </div>
           <div class="live-strip" aria-label="沙盘动态">
             <span data-live-count-result>100</span>
-            <p data-live-feed>份人生说明书已在本机生成</p>
+            <p data-live-feed>已有 100 位求索者读到自己的沙盘</p>
           </div>
         </div>
 
         <div class="result-grid">
           <article class="rpg-panel reveal">
-            <div class="avatar-core" aria-hidden="true"><span></span></div>
+            <div class="avatar-core" aria-hidden="true"><i></i><b></b><em></em><span></span></div>
             <div>
-              <p class="panel-label">玩家类型</p>
-              <h3 data-player-type>平衡型玩家</h3>
-              <p class="panel-copy" data-player-copy>你适合用可控试错换取成长窗口。</p>
+              <p class="panel-label">行动画像</p>
+              <h3 data-player-type>平衡试探者</h3>
+              <p class="panel-copy" data-player-copy>你适合先做一件具体的事，再决定要不要加码。</p>
             </div>
             <div class="stat-list" data-stats></div>
           </article>
@@ -164,7 +164,7 @@
             </div>
             <div class="fate-cast" data-fate-cast></div>
             <div class="fate-meaning" data-fate-meaning></div>
-            <button class="fate-detail-toggle" type="button" data-fate-toggle aria-expanded="false">展开这卦怎么用</button>
+            <button class="fate-detail-toggle" type="button" data-fate-toggle aria-expanded="false">展开更多解释</button>
             <div class="fate-detail" data-fate-detail hidden></div>
           </article>
         </div>
@@ -186,16 +186,16 @@
           <div class="share-card" id="shareCard">
             <div class="share-sigil" aria-hidden="true"><span></span></div>
             <p class="share-eyebrow">LIFE SANDBOX</p>
-            <h3 data-share-title>你的人生存档已生成</h3>
+            <h3 data-share-title>你的沙盘结论已生成</h3>
             <div class="share-portrait" data-share-portrait>
               <span>你的画像</span>
-              <strong>平衡型玩家</strong>
+              <strong>平衡试探者</strong>
               <em>正在读取主线冲突</em>
             </div>
-            <p class="share-story" data-share-story>夜里，你把一个没有说出口的问题放进沙盘。第一盏灯亮起时，系统读到了你的岔路。</p>
+            <p class="share-story" data-share-story>这次主要看你最近最卡住的事，并给出一条更适合先试的路。</p>
             <div class="share-paths" data-share-paths></div>
             <div class="share-sign" data-share-sign>「风起未定 · 缓进之象」</div>
-            <p data-share-line>人生不是选择题，是存档游戏。</p>
+            <p data-share-line>先做一件能验证方向的事，再决定要不要继续。</p>
           </div>
           <textarea class="share-text" readonly data-share-text aria-hidden="true" tabindex="-1"></textarea>
         </div>
@@ -203,7 +203,6 @@
     </main>
 
     <div class="toast" data-toast>已复制</div>
-    <script src="./assets/qrcode-generator.js"></script>
-    <script src="./script.js?v=20260626-clarity-final36"></script>
+    <script src="./script.js?v=20260629-magic-oracle119"></script>
   </body>
 </html>
